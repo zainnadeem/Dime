@@ -7,15 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17C0EA221BDC559CBCFF8F24 /* Pods_Dime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 423E19BC95A6B01B838A4DD9 /* Pods_Dime.framework */; };
+		BF9342A31DCE744E006BE70C /* DimeDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342A21DCE744E006BE70C /* DimeDisplayViewController.swift */; };
+		BF9342A51DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342A41DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift */; };
+		BF9342AA1DCE8A4B006BE70C /* DimeAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342A81DCE8A4B006BE70C /* DimeAlbum.swift */; };
+		BF9342AC1DCE8A92006BE70C /* DimeMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342AB1DCE8A92006BE70C /* DimeMedia.swift */; };
+		BF9342AE1DCE913A006BE70C /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342AD1DCE913A006BE70C /* DataStore.swift */; };
+		BF9342B01DCE956E006BE70C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342AF1DCE956E006BE70C /* Constants.swift */; };
 		BFE3878A1DCCE902000FA9EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE387891DCCE902000FA9EA /* AppDelegate.swift */; };
 		BFE3878C1DCCE902000FA9EA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE3878B1DCCE902000FA9EA /* ViewController.swift */; };
 		BFE387921DCCE902000FA9EA /* Dime.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BFE387901DCCE902000FA9EA /* Dime.xcdatamodeld */; };
 		BFE387941DCCE902000FA9EA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFE387931DCCE902000FA9EA /* Assets.xcassets */; };
 		BFE387971DCCE902000FA9EA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFE387951DCCE902000FA9EA /* LaunchScreen.storyboard */; };
 		BFE3879F1DCCE956000FA9EA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFE3879E1DCCE956000FA9EA /* Main.storyboard */; };
+		BFE387A11DCCEF73000FA9EA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFE387A01DCCEF73000FA9EA /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		35FC2D94581D3F3D58B00A26 /* Pods-Dime.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dime.release.xcconfig"; path = "Pods/Target Support Files/Pods-Dime/Pods-Dime.release.xcconfig"; sourceTree = "<group>"; };
+		423E19BC95A6B01B838A4DD9 /* Pods_Dime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		67DA19E38EAB55B578D203F9 /* Pods-Dime.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dime.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Dime/Pods-Dime.debug.xcconfig"; sourceTree = "<group>"; };
+		BF9342A21DCE744E006BE70C /* DimeDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeDisplayViewController.swift; sourceTree = "<group>"; };
+		BF9342A41DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeImageDisplayCollectionViewCell.swift; sourceTree = "<group>"; };
+		BF9342A81DCE8A4B006BE70C /* DimeAlbum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeAlbum.swift; sourceTree = "<group>"; };
+		BF9342AB1DCE8A92006BE70C /* DimeMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeMedia.swift; sourceTree = "<group>"; };
+		BF9342AD1DCE913A006BE70C /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataStore.swift; path = Dime/DataStore.swift; sourceTree = "<group>"; };
+		BF9342AF1DCE956E006BE70C /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		BFE387861DCCE902000FA9EA /* Dime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFE387891DCCE902000FA9EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFE3878B1DCCE902000FA9EA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -24,6 +41,7 @@
 		BFE387961DCCE902000FA9EA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BFE387981DCCE902000FA9EA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFE3879E1DCCE956000FA9EA /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		BFE387A01DCCEF73000FA9EA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +49,48 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17C0EA221BDC559CBCFF8F24 /* Pods_Dime.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		369AFC2F4247D4BD4B8C8CF7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				67DA19E38EAB55B578D203F9 /* Pods-Dime.debug.xcconfig */,
+				35FC2D94581D3F3D58B00A26 /* Pods-Dime.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		446D11EA0D7C5D561690E8DE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				423E19BC95A6B01B838A4DD9 /* Pods_Dime.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BF9342A91DCE8A4B006BE70C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BF9342A81DCE8A4B006BE70C /* DimeAlbum.swift */,
+				BF9342AB1DCE8A92006BE70C /* DimeMedia.swift */,
+				BF9342AD1DCE913A006BE70C /* DataStore.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 		BFE3877D1DCCE902000FA9EA = {
 			isa = PBXGroup;
 			children = (
+				BF9342A91DCE8A4B006BE70C /* Models */,
 				BFE387881DCCE902000FA9EA /* Dime */,
 				BFE387871DCCE902000FA9EA /* Products */,
+				369AFC2F4247D4BD4B8C8CF7 /* Pods */,
+				446D11EA0D7C5D561690E8DE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,11 +105,15 @@
 		BFE387881DCCE902000FA9EA /* Dime */ = {
 			isa = PBXGroup;
 			children = (
+				BF9342A21DCE744E006BE70C /* DimeDisplayViewController.swift */,
+				BF9342A41DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift */,
+				BF9342AF1DCE956E006BE70C /* Constants.swift */,
 				BFE387891DCCE902000FA9EA /* AppDelegate.swift */,
 				BFE3878B1DCCE902000FA9EA /* ViewController.swift */,
 				BFE3879E1DCCE956000FA9EA /* Main.storyboard */,
 				BFE387931DCCE902000FA9EA /* Assets.xcassets */,
 				BFE387951DCCE902000FA9EA /* LaunchScreen.storyboard */,
+				BFE387A01DCCEF73000FA9EA /* GoogleService-Info.plist */,
 				BFE387981DCCE902000FA9EA /* Info.plist */,
 				BFE387901DCCE902000FA9EA /* Dime.xcdatamodeld */,
 			);
@@ -74,9 +127,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BFE3879B1DCCE902000FA9EA /* Build configuration list for PBXNativeTarget "Dime" */;
 			buildPhases = (
+				73C9AE3188BCB2805ADC6D96 /* [CP] Check Pods Manifest.lock */,
 				BFE387821DCCE902000FA9EA /* Sources */,
 				BFE387831DCCE902000FA9EA /* Frameworks */,
 				BFE387841DCCE902000FA9EA /* Resources */,
+				FF2522B426F86C0F351CA860 /* [CP] Embed Pods Frameworks */,
+				92EE7791E4F51D0395886979 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -128,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFE387971DCCE902000FA9EA /* LaunchScreen.storyboard in Resources */,
+				BFE387A11DCCEF73000FA9EA /* GoogleService-Info.plist in Resources */,
 				BFE387941DCCE902000FA9EA /* Assets.xcassets in Resources */,
 				BFE3879F1DCCE956000FA9EA /* Main.storyboard in Resources */,
 			);
@@ -135,14 +192,68 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		73C9AE3188BCB2805ADC6D96 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		92EE7791E4F51D0395886979 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Dime/Pods-Dime-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FF2522B426F86C0F351CA860 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Dime/Pods-Dime-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		BFE387821DCCE902000FA9EA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				BFE3878C1DCCE902000FA9EA /* ViewController.swift in Sources */,
+				BF9342AE1DCE913A006BE70C /* DataStore.swift in Sources */,
 				BFE387921DCCE902000FA9EA /* Dime.xcdatamodeld in Sources */,
+				BF9342A31DCE744E006BE70C /* DimeDisplayViewController.swift in Sources */,
 				BFE3878A1DCCE902000FA9EA /* AppDelegate.swift in Sources */,
+				BF9342AC1DCE8A92006BE70C /* DimeMedia.swift in Sources */,
+				BF9342AA1DCE8A4B006BE70C /* DimeAlbum.swift in Sources */,
+				BF9342A51DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift in Sources */,
+				BF9342B01DCE956E006BE70C /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,6 +364,7 @@
 		};
 		BFE3879C1DCCE902000FA9EA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 67DA19E38EAB55B578D203F9 /* Pods-Dime.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = VC999G43T3;
@@ -266,6 +378,7 @@
 		};
 		BFE3879D1DCCE902000FA9EA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 35FC2D94581D3F3D58B00A26 /* Pods-Dime.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = VC999G43T3;
@@ -296,6 +409,7 @@
 				BFE3879D1DCCE902000FA9EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
