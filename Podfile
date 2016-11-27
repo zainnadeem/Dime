@@ -8,6 +8,17 @@ target 'Dime' do
   # Pods for Dime
 
   pod 'Firebase/Core'
+  pod 'Firebase/Database'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Storage'
+  
+  #Utilities
+  pod 'DGActivityIndicatorView'
+  pod 'SAMCache'
+  pod 'VENTokenField'
+  
+  #Messenger
+  pod 'JSQMessagesViewController'
 
 
 end

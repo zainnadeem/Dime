@@ -8,12 +8,10 @@ import UIKit
 class SectionHeaderCollectionReusableView: UICollectionReusableView
 {
     @IBOutlet weak var sectionTitleLabel: UILabel!
+    @IBOutlet weak var profileImage: UIImageView!
     
-    var publisher: Publisher! {
-        didSet {
-            sectionTitleLabel.text = publisher.section.uppercased()
-        }
-    }
+
+    
     
 }
 
