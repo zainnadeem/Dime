@@ -19,6 +19,7 @@ class Dime {
     var likes: [User]
     var comments: [Comment]
     
+    
     init(caption: String, createdBy: User, media: [Media])
     {
     

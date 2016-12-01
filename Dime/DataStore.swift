@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 class DataStore {
@@ -16,6 +17,7 @@ class DataStore {
     var currentUser: User?
     
     var currentDime: Dime?
+
 //    
 //    
 //    func createDummyDimeMedia () {

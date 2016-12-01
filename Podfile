@@ -16,6 +16,9 @@ target 'Dime' do
   pod 'DGActivityIndicatorView'
   pod 'SAMCache'
   pod 'VENTokenField'
+  pod 'GooglePlaces'
+  pod 'GooglePlacePicker'
+  pod 'GoogleMaps'
   
   #Messenger
   pod 'JSQMessagesViewController'

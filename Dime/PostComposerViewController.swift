@@ -46,7 +46,7 @@ class PostComposerViewController: UITableViewController {
         if let image = image, let caption = textView.text {
             if let currentUser = store.currentUser{
                 
-                let newMedia = Media(type: "image", caption: caption, createdBy: currentUser, image: image)
+                let newMedia = Media(type: "image", caption: caption, createdBy: currentUser, image: image, location: "")
                 
                 let newDime = Dime(caption: caption, createdBy: currentUser, media: [newMedia])
                 

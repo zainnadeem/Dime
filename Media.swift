@@ -9,23 +9,41 @@
 import UIKit
 import Firebase
 
+
 class Media {
     
     var uid: String
     let type: String //"image" or "video"
     var caption: String
+    var location: String
     var createdTime: Double
     var createdBy: User
     var likes: [User]
     var comments: [Comment]
     var mediaImage: UIImage!
     
-    init(type: String, caption: String, createdBy: User, image: UIImage)
+//    init(type: String, caption: String, createdBy: User, image: UIImage)
+//    {
+//        self.type = type
+//        self.caption = caption
+//        self.createdBy = createdBy
+//        self.mediaImage = image
+//        
+//        
+//        createdTime = Date().timeIntervalSince1970 // number of seconds from 1970 to now
+//        comments = []
+//        likes = []
+//        uid = DatabaseReference.media.reference().childByAutoId().key
+//        
+//    }
+    
+    init(type: String, caption: String, createdBy: User, image: UIImage, location: String)
     {
         self.type = type
         self.caption = caption
         self.createdBy = createdBy
         self.mediaImage = image
+        self.location = location
         
         createdTime = Date().timeIntervalSince1970 // number of seconds from 1970 to now
         comments = []
@@ -40,6 +58,7 @@ class Media {
         type = dictionary["type"] as! String
         caption = dictionary["caption"] as! String
         createdTime = dictionary["createdTime"] as! Double
+        location = dictionary["location"] as! String
         
         let createdByDict = dictionary["createdBy"] as! [String : Any]
         createdBy = User(dictionary: createdByDict)

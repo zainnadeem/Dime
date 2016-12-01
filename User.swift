@@ -88,6 +88,8 @@ class User {
     }
     
     
+  
+    
     func save(completion: @escaping (Error?) -> Void){
         let ref = DatabaseReference.users(uid: uid).reference()
         ref.setValue(toDictionary())
@@ -125,6 +127,9 @@ class User {
         
     }
     
+
+
+
 }
 
 extension User {
@@ -152,8 +157,21 @@ extension User {
         ref.setValue(user.toDictionary())
     }
     
+    func fetchUsersFollowed(uid: String, completion: (_ result: [User]) -> Void) {
+        var arrayOfFollowedUsers = [User]()
+        DatabaseReference.users(uid: uid).reference().child("follows").observe(.childAdded, with: { (snapshot) in
+            print(snapshot)
+            
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let user = User(dictionary: dictionary)
+                arrayOfFollowedUsers.append(user)
+                
+            }
+        })
+       completion(arrayOfFollowedUsers)
+    }
 
-    
+
 }
 
 extension User: Equatable { }
