@@ -19,6 +19,7 @@ class Media {
     var createdTime: Double
     var createdBy: User
     var likes: [User]
+    var usersTagged: [User]
     var comments: [Comment]
     var mediaImage: UIImage!
     
@@ -48,6 +49,7 @@ class Media {
         createdTime = Date().timeIntervalSince1970 // number of seconds from 1970 to now
         comments = []
         likes = []
+        usersTagged = []
         uid = DatabaseReference.media.reference().childByAutoId().key
         
     }
@@ -73,6 +75,7 @@ class Media {
         }
         
         comments = []
+        usersTagged = []
     }
     
     func save(completion: @escaping (Error?) -> Void) {

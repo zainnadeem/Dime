@@ -32,8 +32,7 @@ class MediaHeaderCell: UITableViewCell {
         if let image = cache?.object(forKey: "\(self.media.createdBy.uid)-headerImage") as? UIImage {
             self.profileImageView.image = image
         }else{
-            
-            
+
             media.createdBy.downloadProfilePicture { [weak self] (image, error) in
                 if let image = image {
                     self?.profileImageView.image = image
@@ -45,7 +44,7 @@ class MediaHeaderCell: UITableViewCell {
         }
         
          profileImageView.layer.cornerRadius = profileImageView.bounds.width / 2.0
-            profileImageView.layer.masksToBounds = true
+         profileImageView.layer.masksToBounds = true
         
         usernameButton.setTitle(media.createdBy.username, for: [])
         
@@ -62,7 +61,7 @@ class MediaHeaderCell: UITableViewCell {
     }
    
     @IBAction func followButtonTapped(_ sender: Any) {
-       
+       currentUser.follow(user: media.createdBy)
 
     }
 

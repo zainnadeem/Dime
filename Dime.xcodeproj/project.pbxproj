@@ -49,6 +49,8 @@
 		BF9342BF1DCFCC9A006BE70C /* MediaCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */; };
 		BFAA92D11DEF38800063F660 /* EditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAA92D01DEF38800063F660 /* EditingViewController.swift */; };
 		BFAA92D51DF0BFDA0063F660 /* SearchUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAA92D41DF0BFDA0063F660 /* SearchUserViewController.swift */; };
+		BFAA92D71DF1EEA60063F660 /* SearchUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */; };
+		BFAA92D91DF203650063F660 /* TaggingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAA92D81DF203650063F660 /* TaggingViewController.swift */; };
 		BFE3878A1DCCE902000FA9EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE387891DCCE902000FA9EA /* AppDelegate.swift */; };
 		BFE387921DCCE902000FA9EA /* Dime.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BFE387901DCCE902000FA9EA /* Dime.xcdatamodeld */; };
 		BFE387941DCCE902000FA9EA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFE387931DCCE902000FA9EA /* Assets.xcassets */; };
@@ -101,6 +103,8 @@
 		BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaCollectionViewCell.swift; sourceTree = "<group>"; };
 		BFAA92D01DEF38800063F660 /* EditingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditingViewController.swift; sourceTree = "<group>"; };
 		BFAA92D41DF0BFDA0063F660 /* SearchUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserViewController.swift; sourceTree = "<group>"; };
+		BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserTableViewCell.swift; sourceTree = "<group>"; };
+		BFAA92D81DF203650063F660 /* TaggingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaggingViewController.swift; sourceTree = "<group>"; };
 		BFE387861DCCE902000FA9EA /* Dime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFE387891DCCE902000FA9EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFE387911DCCE902000FA9EA /* Dime.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Dime.xcdatamodel; sourceTree = "<group>"; };
@@ -155,21 +159,14 @@
 			name = "Not In Use";
 			sourceTree = "<group>";
 		};
-		BF5090841DD0397F000AF7B6 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */,
-				BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */,
-			);
-			name = Cells;
-			sourceTree = "<group>";
-		};
 		BF5090851DD039BF000AF7B6 /* Dime Creation Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				BF2F2CA71DEDFDFC00014BB0 /* CreateDimeViewController.swift */,
 				BF9342B81DCFCC9A006BE70C /* MediaCollectionViewController.swift */,
 				BFAA92D01DEF38800063F660 /* EditingViewController.swift */,
+				BFAA92D81DF203650063F660 /* TaggingViewController.swift */,
+				BFAA92D41DF0BFDA0063F660 /* SearchUserViewController.swift */,
 			);
 			name = "Dime Creation Controllers";
 			sourceTree = "<group>";
@@ -189,7 +186,6 @@
 			isa = PBXGroup;
 			children = (
 				BF5A00881DDA3BA200F825DD /* imagePickerHelper.swift */,
-				BFAA92D41DF0BFDA0063F660 /* SearchUserViewController.swift */,
 			);
 			name = "Helper Classes";
 			sourceTree = "<group>";
@@ -221,7 +217,10 @@
 			isa = PBXGroup;
 			children = (
 				BF6FCDFF1DDE433600AC5A71 /* MediaHeaderCell.swift */,
+				BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */,
 				BF5090821DD02A42000AF7B6 /* MediaTableViewCell.swift */,
+				BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */,
+				BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -291,7 +290,6 @@
 				BF5A00771DDA390500F825DD /* User Authentification */,
 				BF9342A91DCE8A4B006BE70C /* Models */,
 				BF9342C21DCFCCA1006BE70C /* Newsreader */,
-				BF5090841DD0397F000AF7B6 /* Cells */,
 				BF6FCE031DDE450C00AC5A71 /* Post Composer Tab */,
 				BFE387951DCCE902000FA9EA /* LaunchScreen.storyboard */,
 				BFE387A01DCCEF73000FA9EA /* GoogleService-Info.plist */,
@@ -436,6 +434,7 @@
 				BF6FCE051DDE451900AC5A71 /* DummyPostComposerViewController.swift in Sources */,
 				BF2A9B421DE3652A001A7704 /* Dime.swift in Sources */,
 				BF5A00841DDA39CF00F825DD /* FIRImage.swift in Sources */,
+				BFAA92D91DF203650063F660 /* TaggingViewController.swift in Sources */,
 				BF9342AE1DCE913A006BE70C /* DataStore.swift in Sources */,
 				BF2A9B4E1DEB74D0001A7704 /* TabBarViewController.swift in Sources */,
 				BF6FCE021DDE433E00AC5A71 /* CommentTableViewCell.swift in Sources */,
@@ -450,6 +449,7 @@
 				BF6FCDFD1DDE42CB00AC5A71 /* CommentComposerViewController.swift in Sources */,
 				BF6FCE071DDE452100AC5A71 /* PostComposerViewController.swift in Sources */,
 				BF9342BF1DCFCC9A006BE70C /* MediaCollectionViewCell.swift in Sources */,
+				BFAA92D71DF1EEA60063F660 /* SearchUserTableViewCell.swift in Sources */,
 				BF5A00831DDA39CF00F825DD /* User.swift in Sources */,
 				BF5A00821DDA39CF00F825DD /* FirebaseReference.swift in Sources */,
 				BF5A007C1DDA392100F825DD /* SignUpTableViewController.swift in Sources */,

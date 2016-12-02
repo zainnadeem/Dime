@@ -97,14 +97,11 @@ class EditingViewController: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowSearchUserController"{
-        let destinationVC = segue.destination as! SearchUserViewController
         
-            //fetch user followed not being called
-            store.currentUser?.fetchUsersFollowed(uid: (store.currentUser?.uid)!, completion: { (users) in
-            destinationVC.Users = users
-        })
-        
-         //   self.present(destinationVC, animated: true, completion: nil)
+            let destinationVC = segue.destination as! UINavigationController
+            let targetController = destinationVC.topViewController as! SearchUserViewController
+            if let user = store.currentUser{
+            targetController.userForView = user }
         }
     }
 }

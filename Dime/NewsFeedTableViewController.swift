@@ -15,6 +15,7 @@ public struct Storyboard {
     
     static let mediaCell = "MediaCell"
     static let mediaHeaderCell = "MediaHeaderCell"
+    static let searchUserCell = "SearchUserCell"
     static let mediaHeaderHeight: CGFloat = 57
     static let mediaCellDefaultHeight: CGFloat = 597
     
