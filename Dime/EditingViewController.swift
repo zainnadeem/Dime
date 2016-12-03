@@ -48,7 +48,7 @@ class EditingViewController: UIViewController {
     }
     
     @IBAction func tagPeopleTapped(_ sender: Any) {
-        self.performSegue(withIdentifier: "ShowSearchUserController", sender: nil)
+        self.performSegue(withIdentifier: "ShowTaggingController", sender: nil)
     }
     
     @IBAction func captionButtonTapped(_ sender: Any) {
@@ -96,12 +96,11 @@ class EditingViewController: UIViewController {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowSearchUserController"{
+        if segue.identifier == "ShowTaggingController"{
         
             let destinationVC = segue.destination as! UINavigationController
-            let targetController = destinationVC.topViewController as! SearchUserViewController
-            if let user = store.currentUser{
-            targetController.userForView = user }
+            let targetController = destinationVC.topViewController as! TaggingViewController
+            targetController.passedMedia = dime?.media[currentImageNumber - 1]
         }
     }
 }

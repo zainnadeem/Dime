@@ -8,34 +8,63 @@
 
 import UIKit
 
-class TaggingViewController: UIViewController, UITabBarDelegate, UITableViewDataSource {
+class TaggingViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    let store = DataStore.sharedInstance
+    var passedMedia: Media?
     var media: Media?
-    var mediaNumberToEdit: Int?
     
     @IBOutlet weak var mediaImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        media = passedMedia
+        media?.mediaImage = mediaImageView.image
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction func imageTapped(_ sender: Any) {
+        
+        self.performSegue(withIdentifier: "ShowSearchUserController", sender: nil)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "ShowSearchUserController"{
+            
+            let destinationVC = segue.destination as! SearchUserViewController
+            destinationVC.taggingViewController = self
+            if let user = store.currentUser{
+                destinationVC.userForView = user }
+        }
     }
-    */
 
+
+//Mark: - UITableView
+    
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let count = media?.usersTagged.count {
+                return count
+        }else{
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell  = tableView.dequeueReusableCell(withIdentifier: Storyboard.searchUserCell, for: indexPath) as! SearchUserTableViewCell
+        
+        if let users = media?.usersTagged {
+        cell.updateUI(user: users[indexPath.row])
+        }
+       
+        return cell
+    }
+    
+        
 }

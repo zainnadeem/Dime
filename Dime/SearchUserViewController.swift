@@ -11,10 +11,12 @@ import Firebase
 
 class SearchUserViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate {
     
+    weak var taggingViewController : TaggingViewController?
     
     var userForView: User?
     var UsersToSearch = [User]()
     var filteredUsers = [User]()
+    var selectedUser: User?
     
     
     @IBOutlet weak var searchBar: UISearchBar!
@@ -72,7 +74,9 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
             user = self.UsersToSearch[indexPath.row]
         }
         
-        print(user.username)
+        taggingViewController?.media?.usersTagged.append(user)
+        taggingViewController?.tableView.reloadData()
+        self.dismiss(animated: true, completion: nil)
     }
     
     //Mark: Search 
@@ -86,30 +90,5 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
         
             tableView.reloadData()
     }
-    
-    
-    
-    
-//    func filteredContentForSearchText(searchText: String, scope: String = "title"){
-//        self.filteredUsers = self.UsersToSearch.filter({ (user: User) -> Bool in
-//            var categoryMatch = (scope == "title")
-//            var stringMatch = user.fullName.range(of: searchText)
-//            return categoryMatch && (stringMatch != nil)
-//  
-//        })
-//    }
-//    
-//    func searchDisplayController(_ controller: UISearchDisplayController, shouldReloadTableForSearch searchString: String?) -> Bool {
-//        self.filteredContentForSearchText(searchText: searchString!, scope: "title")
-//        
-//        return true
-//    }
-//    
-//    func searchDisplayController(_ controller: UISearchDisplayController, shouldReloadTableForSearchScope searchOption: Int) -> Bool {
-//        self.filteredContentForSearchText(searchText: (self.searchDisplayController?.searchBar.text)!, scope: "title")
-//        
-//        return true
-//    }
-
 
 }
