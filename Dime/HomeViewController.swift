@@ -14,10 +14,13 @@ class HomeViewController: UIViewController {
     var imagePickerHelper: ImagePickerHelper!
     var currentUser: User?
     var store = DataStore.sharedInstance
-
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
+    
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+        
+        self.navBar.delegate = self
+        self.view.addSubview(navBar)
     }
 
     
@@ -49,8 +52,7 @@ class HomeViewController: UIViewController {
 
     @IBAction func logOutDidTap() {
         
-        try! FIRAuth.auth()?.signOut()
-        self.dismiss(animated: true, completion: nil)
+        
         
     }
     
@@ -67,4 +69,22 @@ class HomeViewController: UIViewController {
 
         }
     }
+}
+
+extension HomeViewController : NavBarViewDelegate {
+    
+    func rightBarButtonTapped(_ sender: AnyObject) {
+        print("Not sure what the right bar button will do yet.")
+    }
+    
+    func leftBarButtonTapped(_ sender: AnyObject) {
+        try! FIRAuth.auth()?.signOut()
+        self.dismiss(animated: true, completion: nil)
+        print("Not sure what the left bar button will do yet.")
+    }
+    
+    func middleBarButtonTapped(_ Sender: AnyObject) {
+        print("Not sure what the middle bar button will do yet.")
+    }
+    
 }

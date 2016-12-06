@@ -13,6 +13,7 @@ class SectionFooterCollectionReusableView: UICollectionReusableView {
     @IBOutlet weak var diamondImage: UIImageView!
     @IBOutlet weak var likesCountButton: UIButton!
     @IBOutlet weak var viewAllCommentsButton: UIButton!
+    @IBOutlet weak var coverPhotoImage: UIImageView!
     
         
 }

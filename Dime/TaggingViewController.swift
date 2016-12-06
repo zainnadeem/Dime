@@ -13,16 +13,38 @@ class TaggingViewController: UIViewController, UITableViewDelegate, UITableViewD
     let store = DataStore.sharedInstance
     var passedMedia: Media?
     var media: Media?
+    var editViewController = EditingViewController()
     
     @IBOutlet weak var mediaImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var cancelButton: UIBarButtonItem!
+    @IBOutlet weak var doneButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         media = passedMedia
-        media?.mediaImage = mediaImageView.image
+        mediaImageView.image = media?.mediaImage
+    }
+    
+   func hideButtons() {
+        self.cancelButton.title = ""
+        self.doneButton.title = ""
+    }
+    
+    func unhideButtons() {
+        self.cancelButton.title = "Cancel"
+        self.doneButton.title = "Done"
+    }
+    
+    @IBAction func cancelButtonTapped(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    
     }
 
+    @IBAction func doneButtonTapped(_ sender: Any) {
+        self.editViewController.dime?.media[editViewController.currentImageNumber - 1] = self.media!
+        self.dismiss(animated: true, completion: nil)
+    }
     
     @IBAction func imageTapped(_ sender: Any) {
         
@@ -34,6 +56,7 @@ class TaggingViewController: UIViewController, UITableViewDelegate, UITableViewD
         if segue.identifier == "ShowSearchUserController"{
             
             let destinationVC = segue.destination as! SearchUserViewController
+            destinationVC.modalPresentationStyle = .overCurrentContext
             destinationVC.taggingViewController = self
             if let user = store.currentUser{
                 destinationVC.userForView = user }
@@ -66,5 +89,18 @@ class TaggingViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
+    {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
+    {
+        if editingStyle == .delete
+        {
+            media?.usersTagged.remove(at: indexPath.row)
+            self.tableView.reloadData()
+        }
+    }
         
 }

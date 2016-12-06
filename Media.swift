@@ -78,10 +78,9 @@ class Media {
         usersTagged = []
     }
     
-    func save(completion: @escaping (Error?) -> Void) {
-        let ref = DatabaseReference.media.reference().child(uid)
-        ref.setValue(toDictionary())
-        
+    func save(ref: FIRDatabaseReference, completion: @escaping (Error?) -> Void) {
+//        let ref = DatabaseReference.media.reference().child(uid)
+//        ref.setValue(toDictionary())
         //save likes
         for like in likes {
             ref.child("likes/\(like.uid)").setValue(like.toDictionary())
@@ -92,7 +91,9 @@ class Media {
             ref.child("comments/\(comment.uid)").setValue(comment.toDictionary())
         }
         
-        
+        for user in usersTagged {
+            ref.child("users tagged/\(user.uid)").setValue(user.toDictionary())
+        }
         
         //upload image to storage database
         let firImage = FIRImage(image: mediaImage)
@@ -107,7 +108,8 @@ class Media {
             "type" : type,
             "caption" : caption,
             "createdTime" : createdTime,
-            "createdBy" : createdBy.toDictionary()
+            "createdBy" : createdBy.toDictionary(),
+            "location"  : location
         ]
     }
 }

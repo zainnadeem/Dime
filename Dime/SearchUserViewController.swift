@@ -25,11 +25,15 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = UIColor.clear
+        view.isOpaque = false
+        searchBar.becomeFirstResponder()
         if let usersFollowed = userForView?.follows {
             UsersToSearch = usersFollowed
     }
 
+    
+        
 }
 
     // Mark - UITableView
@@ -91,4 +95,16 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
             tableView.reloadData()
     }
 
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        taggingViewController?.hideButtons()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        taggingViewController?.unhideButtons()
+    }
+    
 }

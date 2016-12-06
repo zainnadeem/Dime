@@ -9,11 +9,18 @@ class MediaCollectionViewController: UICollectionViewController
 {
     var store = DataStore.sharedInstance
     var selectedIndexPath: Int = Int()
+    
     var imagePickerHelper: ImagePickerHelper?
     var passedDime: Dime!
-    var dime: Dime?
     
+    var dime: Dime?
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
 
+    var finishedEditing: Bool = Bool()
+
+    
+    
+    
     struct Storyboard {
         static let mediaCell = "mediaCell"
         static let sectionHeader = "SectionHeader"
@@ -24,6 +31,22 @@ class MediaCollectionViewController: UICollectionViewController
         static let titleHeightAdjustment: CGFloat = 30.0
     }
     
+    @IBAction func postButtonTapped(_ sender: Any) {
+        store.currentDime = dime
+        store.currentDime?.save(caption: "Set Title of Dime", completion: { (error) in
+            if error != nil {
+                print(error?.localizedDescription)
+            }
+       
+        
+        })
+    
+    }
+
+    @IBAction func changeCoverPhoto(_ sender: Any) {
+        
+    }
+    
     
     @IBAction func homeButtonTap(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
@@ -31,26 +54,33 @@ class MediaCollectionViewController: UICollectionViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        dime = passedDime
+        self.navBar.delegate = self
+        self.view.addSubview(navBar)
+        
+        dime = self.store.currentDime
+        
         let bgImage = UIImageView()
         bgImage.image = #imageLiteral(resourceName: "background_GREY")
         bgImage.contentMode = .scaleToFill
         self.collectionView?.backgroundView = bgImage
+        
         let collectionViewWidth = collectionView?.frame.width
         let itemWidth = (collectionViewWidth! - Storyboard.leftAndRightPaddings) / Storyboard.numberOfItemsPerRow
+        
         let layout = collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize = CGSize(width: itemWidth, height: itemWidth + Storyboard.titleHeightAdjustment)
         
-        
+        installsStandardGestureForInteractiveMovement = true
     }
     
+
     @IBAction func editButtonTapped(_ sender: Any) {
-//        if (dime?.media.count)! > 3 {
+      if (dime?.media.count)! > 3 {
             self.performSegue(withIdentifier: "showEditView", sender: nil)
-//        } else {
-//            alert(title: "Oops!", message: "Please select at least four items to edit", buttonTitle: "Got it!")
-//        }
-//        
+        } else {
+            alert(title: "Oops!", message: "Please select at least four items to edit", buttonTitle: "Got it!")
+        }
+        
     }
     // MARK: - UICollectionViewDataSource
     
@@ -82,8 +112,23 @@ class MediaCollectionViewController: UICollectionViewController
         cell.mediaImageView.image = dime?.media[indexPath.row].mediaImage
         }
         
+        
+        if indexPath.row == 0 {
+            cell.layer.borderColor =  UIColor.blue.cgColor
+            cell.layer.borderWidth = 1
+            cell.imageLabel.text = "Cover"
+            cell.visualEffectView.isHidden = false
+        }else{
+            cell.layer.borderColor = UIColor.white.cgColor
+            cell.layer.borderWidth = 1
+            cell.imageLabel.text = ""
+            cell.visualEffectView.isHidden = true
+        }
+        
         return cell
     }
+    
+
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
@@ -98,6 +143,8 @@ class MediaCollectionViewController: UICollectionViewController
             
         case UICollectionElementKindSectionFooter:
             let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionFooter", for: indexPath) as! SectionFooterCollectionReusableView
+            
+            
   
             return footerView
             
@@ -110,6 +157,7 @@ class MediaCollectionViewController: UICollectionViewController
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        
         imagePickerHelper = ImagePickerHelper(viewController: self, completion: { (image) in
             
             let newMedia = Media(type: "", caption: "", createdBy: self.store.currentUser!, image: image!, location: "")
@@ -120,14 +168,38 @@ class MediaCollectionViewController: UICollectionViewController
             
             
         })
+    }
+
+    
+    override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
+        
+        if indexPath.row == (collectionView.numberOfItems(inSection: 0) - 1) && (dime?.media.count)! < 9 {
+            return false
+        }
+        
+        return true
         
     }
+    
+    
+    override func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+//        let sourceCell = collectionView.dequeueReusableCell(withReuseIdentifier: Storyboard.mediaCell, for: sourceIndexPath) as! MediaCollectionViewCell
+//        let destCell = collectionView.dequeueReusableCell(withReuseIdentifier: Storyboard.mediaCell, for: destinationIndexPath) as! MediaCollectionViewCell
+//    
+
+        collectionView.reloadData()
+
+    }
+
+
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showEditView" {
             store.currentDime = dime
             let destinationVC = segue.destination as! UINavigationController
             let targetController = destinationVC.topViewController as! EditingViewController
+            targetController.mediaCollectionViewController = self
             targetController.passedDime = store.currentDime
         }
     }
@@ -145,6 +217,23 @@ extension MediaCollectionViewController {
     }
 }
 
+extension MediaCollectionViewController : NavBarViewDelegate {
+    
+    func rightBarButtonTapped(_ sender: AnyObject) {
+        self.performSegue(withIdentifier: "showEditView", sender: nil)
+        print("Not sure what the right bar button will do yet.")
+    }
+    
+    func leftBarButtonTapped(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
+        print("Not sure what the left bar button will do yet.")
+    }
+    
+    func middleBarButtonTapped(_ Sender: AnyObject) {
+        print("Not sure what the middle bar button will do yet.")
+    }
+    
+}
 
 
 

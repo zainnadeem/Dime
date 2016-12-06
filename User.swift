@@ -138,6 +138,10 @@ extension User {
         
     }
     
+    func shareDime(newDime: Dime){
+        DatabaseReference.users(uid: uid).reference().child("dimes").childByAutoId().setValue(newDime)
+    }
+    
     func addToDime(newMedia: Media, caption: String){
        // self.currentDime.media.append(newMedia)
        

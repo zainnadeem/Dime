@@ -14,6 +14,7 @@ class Dime {
     var uid: String
     var caption: String
     var createdTime: Double
+    //var coverMedia: Media
     var media: [Media]
     var createdBy: User
     var likes: [User]
@@ -53,13 +54,29 @@ class Dime {
         }
         
         media = []
+        if let mediaDict = dictionary["media"] as? [String : Any] {
+            for (_, mediaDict) in mediaDict {
+                if let mediaDict = mediaDict as? [String: Any] {
+                    media.append(Media(dictionary: mediaDict))
+                }
+            }
+        }
 
         comments = []
     }
     
     func save(caption: String, completion: @escaping (Error?) -> Void) {
-        let ref = DatabaseReference.dimes.reference().child("\(caption)/media").childByAutoId()
+        let ref = DatabaseReference.dimes.reference().childByAutoId()
         ref.setValue(toDictionary())
+        
+        for media in media{
+            ref.child("media/\(media.uid)").setValue(media.toDictionary())
+            media.save(ref: ref, completion: { (error) in
+                if error != nil{
+                    print(error?.localizedDescription)
+                }
+            })
+        }
         
         //save likes
         for like in likes {
@@ -80,6 +97,7 @@ class Dime {
             "caption" : caption,
             "createdTime" : createdTime,
             "createdBy" : createdBy.toDictionary()
+            
         ]
     }
 }
@@ -93,13 +111,15 @@ extension Dime {
         })
     }
     
-    class func observeNewMedia(_ completion: @escaping (Media) -> Void) {
+    class func observeNewDime(_ completion: @escaping (Dime) -> Void) {
         
         DatabaseReference.dimes.reference().observe(.childAdded, with: { (snapshot) in
-            let media = Media(dictionary: snapshot.value as! [String : Any])
-            completion(media)
+            let dime = Dime(dictionary: snapshot.value as! [String : Any])
+            completion(dime)
         })
     }
+    
+    
     
     func observeNewComment(_ completion: @escaping (Comment) -> Void){
         //.childAdded: (1) download everything fo the first time

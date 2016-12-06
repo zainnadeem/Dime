@@ -41,35 +41,35 @@ class PostComposerViewController: UITableViewController {
     }
 
 
-    @IBAction func shareDidTap(_ sender: AnyObject) {
-    
-        if let image = image, let caption = textView.text {
-            if let currentUser = store.currentUser{
-                
-                let newMedia = Media(type: "image", caption: caption, createdBy: currentUser, image: image, location: "")
-                
-                let newDime = Dime(caption: caption, createdBy: currentUser, media: [newMedia])
-                
-                newDime.save(caption: caption, completion: { (error) in
-                    if let error = error {
-                        self.alert(title: "Oops", message: error.localizedDescription, buttonTitle: "OK")
-                    }
-                })
-                
-                newMedia.save(completion: { (error) in
-                    if let error = error {
-                        self.alert(title: "Oops!", message: error.localizedDescription, buttonTitle: "OK")
-                    }else {
-                        currentUser.share(newMedia: newMedia)
-                        currentUser.addToDime(newMedia: newMedia, caption: caption)
-                    }
-                    
-                })
-            }
-            
-        }
-        self.cancelDidTap()
-    }
+//    @IBAction func shareDidTap(_ sender: AnyObject) {
+//    
+//        if let image = image, let caption = textView.text {
+//            if let currentUser = store.currentUser{
+//                
+//                let newMedia = Media(type: "image", caption: caption, createdBy: currentUser, image: image, location: "")
+//                
+//                let newDime = Dime(caption: caption, createdBy: currentUser, media: [newMedia])
+//                
+//                newDime.save(caption: caption, completion: { (error) in
+//                    if let error = error {
+//                        self.alert(title: "Oops", message: error.localizedDescription, buttonTitle: "OK")
+//                    }
+//                })
+//                
+//                newMedia.save(completion: { (error) in
+//                    if let error = error {
+//                        self.alert(title: "Oops!", message: error.localizedDescription, buttonTitle: "OK")
+//                    }else {
+//                        currentUser.share(newMedia: newMedia)
+//                        currentUser.addToDime(newMedia: newMedia, caption: caption)
+//                    }
+//                    
+//                })
+//            }
+//            
+//        }
+//        self.cancelDidTap()
+//    }
 
     
     func alert(title: String, message: String, buttonTitle: String) {

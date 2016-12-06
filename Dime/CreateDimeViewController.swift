@@ -14,6 +14,7 @@ class CreateDimeViewController: UIViewController {
     var imagePickerHelper: ImagePickerHelper!
     var passedImage: UIImage = UIImage()
     
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
 
     @IBOutlet weak var dimeTitleTextField: UITextField!
     
@@ -27,7 +28,9 @@ class CreateDimeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        self.navBar.delegate = self
+        self.view.addSubview(navBar)
+
     }
 
     
@@ -39,7 +42,15 @@ class CreateDimeViewController: UIViewController {
             let newMedia = Media(type: "", caption: "", createdBy: self.store.currentUser!, image: image!, location: "")
             self.store.currentDime?.media.append(newMedia)
             
-            self.performSegue(withIdentifier: "mediaCollectionSegue", sender: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
+            
+           // controller.exercisedPassed = "Ex1"
+            
+            self.present(controller, animated: true, completion: nil)
+            
+            
+            // self.performSegue(withIdentifier: "mediaCollectionSegue", sender: nil)
             
     })
     
@@ -57,5 +68,21 @@ class CreateDimeViewController: UIViewController {
 
 extension CreateDimeViewController: UITextFieldDelegate {
     
+    
+}
+
+extension CreateDimeViewController : NavBarViewDelegate {
+    
+    func rightBarButtonTapped(_ sender: AnyObject) {
+        print("Not sure what the right bar button will do yet.")
+    }
+    
+    func leftBarButtonTapped(_ sender: AnyObject) {
+        print("Not sure what the left bar button will do yet.")
+    }
+    
+    func middleBarButtonTapped(_ Sender: AnyObject) {
+        print("Not sure what the middle bar button will do yet.")
+    }
     
 }

@@ -12,6 +12,7 @@ import GooglePlacePicker
 
 class EditingViewController: UIViewController {
     
+    var mediaCollectionViewController = MediaCollectionViewController()
     let store = DataStore.sharedInstance
     var passedDime: Dime!
     var dime: Dime?
@@ -39,6 +40,11 @@ class EditingViewController: UIViewController {
      dimeNumberLabel.text = "\(currentImageNumber)/\(numberOfImagesToEdit)"
      dimeImage.image = dime?.media[currentImageNumber-1].mediaImage
 
+    }
+    
+    @IBAction func nextButtonTapped(_ sender: Any) {
+        mediaCollectionViewController.passedDime = dime
+        dismiss(animated: true, completion: nil)
     }
 
     @IBAction func locationButtonTapped(_ sender: Any) {
@@ -97,9 +103,9 @@ class EditingViewController: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTaggingController"{
-        
             let destinationVC = segue.destination as! UINavigationController
             let targetController = destinationVC.topViewController as! TaggingViewController
+            targetController.editViewController = self
             targetController.passedMedia = dime?.media[currentImageNumber - 1]
         }
     }
