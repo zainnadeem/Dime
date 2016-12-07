@@ -172,10 +172,10 @@
                         <color key="selectedImageTintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="Wu6-mI-mZz" kind="relationship" relationship="viewControllers" id="KqN-AU-vU0"/>
                         <segue destination="4zC-uY-1fF" kind="relationship" relationship="viewControllers" id="osj-P7-DPP"/>
                         <segue destination="AnZ-QQ-sRe" kind="relationship" relationship="viewControllers" id="m9l-jC-zOL"/>
                         <segue destination="Oa8-SV-Ojh" kind="relationship" relationship="viewControllers" id="ZvS-ma-SCu"/>
+                        <segue destination="0SF-f9-LhO" kind="relationship" relationship="viewControllers" id="U8d-DV-du3"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4MB-nY-HB0" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -376,7 +376,7 @@
         <scene sceneID="MfD-XP-2FO">
             <objects>
                 <collectionViewController id="ULz-gi-PcG" customClass="DimesCollectionViewController" customModule="Dime" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="UrX-G4-WNY">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="UrX-G4-WNY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -956,35 +956,9 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x69-XY-mNo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3033" y="-1077"/>
+            <point key="canvasLocation" x="3377" y="-886"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="sxv-ed-Mfe">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Wu6-mI-mZz" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="bar-icon-diamond-black-outline" selectedImage="bar-icon-diamond-black" id="CSe-OE-h0a">
-                        <inset key="imageInsets" minX="8" minY="15" maxX="8" maxY="1"/>
-                    </tabBarItem>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="kRb-4J-h02">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <textAttributes key="titleTextAttributes">
-                            <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
-                        </textAttributes>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="0SF-f9-LhO" kind="relationship" relationship="rootViewController" id="yNB-wo-Jnm"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="sqj-XV-iBU" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="873" y="-1820"/>
-        </scene>
-        <!--Dime Collection View Controller-->
+        <!--Item-->
         <scene sceneID="6Tp-XN-NAn">
             <objects>
                 <viewController id="0SF-f9-LhO" customClass="DimeCollectionViewController" customModule="Dime" customModuleProvider="target" sceneMemberID="viewController">
@@ -997,11 +971,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="LxB-lY-0tE"/>
                     <navigationItem key="navigationItem" id="B9f-aw-5cD"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="36j-8k-PBU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1842" y="-1820"/>
+            <point key="canvasLocation" x="873" y="-1751"/>
         </scene>
         <!--Friends-->
         <scene sceneID="inj-rZ-vHD">
@@ -1074,7 +1049,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6RS-Gg-LTE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2313" y="-913"/>
+            <point key="canvasLocation" x="1841" y="-913"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="aGP-rF-KY1">
@@ -1743,7 +1718,7 @@
         <scene sceneID="AL1-Jb-X18">
             <objects>
                 <collectionViewController storyboardIdentifier="MediaCollectionViewController" id="qBO-UT-0T9" customClass="MediaCollectionViewController" customModule="Dime" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="jv9-b8-51X">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="jv9-b8-51X">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -2736,7 +2711,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fhg-rO-zDH" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="sim-20-vbz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sim-20-vbz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2757,8 +2732,6 @@
         <image name="HOMEBACKGROUND" width="1125" height="1980"/>
         <image name="background_BLUE" width="3167" height="5634"/>
         <image name="background_GREY" width="3125" height="5560"/>
-        <image name="bar-icon-diamond-black" width="63" height="57"/>
-        <image name="bar-icon-diamond-black-outline" width="66" height="57"/>
         <image name="bar-icon-diamond-blue" width="63" height="57"/>
         <image name="bar-icon-diamond-blue-outline" width="66" height="57"/>
         <image name="bar-icon-fire" width="69" height="63"/>

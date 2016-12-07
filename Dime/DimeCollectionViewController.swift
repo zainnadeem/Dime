@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 private let reuseIdentifier = "dimeCollectionViewCell"
 
@@ -14,18 +15,39 @@ class DimeCollectionViewController: UIViewController, UICollectionViewDelegateFl
     
     let store = DataStore.sharedInstance
     var passedDimes: [Dime] = [Dime]()
+    var viewControllerTitle: UILabel = UILabel()
     
-      var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
+    
+    var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-       
         setUpCollectionView()
-       
+        self.navBar.delegate = self
+        self.view.addSubview(navBar)
+        configureTitleLabel()
         fetchDimes()
     }
 
+    func configureTitleLabel(){
+        self.view.addSubview(viewControllerTitle)
+        
+        self.viewControllerTitle.translatesAutoresizingMaskIntoConstraints = false
+        self.viewControllerTitle.topAnchor.constraint(equalTo: self.navBar.bottomAnchor).isActive = true
+        
+        self.viewControllerTitle.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        
+        self.viewControllerTitle.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.05).isActive = true
+        self.viewControllerTitle.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
+        
+        viewControllerTitle.backgroundColor = UIColor.lightGray
+        viewControllerTitle.textAlignment = NSTextAlignment.center
+        viewControllerTitle.textColor = UIColor.white
+        viewControllerTitle.font = UIFont.dimeFont(15)
+        viewControllerTitle.text = "Top Dimes"
+        
+    }
     
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
@@ -44,8 +66,7 @@ class DimeCollectionViewController: UIViewController, UICollectionViewDelegateFl
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
-
-
+    
      func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
         return passedDimes.count
@@ -64,12 +85,15 @@ class DimeCollectionViewController: UIViewController, UICollectionViewDelegateFl
     func setUpCollectionView(){
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionViewScrollDirection.horizontal
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
         dimeCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
         dimeCollectionView.dataSource = self
         dimeCollectionView.delegate = self
         self.dimeCollectionView.register(DimeCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         dimeCollectionView.backgroundColor = UIColor.black
         self.view.addSubview(dimeCollectionView)
+        
         //dimeCollectionView.isPagingEnabled = true
         
         
@@ -84,4 +108,24 @@ class DimeCollectionViewController: UIViewController, UICollectionViewDelegateFl
     }
     
 
+    
+    
+}
+
+extension DimeCollectionViewController : NavBarViewDelegate {
+    
+    func rightBarButtonTapped(_ sender: AnyObject) {
+        print("Not sure what the right bar button will do yet.")
+    }
+    
+    func leftBarButtonTapped(_ sender: AnyObject) {
+        try! FIRAuth.auth()?.signOut()
+        self.dismiss(animated: true, completion: nil)
+        print("Not sure what the left bar button will do yet.")
+    }
+    
+    func middleBarButtonTapped(_ Sender: AnyObject) {
+        print("Not sure what the middle bar button will do yet.")
+    }
+    
 }
