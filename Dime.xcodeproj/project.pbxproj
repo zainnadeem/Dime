@@ -24,7 +24,11 @@
 		BF5090891DD10A28000AF7B6 /* User(dime).swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5090881DD10A28000AF7B6 /* User(dime).swift */; };
 		BF5564EC1DF37D880086290D /* NavBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5564EB1DF37D880086290D /* NavBarView.swift */; };
 		BF5564EE1DF72EC40086290D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5564ED1DF72EC40086290D /* Constants.swift */; };
-		BF5564F01DF7335F0086290D /* DimeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5564EF1DF7335F0086290D /* DimeCollectionViewController.swift */; };
+		BF5564F01DF7335F0086290D /* TopDimesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5564EF1DF7335F0086290D /* TopDimesCollectionViewController.swift */; };
+		BF5564F21DF88D0C0086290D /* TrendingCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5564F11DF88D0C0086290D /* TrendingCollectionViewController.swift */; };
+		BF5564F41DF8A2100086290D /* FriendsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5564F31DF8A2100086290D /* FriendsCollectionViewController.swift */; };
+		BF5564F61DF8AA0C0086290D /* PopularTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5564F51DF8AA0C0086290D /* PopularTableViewCell.swift */; };
+		BF5564F81DF8B1580086290D /* PopularFeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */; };
 		BF5A007B1DDA392100F825DD /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A00781DDA392100F825DD /* WelcomeViewController.swift */; };
 		BF5A007C1DDA392100F825DD /* SignUpTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A00791DDA392100F825DD /* SignUpTableViewController.swift */; };
 		BF5A007D1DDA392100F825DD /* LoginTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A007A1DDA392100F825DD /* LoginTableViewController.swift */; };
@@ -81,7 +85,11 @@
 		BF5090881DD10A28000AF7B6 /* User(dime).swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "User(dime).swift"; path = "../User(dime).swift"; sourceTree = "<group>"; };
 		BF5564EB1DF37D880086290D /* NavBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavBarView.swift; sourceTree = "<group>"; };
 		BF5564ED1DF72EC40086290D /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		BF5564EF1DF7335F0086290D /* DimeCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeCollectionViewController.swift; sourceTree = "<group>"; };
+		BF5564EF1DF7335F0086290D /* TopDimesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopDimesCollectionViewController.swift; sourceTree = "<group>"; };
+		BF5564F11DF88D0C0086290D /* TrendingCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrendingCollectionViewController.swift; sourceTree = "<group>"; };
+		BF5564F31DF8A2100086290D /* FriendsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsCollectionViewController.swift; sourceTree = "<group>"; };
+		BF5564F51DF8AA0C0086290D /* PopularTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopularTableViewCell.swift; sourceTree = "<group>"; };
+		BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopularFeedTableViewController.swift; sourceTree = "<group>"; };
 		BF5A00781DDA392100F825DD /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		BF5A00791DDA392100F825DD /* SignUpTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpTableViewController.swift; sourceTree = "<group>"; };
 		BF5A007A1DDA392100F825DD /* LoginTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewController.swift; sourceTree = "<group>"; };
@@ -152,6 +160,7 @@
 		BF2F2CA91DEE004400014BB0 /* Not In Use */ = {
 			isa = PBXGroup;
 			children = (
+				BF2A9B4B1DEB6C7C001A7704 /* PopularTableViewController.swift */,
 				BF9342A81DCE8A4B006BE70C /* DimeAlbum.swift */,
 				BF5090881DD10A28000AF7B6 /* User(dime).swift */,
 				BF9342AB1DCE8A92006BE70C /* DimeMedia.swift */,
@@ -214,7 +223,6 @@
 				BF6FCDF81DDE42CB00AC5A71 /* NewsFeedTableViewController.swift */,
 				BF2A9B491DEB6C6F001A7704 /* TrendingTableViewController.swift */,
 				BF2A9B471DEB6C5E001A7704 /* FriendsTableViewController.swift */,
-				BF2A9B4B1DEB6C7C001A7704 /* PopularTableViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -226,8 +234,12 @@
 				BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */,
 				BF5090821DD02A42000AF7B6 /* MediaTableViewCell.swift */,
 				BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */,
+				BF5564F11DF88D0C0086290D /* TrendingCollectionViewController.swift */,
+				BF5564F31DF8A2100086290D /* FriendsCollectionViewController.swift */,
+				BF5564EF1DF7335F0086290D /* TopDimesCollectionViewController.swift */,
+				BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */,
+				BF5564F51DF8AA0C0086290D /* PopularTableViewCell.swift */,
 				BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */,
-				BF5564EF1DF7335F0086290D /* DimeCollectionViewController.swift */,
 				BF5564ED1DF72EC40086290D /* Constants.swift */,
 			);
 			name = Cells;
@@ -440,13 +452,15 @@
 				BF6FCE001DDE433600AC5A71 /* MediaHeaderCell.swift in Sources */,
 				BF5A00891DDA3BA200F825DD /* imagePickerHelper.swift in Sources */,
 				BF50907D1DD020B6000AF7B6 /* MediaTableViewController.swift in Sources */,
+				BF5564F21DF88D0C0086290D /* TrendingCollectionViewController.swift in Sources */,
 				BF6FCE051DDE451900AC5A71 /* DummyPostComposerViewController.swift in Sources */,
 				BF2A9B421DE3652A001A7704 /* Dime.swift in Sources */,
 				BF5A00841DDA39CF00F825DD /* FIRImage.swift in Sources */,
 				BFAA92D91DF203650063F660 /* TaggingViewController.swift in Sources */,
 				BF9342AE1DCE913A006BE70C /* DataStore.swift in Sources */,
 				BF2A9B4E1DEB74D0001A7704 /* TabBarViewController.swift in Sources */,
-				BF5564F01DF7335F0086290D /* DimeCollectionViewController.swift in Sources */,
+				BF5564F01DF7335F0086290D /* TopDimesCollectionViewController.swift in Sources */,
+				BF5564F41DF8A2100086290D /* FriendsCollectionViewController.swift in Sources */,
 				BF5564EC1DF37D880086290D /* NavBarView.swift in Sources */,
 				BF6FCE021DDE433E00AC5A71 /* CommentTableViewCell.swift in Sources */,
 				BF5A007D1DDA392100F825DD /* LoginTableViewController.swift in Sources */,
@@ -455,6 +469,7 @@
 				BF6FCDFB1DDE42CB00AC5A71 /* NewsFeedTableViewController.swift in Sources */,
 				BF5090811DD02A2E000AF7B6 /* UserTableViewCell.swift in Sources */,
 				BF5090891DD10A28000AF7B6 /* User(dime).swift in Sources */,
+				BF5564F81DF8B1580086290D /* PopularFeedTableViewController.swift in Sources */,
 				BF5A007B1DDA392100F825DD /* WelcomeViewController.swift in Sources */,
 				BF2F2CA81DEDFDFC00014BB0 /* CreateDimeViewController.swift in Sources */,
 				BF6FCDFD1DDE42CB00AC5A71 /* CommentComposerViewController.swift in Sources */,
@@ -462,6 +477,7 @@
 				BF9342BF1DCFCC9A006BE70C /* MediaCollectionViewCell.swift in Sources */,
 				BFAA92D71DF1EEA60063F660 /* SearchUserTableViewCell.swift in Sources */,
 				BF5A00831DDA39CF00F825DD /* User.swift in Sources */,
+				BF5564F61DF8AA0C0086290D /* PopularTableViewCell.swift in Sources */,
 				BF5A00821DDA39CF00F825DD /* FirebaseReference.swift in Sources */,
 				BF5564EE1DF72EC40086290D /* Constants.swift in Sources */,
 				BF5A007C1DDA392100F825DD /* SignUpTableViewController.swift in Sources */,

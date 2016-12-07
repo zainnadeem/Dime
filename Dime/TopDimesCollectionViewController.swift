@@ -11,11 +11,12 @@ import Firebase
 
 private let reuseIdentifier = "dimeCollectionViewCell"
 
-class DimeCollectionViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UITextViewDelegate {
+class TopDimesCollectionViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UITextViewDelegate {
     
     let store = DataStore.sharedInstance
     var passedDimes: [Dime] = [Dime]()
     var viewControllerTitle: UILabel = UILabel()
+    var viewControllerIcon: UIButton = UIButton()
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
     
@@ -24,10 +25,18 @@ class DimeCollectionViewController: UIViewController, UICollectionViewDelegateFl
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
+        
+        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
+        backgroundImage.image = #imageLiteral(resourceName: "background_GREY")
+        self.view.insertSubview(backgroundImage, at: 0)
+        
+        
         self.navBar.delegate = self
         self.view.addSubview(navBar)
         configureTitleLabel()
+        configureTitleIcon()
         fetchDimes()
+        
     }
 
     func configureTitleLabel(){
@@ -38,16 +47,30 @@ class DimeCollectionViewController: UIViewController, UICollectionViewDelegateFl
         
         self.viewControllerTitle.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         
-        self.viewControllerTitle.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.05).isActive = true
+        self.viewControllerTitle.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.07).isActive = true
         self.viewControllerTitle.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         
-        viewControllerTitle.backgroundColor = UIColor.lightGray
-        viewControllerTitle.textAlignment = NSTextAlignment.center
+        viewControllerTitle.backgroundColor = UIColor.darkGray
+        viewControllerTitle.textAlignment = NSTextAlignment.left
         viewControllerTitle.textColor = UIColor.white
         viewControllerTitle.font = UIFont.dimeFont(15)
-        viewControllerTitle.text = "Top Dimes"
+        viewControllerTitle.text = "        TOP DIMES"
         
     }
+    
+    func configureTitleIcon() {
+        self.view.addSubview(viewControllerIcon)
+        viewControllerIcon.setImage(#imageLiteral(resourceName: "icon-diamond-black"), for: .normal)
+        
+        
+        self.viewControllerIcon.translatesAutoresizingMaskIntoConstraints = false
+        self.viewControllerIcon.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 5).isActive = true
+        self.viewControllerIcon.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
+        self.viewControllerIcon.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.03).isActive = true
+        self.viewControllerIcon.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
+    }
+    
+    
     
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
@@ -75,7 +98,7 @@ class DimeCollectionViewController: UIViewController, UICollectionViewDelegateFl
      func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DimeCollectionViewCell
-    
+        
         cell.currentUser = store.currentUser
         cell.dime = passedDimes[indexPath.row]
     
@@ -91,7 +114,7 @@ class DimeCollectionViewController: UIViewController, UICollectionViewDelegateFl
         dimeCollectionView.dataSource = self
         dimeCollectionView.delegate = self
         self.dimeCollectionView.register(DimeCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        dimeCollectionView.backgroundColor = UIColor.black
+        dimeCollectionView.backgroundColor = UIColor.clear
         self.view.addSubview(dimeCollectionView)
         
         //dimeCollectionView.isPagingEnabled = true
@@ -112,14 +135,14 @@ class DimeCollectionViewController: UIViewController, UICollectionViewDelegateFl
     
 }
 
-extension DimeCollectionViewController : NavBarViewDelegate {
+extension TopDimesCollectionViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {
         print("Not sure what the right bar button will do yet.")
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
-        try! FIRAuth.auth()?.signOut()
+
         self.dismiss(animated: true, completion: nil)
         print("Not sure what the left bar button will do yet.")
     }
