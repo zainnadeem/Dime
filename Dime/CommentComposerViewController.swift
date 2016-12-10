@@ -44,12 +44,12 @@ class CommentComposerViewController: UIViewController {
     }
 
     
-    @IBAction func postDidTap(){
-        let comment = Comment(mediaUID: media.uid, from: currentUser, caption: captionTextView.text)
-        comment.save()
-        media.comments.append(comment)
-        self.navigationController?.popViewController(animated: true)
-    }
+//    @IBAction func postDidTap(){
+//        let comment = Comment(mediaUID: media.uid, from: currentUser, caption: captionTextView.text)
+//        comment.save()
+//        media.comments.append(comment)
+//        self.navigationController?.popViewController(animated: true)
+//    }
     
 }
 

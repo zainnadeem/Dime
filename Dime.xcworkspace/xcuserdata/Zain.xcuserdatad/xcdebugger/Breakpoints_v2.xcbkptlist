@@ -19,61 +19,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Dime.swift"
-            timestampString = "502748308.225242"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "save(caption:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Media.swift"
-            timestampString = "502747347.490058"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "85"
-            endingLineNumber = "85"
-            landmarkName = "save(ref:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Dime.swift"
-            timestampString = "502748308.225242"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "save(caption:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Dime.swift"
-            timestampString = "502748308.225242"
+            filePath = "Dime/ViewMediaCollectionViewCell.swift"
+            timestampString = "502915468.87989"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "72"
             endingLineNumber = "72"
-            landmarkName = "save(caption:completion:)"
+            landmarkName = "updateUI()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -83,13 +35,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Dime.swift"
-            timestampString = "502748308.225242"
+            filePath = "Comment.swift"
+            timestampString = "503012995.700135"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
-            landmarkName = "save(caption:completion:)"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "init(dictionary:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -99,13 +51,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Media.swift"
-            timestampString = "502747478.672959"
+            filePath = "Comment.swift"
+            timestampString = "503013571.377858"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
-            landmarkName = "save(ref:completion:)"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "init(dimeUID:mediaUID:from:caption:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -115,13 +67,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Media.swift"
-            timestampString = "502747482.22496"
+            filePath = "Comment.swift"
+            timestampString = "503013641.607517"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "save(ref:completion:)"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "init(dimeUID:mediaUID:from:caption:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

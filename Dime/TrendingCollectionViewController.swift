@@ -130,7 +130,13 @@ class TrendingCollectionViewController: UIViewController, UICollectionViewDelega
         return CGSize(width: collectionViewWidth, height: collectionViewHeight)
     }
     
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //show mediaCollection
+        let destinationVC = ViewMediaCollectionViewController()
+        destinationVC.passedDime = passedDimes[indexPath.row]
+        destinationVC.modalTransitionStyle = .crossDissolve
+        self.present(destinationVC, animated: true, completion: nil)
+    }
     
     
 }

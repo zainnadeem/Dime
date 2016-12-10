@@ -11,6 +11,7 @@ class PopularTableViewCell: UITableViewCell {
     lazy var fullName               : UILabel       = UILabel()
     lazy var tagsLabel              : UILabel       = UILabel()
     lazy var timeAgoLabel           : UILabel       = UILabel()
+    lazy var averageLikesLabel      : UILabel       = UILabel()
     
     lazy var rightLabelStackview    : UIStackView   = UIStackView()
     
@@ -28,11 +29,12 @@ class PopularTableViewCell: UITableViewCell {
     
     lazy var iconsStack             : UIStackView   = UIStackView()
     lazy var textLabelsStack        : UIStackView   = UIStackView()
+
     
     lazy var activitySpinner        : UIActivityIndicatorView
         = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     
-    lazy var borderWidth            : CGFloat       = 25.0
+    lazy var borderWidth            : CGFloat       = 3.0
     lazy var profileImageHeightMultiplier : CGFloat =      (0.75)
     
     lazy var orangeSideBar          : UIView        = UIView(frame: CGRect(x: 0, y: 0, width: 7.5, height: self.contentView.bounds.height))
@@ -41,39 +43,21 @@ class PopularTableViewCell: UITableViewCell {
     var dime: Dime! {
         didSet{
             if currentUser != nil {
-                self.updateUI()
+                self.setViewProperties()
             }
         }
     }
     
     var cache = SAMCache.shared()
     
-    func updateUI() {
-        timeAgoLabel.text = dime.createdTime.description
-        
-        // profileImageView.image = #imageLiteral(resourceName: "icon-defaultAvatar")
-        
-        if let image = cache?.object(forKey: "\(self.dime.createdBy.uid)-profileImage") as? UIImage {
-            self.profileImage.image = image
-        }else{
-            
-            dime.createdBy.downloadProfilePicture { [weak self] (image, error) in
-                if let image = image {
-                    self?.profileImage.image = image
-                    self?.cache?.setObject(image, forKey: "\(self?.dime.createdBy.uid)- profileImage")
-                }else if error != nil {
-                    print(error?.localizedDescription)
-                }
-            }
-        }
-    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
+
     }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+      
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
     
@@ -103,18 +87,22 @@ class PopularTableViewCell: UITableViewCell {
     
     func setViewConstraints() {
         
+        
         self.profileImage.translatesAutoresizingMaskIntoConstraints = false
         
         self.mainLabelStackview.translatesAutoresizingMaskIntoConstraints = false
         self.fullName.translatesAutoresizingMaskIntoConstraints = false
         self.tagsLabel.translatesAutoresizingMaskIntoConstraints = false
         self.timeAgoLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.averageLikesLabel.translatesAutoresizingMaskIntoConstraints = false
         
         self.contentView.addSubview(self.profileImage)
         self.profileImage.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
         self.profileImage.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 12.5).isActive = true
         self.profileImage.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: profileImageHeightMultiplier).isActive = true
         self.profileImage.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.25*0.75).isActive = true
+
+        
         
         
         // Main center labels stack
@@ -133,11 +121,41 @@ class PopularTableViewCell: UITableViewCell {
         
         self.contentView.addSubview(self.orangeSideBar)
         self.orangeSideBar.backgroundColor = UIColor.clear
+        
+        
+        
+        self.contentView.addSubview(self.averageLikesLabel)
+        self.averageLikesLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+        self.averageLikesLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 2).isActive = true
+        self.averageLikesLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.2).isActive = true
+        self.averageLikesLabel.heightAnchor.constraint(equalTo: self.fullName.heightAnchor).isActive = true
+        self.averageLikesLabel.text = "55"
+        
+        
     }
     
-    func setViewProperties(withDime dime: Dime) {
+    
+    
+    func setViewProperties() {
         
-        self.profileImage.image = nil
+        //timeAgoLabel.text = dime.createdTime.description
+        
+        if let image = cache?.object(forKey: "\(self.dime.createdBy.uid)-profileImage") as? UIImage {
+            self.profileImage.image = image
+        }else{
+            
+            dime.createdBy.downloadProfilePicture { [weak self] (image, error) in
+                if let image = image {
+                    self?.profileImage.image = image
+                    self?.cache?.setObject(image, forKey: "\(self?.dime.createdBy.uid)-profileImage")
+                }else if error != nil {
+                    print(error?.localizedDescription)
+                }
+            }
+        }
+        
+
+        //self.profileImage.image = nil
         self.profileImage.contentMode = .scaleAspectFill
         self.profileImage.layer.cornerRadius = self.profileImage.frame.width / 2
         self.profileImage.layer.borderWidth = borderWidth

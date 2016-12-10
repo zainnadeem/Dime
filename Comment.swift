@@ -13,19 +13,21 @@ import UIKit
 
 class Comment{
     var mediaUID: String
+    var dimeUID: String
     var uid: String
-    var createdTime: Double
+    var createdTime: String
     var from: User
     var caption: String
     var ref: FIRDatabaseReference
     
-    init(mediaUID: String, from: User, caption: String) {
+    init(dimeUID: String, mediaUID: String, from: User, caption: String) {
         self.mediaUID = mediaUID
+        self.dimeUID = dimeUID
         self.from = from
         self.caption = caption
         
-        self.createdTime = Date().timeIntervalSince1970
-        ref = DatabaseReference.media.reference().child("\(mediaUID)/comments").childByAutoId()
+        self.createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
+        ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(mediaUID)/comments").childByAutoId()
         uid = ref.key
         
     }
@@ -33,14 +35,16 @@ class Comment{
     init(dictionary: [String : Any]) {
         
         uid = dictionary["uid"] as! String
-        createdTime = dictionary["createdTime"] as! Double
+        createdTime = dictionary["createdTime"] as! String
         caption = dictionary["caption"] as! String
         
         let fromDictionary = dictionary["from"] as! [String : Any]
         from = User(dictionary: fromDictionary)
         
         mediaUID = dictionary["mediaUID"] as! String
-        ref = DatabaseReference.media.reference().child("\(mediaUID)/comments/\(uid)")
+        dimeUID = dictionary["dimeUID"] as! String
+        
+        ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(mediaUID)/comments/\(uid)")
     }
     
     func save(){
@@ -51,6 +55,7 @@ class Comment{
     {
         return [
             "mediaUID" : mediaUID,
+            "dimeUID"  : dimeUID,
             "uid" : uid,
             "createdTime" : createdTime,
             "from" : from.toDictionary(),

@@ -81,6 +81,7 @@ class MediaDetailTableViewController: UITableViewController {
             
             return cell
         } else {
+           
             let cell = tableView.dequeueReusableCell(withIdentifier: Storyboard.commentCell, for: indexPath) as! CommentTableViewCell
             
             cell.comment = comments[indexPath.row - 1]

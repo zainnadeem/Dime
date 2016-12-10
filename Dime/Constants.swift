@@ -64,3 +64,60 @@ extension UIColor {
         return 0
     }
 }
+
+class Constants {
+    
+    class func twoHoursAgo() -> Date {
+        return Constants.dateFormatter().date(from: Constants.twoHoursAgo())!
+    }
+    
+    class func twoHoursAgo() -> String {
+        return Constants.dateFormatter().string(from: Date(timeInterval: -7200, since: Date(timeIntervalSinceNow: 0)))
+    }
+    
+    class func oneDayAgo() -> String {
+        return Constants.dateFormatter().string(from: Date(timeInterval: -86400, since: Date(timeIntervalSinceNow: 0)))
+    }
+    
+    class func displayAlert(_ title: String, message: String) -> UIAlertController {
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+        return alert
+        
+    }
+    
+    class func dateFormatter() -> DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "M/d/yy, HH:mm:ss"
+        return dateFormatter
+    }
+    
+    class func timeRemainingForDeal(_ date: Date) -> String {
+        
+        let twoHoursFromDate = date.addingTimeInterval(7200)
+        let now = Date(timeIntervalSinceNow: 0)
+        let secondsRemaining = twoHoursFromDate.timeIntervalSince(now)
+        let minutesRemaining = secondsRemaining / 60
+        
+        if minutesRemaining == 120 {
+            let minuteString = Int(minutesRemaining)
+            return "Expires in \(minuteString) hrs"
+        }
+        else if minutesRemaining > 59.9 && minutesRemaining < 61 {
+            let minuteString = Int(minutesRemaining)
+            return "Expires in 1 hr"
+        }
+        else if minutesRemaining >= 61 && minutesRemaining < 120 {
+            let minuteString = Int(minutesRemaining - 60)
+            return "Expires in 1 hr \(minuteString) min"
+        } else if minutesRemaining < 60 && minutesRemaining > 0 {
+            let minuteString = Int(minutesRemaining)
+            return "Expires in \(minuteString) min"
+        } else {
+            return "Expired"
+        }
+    }
+    
+
+}

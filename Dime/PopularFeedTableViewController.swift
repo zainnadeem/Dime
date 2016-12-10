@@ -34,9 +34,9 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
        
         self.navBar.delegate = self
         self.view.addSubview(navBar)
-        setUpTableView()
         configureTitleLabel()
         configureTitleIcon()
+        setUpTableView()
         fetchDimes()
 
     }
@@ -57,10 +57,12 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.tableView.topAnchor.constraint(equalTo: self.navBar.bottomAnchor, constant: 5.0).isActive = true
+        self.tableView.topAnchor.constraint(equalTo: self.viewControllerTitle.bottomAnchor, constant: 5.0).isActive = true
         self.tableView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         self.tableView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        self.tableView.backgroundColor = UIColor.clear
+        self.tableView.separatorColor = UIColor.black
     }
     
     
@@ -117,10 +119,19 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! PopularTableViewCell
         
         cell.setViewConstraints()
-        cell.setViewProperties(withDime: passedDimes[indexPath.row])
+        cell.currentUser = store.currentUser
+        cell.dime = passedDimes[indexPath.row]
+        cell.backgroundColor = UIColor.clear
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return  self.view.bounds.width / 4
+    }
 
+    
+    
+    
  
 }
 

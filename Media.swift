@@ -13,10 +13,11 @@ import Firebase
 class Media {
     
     var uid: String
+    var dimeUID: String
     let type: String //"image" or "video"
     var caption: String
     var location: String
-    var createdTime: Double
+    var createdTime: String
     var createdBy: User
     var likes: [User]
     var usersTagged: [User]
@@ -38,15 +39,16 @@ class Media {
 //        
 //    }
     
-    init(type: String, caption: String, createdBy: User, image: UIImage, location: String)
+    init(dimeUID: String, type: String, caption: String, createdBy: User, image: UIImage, location: String)
     {
         self.type = type
         self.caption = caption
         self.createdBy = createdBy
         self.mediaImage = image
         self.location = location
+        self.dimeUID = dimeUID
         
-        createdTime = Date().timeIntervalSince1970 // number of seconds from 1970 to now
+        createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
         comments = []
         likes = []
         usersTagged = []
@@ -57,9 +59,10 @@ class Media {
     init (dictionary: [String: Any]){
         
         uid = dictionary["uid"] as! String
+        dimeUID = dictionary["dimeUID"] as! String
         type = dictionary["type"] as! String
         caption = dictionary["caption"] as! String
-        createdTime = dictionary["createdTime"] as! Double
+        createdTime = dictionary["createdTime"] as! String
         location = dictionary["location"] as! String
         
         let createdByDict = dictionary["createdBy"] as! [String : Any]
@@ -75,12 +78,29 @@ class Media {
         }
         
         comments = []
+        if let commentsDict = dictionary["comments"] as? [String : Any] {
+            for (_, commentDict) in commentsDict {
+                if let commentDict = commentDict as? [String: Any] {
+                    comments.append(Comment(dictionary: commentDict))
+                }
+            }
+        }
+        
+        
         usersTagged = []
+        if let usersDict = dictionary["users tagged"] as? [String : Any] {
+            for (_, userDict) in usersDict {
+                if let userDict = userDict as? [String: Any] {
+                    usersTagged.append(User(dictionary: userDict))
+                }
+            }
+        }
     }
     
     func save(ref: FIRDatabaseReference, completion: @escaping (Error?) -> Void) {
-//        let ref = DatabaseReference.media.reference().child(uid)
-//        ref.setValue(toDictionary())
+        let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)")
+        //ref.setValue(toDictionary())
+        
         //save likes
         for like in likes {
             ref.child("likes/\(like.uid)").setValue(like.toDictionary())
@@ -105,6 +125,7 @@ class Media {
     func toDictionary() -> [String: Any] {
         return [
             "uid" : uid,
+            "dimeUID" : dimeUID,
             "type" : type,
             "caption" : caption,
             "createdTime" : createdTime,

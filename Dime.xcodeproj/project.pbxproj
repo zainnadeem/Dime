@@ -17,6 +17,8 @@
 		BF2A9B4C1DEB6C7C001A7704 /* PopularTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2A9B4B1DEB6C7C001A7704 /* PopularTableViewController.swift */; };
 		BF2A9B4E1DEB74D0001A7704 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2A9B4D1DEB74D0001A7704 /* TabBarViewController.swift */; };
 		BF2F2CA81DEDFDFC00014BB0 /* CreateDimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2F2CA71DEDFDFC00014BB0 /* CreateDimeViewController.swift */; };
+		BF35B8C71DFB3663006D87D1 /* CommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF35B8C61DFB3663006D87D1 /* CommentTableViewCell.swift */; };
+		BF35B8C91DFB39CB006D87D1 /* CommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF35B8C81DFB39CB006D87D1 /* CommentsViewController.swift */; };
 		BF50907D1DD020B6000AF7B6 /* MediaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF50907C1DD020B6000AF7B6 /* MediaTableViewController.swift */; };
 		BF5090811DD02A2E000AF7B6 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5090801DD02A2E000AF7B6 /* UserTableViewCell.swift */; };
 		BF5090831DD02A42000AF7B6 /* MediaTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5090821DD02A42000AF7B6 /* MediaTableViewCell.swift */; };
@@ -43,7 +45,6 @@
 		BF6FCDFC1DDE42CB00AC5A71 /* MediaDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDF91DDE42CB00AC5A71 /* MediaDetailTableViewController.swift */; };
 		BF6FCDFD1DDE42CB00AC5A71 /* CommentComposerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDFA1DDE42CB00AC5A71 /* CommentComposerViewController.swift */; };
 		BF6FCE001DDE433600AC5A71 /* MediaHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDFF1DDE433600AC5A71 /* MediaHeaderCell.swift */; };
-		BF6FCE021DDE433E00AC5A71 /* CommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCE011DDE433E00AC5A71 /* CommentTableViewCell.swift */; };
 		BF6FCE051DDE451900AC5A71 /* DummyPostComposerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCE041DDE451900AC5A71 /* DummyPostComposerViewController.swift */; };
 		BF6FCE071DDE452100AC5A71 /* PostComposerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCE061DDE452100AC5A71 /* PostComposerViewController.swift */; };
 		BF9342A31DCE744E006BE70C /* DimeDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342A21DCE744E006BE70C /* DimeDisplayViewController.swift */; };
@@ -54,6 +55,8 @@
 		BF9342BD1DCFCC9A006BE70C /* MediaCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342B81DCFCC9A006BE70C /* MediaCollectionViewController.swift */; };
 		BF9342BE1DCFCC9A006BE70C /* SectionHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342B91DCFCC9A006BE70C /* SectionHeaderCollectionReusableView.swift */; };
 		BF9342BF1DCFCC9A006BE70C /* MediaCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */; };
+		BFA3F60F1DF9DC3700EE0A0A /* ViewMediaCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA3F60E1DF9DC3700EE0A0A /* ViewMediaCollectionViewCell.swift */; };
+		BFA3F6111DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA3F6101DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift */; };
 		BFAA92D11DEF38800063F660 /* EditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAA92D01DEF38800063F660 /* EditingViewController.swift */; };
 		BFAA92D51DF0BFDA0063F660 /* SearchUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAA92D41DF0BFDA0063F660 /* SearchUserViewController.swift */; };
 		BFAA92D71DF1EEA60063F660 /* SearchUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */; };
@@ -78,6 +81,8 @@
 		BF2A9B4B1DEB6C7C001A7704 /* PopularTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopularTableViewController.swift; sourceTree = "<group>"; };
 		BF2A9B4D1DEB74D0001A7704 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		BF2F2CA71DEDFDFC00014BB0 /* CreateDimeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateDimeViewController.swift; sourceTree = "<group>"; };
+		BF35B8C61DFB3663006D87D1 /* CommentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
+		BF35B8C81DFB39CB006D87D1 /* CommentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsViewController.swift; sourceTree = "<group>"; };
 		BF50907C1DD020B6000AF7B6 /* MediaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaTableViewController.swift; sourceTree = "<group>"; };
 		BF5090801DD02A2E000AF7B6 /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		BF5090821DD02A42000AF7B6 /* MediaTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaTableViewCell.swift; sourceTree = "<group>"; };
@@ -104,7 +109,6 @@
 		BF6FCDF91DDE42CB00AC5A71 /* MediaDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDetailTableViewController.swift; sourceTree = "<group>"; };
 		BF6FCDFA1DDE42CB00AC5A71 /* CommentComposerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentComposerViewController.swift; sourceTree = "<group>"; };
 		BF6FCDFF1DDE433600AC5A71 /* MediaHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaHeaderCell.swift; sourceTree = "<group>"; };
-		BF6FCE011DDE433E00AC5A71 /* CommentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
 		BF6FCE041DDE451900AC5A71 /* DummyPostComposerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DummyPostComposerViewController.swift; sourceTree = "<group>"; };
 		BF6FCE061DDE452100AC5A71 /* PostComposerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostComposerViewController.swift; sourceTree = "<group>"; };
 		BF9342A21DCE744E006BE70C /* DimeDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeDisplayViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +119,8 @@
 		BF9342B81DCFCC9A006BE70C /* MediaCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaCollectionViewController.swift; sourceTree = "<group>"; };
 		BF9342B91DCFCC9A006BE70C /* SectionHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
 		BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaCollectionViewCell.swift; sourceTree = "<group>"; };
+		BFA3F60E1DF9DC3700EE0A0A /* ViewMediaCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMediaCollectionViewCell.swift; sourceTree = "<group>"; };
+		BFA3F6101DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMediaCollectionViewController.swift; sourceTree = "<group>"; };
 		BFAA92D01DEF38800063F660 /* EditingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditingViewController.swift; sourceTree = "<group>"; };
 		BFAA92D41DF0BFDA0063F660 /* SearchUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserViewController.swift; sourceTree = "<group>"; };
 		BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserTableViewCell.swift; sourceTree = "<group>"; };
@@ -169,7 +175,6 @@
 				BF2A9B3F1DE35FCB001A7704 /* DimesCollectionViewController.swift */,
 				BF5090801DD02A2E000AF7B6 /* UserTableViewCell.swift */,
 				BF9342A41DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift */,
-				BF6FCE011DDE433E00AC5A71 /* CommentTableViewCell.swift */,
 			);
 			name = "Not In Use";
 			sourceTree = "<group>";
@@ -182,6 +187,7 @@
 				BFAA92D01DEF38800063F660 /* EditingViewController.swift */,
 				BFAA92D81DF203650063F660 /* TaggingViewController.swift */,
 				BFAA92D41DF0BFDA0063F660 /* SearchUserViewController.swift */,
+				BF35B8C81DFB39CB006D87D1 /* CommentsViewController.swift */,
 			);
 			name = "Dime Creation Controllers";
 			sourceTree = "<group>";
@@ -234,12 +240,15 @@
 				BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */,
 				BF5090821DD02A42000AF7B6 /* MediaTableViewCell.swift */,
 				BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */,
+				BFA3F6101DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift */,
+				BFA3F60E1DF9DC3700EE0A0A /* ViewMediaCollectionViewCell.swift */,
+				BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */,
 				BF5564F11DF88D0C0086290D /* TrendingCollectionViewController.swift */,
 				BF5564F31DF8A2100086290D /* FriendsCollectionViewController.swift */,
 				BF5564EF1DF7335F0086290D /* TopDimesCollectionViewController.swift */,
+				BF35B8C61DFB3663006D87D1 /* CommentTableViewCell.swift */,
 				BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */,
 				BF5564F51DF8AA0C0086290D /* PopularTableViewCell.swift */,
-				BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */,
 				BF5564ED1DF72EC40086290D /* Constants.swift */,
 			);
 			name = Cells;
@@ -458,13 +467,15 @@
 				BF5A00841DDA39CF00F825DD /* FIRImage.swift in Sources */,
 				BFAA92D91DF203650063F660 /* TaggingViewController.swift in Sources */,
 				BF9342AE1DCE913A006BE70C /* DataStore.swift in Sources */,
+				BFA3F6111DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift in Sources */,
 				BF2A9B4E1DEB74D0001A7704 /* TabBarViewController.swift in Sources */,
+				BFA3F60F1DF9DC3700EE0A0A /* ViewMediaCollectionViewCell.swift in Sources */,
 				BF5564F01DF7335F0086290D /* TopDimesCollectionViewController.swift in Sources */,
 				BF5564F41DF8A2100086290D /* FriendsCollectionViewController.swift in Sources */,
 				BF5564EC1DF37D880086290D /* NavBarView.swift in Sources */,
-				BF6FCE021DDE433E00AC5A71 /* CommentTableViewCell.swift in Sources */,
 				BF5A007D1DDA392100F825DD /* LoginTableViewController.swift in Sources */,
 				BFE387921DCCE902000FA9EA /* Dime.xcdatamodeld in Sources */,
+				BF35B8C71DFB3663006D87D1 /* CommentTableViewCell.swift in Sources */,
 				BF2A9B4A1DEB6C6F001A7704 /* TrendingTableViewController.swift in Sources */,
 				BF6FCDFB1DDE42CB00AC5A71 /* NewsFeedTableViewController.swift in Sources */,
 				BF5090811DD02A2E000AF7B6 /* UserTableViewCell.swift in Sources */,
@@ -487,6 +498,7 @@
 				BFAA92D11DEF38800063F660 /* EditingViewController.swift in Sources */,
 				BF2A9B441DE36B7B001A7704 /* DimeCollectionViewCell.swift in Sources */,
 				BF9342BE1DCFCC9A006BE70C /* SectionHeaderCollectionReusableView.swift in Sources */,
+				BF35B8C91DFB39CB006D87D1 /* CommentsViewController.swift in Sources */,
 				BFE3878A1DCCE902000FA9EA /* AppDelegate.swift in Sources */,
 				BF9342BD1DCFCC9A006BE70C /* MediaCollectionViewController.swift in Sources */,
 				BF2A9B401DE35FCB001A7704 /* DimesCollectionViewController.swift in Sources */,

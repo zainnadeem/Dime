@@ -13,7 +13,7 @@ class Dime {
     
     var uid: String
     var caption: String
-    var createdTime: Double
+    var createdTime: String
     //var coverMedia: Media
     var media: [Media]
     var createdBy: User
@@ -27,7 +27,7 @@ class Dime {
         self.caption = caption
         self.createdBy = createdBy
         self.media = media
-        createdTime = Date().timeIntervalSince1970 // number of seconds from 1970 to now
+        createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
         comments = []
         likes = []
         uid = DatabaseReference.dimes.reference().childByAutoId().key
@@ -38,7 +38,7 @@ class Dime {
         
         uid = dictionary["uid"] as! String
         caption = dictionary["caption"] as! String
-        createdTime = dictionary["createdTime"] as! Double
+        createdTime = dictionary["createdTime"] as! String
         
         let createdByDict = dictionary["createdBy"] as! [String : Any]
         createdBy = User(dictionary: createdByDict)
@@ -66,7 +66,7 @@ class Dime {
     }
     
     func save(caption: String, completion: @escaping (Error?) -> Void) {
-        let ref = DatabaseReference.dimes.reference().childByAutoId()
+        let ref = DatabaseReference.dimes.reference().child(uid)
         ref.setValue(toDictionary())
         
         for media in media{

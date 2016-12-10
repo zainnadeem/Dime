@@ -39,7 +39,7 @@ class CreateDimeViewController: UIViewController {
         imagePickerHelper = ImagePickerHelper(viewController: self, completion: { (image) in
             
             self.store.currentDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [])
-            let newMedia = Media(type: "", caption: "", createdBy: self.store.currentUser!, image: image!, location: "")
+            let newMedia = Media(dimeUID: (self.store.currentDime?.uid)!, type: "", caption: "", createdBy: self.store.currentUser!, image: image!, location: "")
             self.store.currentDime?.media.append(newMedia)
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)

@@ -19,6 +19,7 @@ target 'Dime' do
   pod 'GooglePlaces'
   pod 'GooglePlacePicker'
   pod 'GoogleMaps'
+  pod ‘NSDate+TimeAgo’
   
   #Messenger
   pod 'JSQMessagesViewController'

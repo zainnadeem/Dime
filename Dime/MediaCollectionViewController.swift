@@ -160,7 +160,7 @@ class MediaCollectionViewController: UICollectionViewController
         
         imagePickerHelper = ImagePickerHelper(viewController: self, completion: { (image) in
             
-            let newMedia = Media(type: "", caption: "", createdBy: self.store.currentUser!, image: image!, location: "")
+            let newMedia = Media(dimeUID: (self.dime?.uid)!, type: "", caption: "", createdBy: self.store.currentUser!, image: image!, location: "")
             
             if (self.dime?.media.count)! >= indexPath.row + 1 { self.dime?.media.remove(at: indexPath.row) }
             self.dime?.media.insert(newMedia, at: indexPath.row)

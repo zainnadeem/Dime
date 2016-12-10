@@ -34,6 +34,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>NSDate+TimeAgo.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-Dime.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -57,17 +62,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>22ECA24234CF2F371A218C9EFAB7E7DC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>23BA9083ED0D2392A167A8AFA04427FA</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>59CDDB315DD2B098E0CD9ED56B026F4B</key>
+		<key>2F7DD6139C41654E00B03174EDE88BB1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>67CAA52A8BAA8B8FEA33DDB98BFBDF45</key>
+		<key>59CDDB315DD2B098E0CD9ED56B026F4B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -82,17 +92,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7DC6CE15B3816C42254AEF5B76B853DF</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>962AFA3ABCDD4F7F3FABE41883E963C6</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>AFB03979D32044469989588246C4F26F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B5C6BC41CACA442F57FEF9C9E1ADEBB3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FD1DC386A73FE1C27E95F15998CC33C9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
