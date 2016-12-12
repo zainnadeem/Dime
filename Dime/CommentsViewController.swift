@@ -93,6 +93,8 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.tableView.backgroundColor = UIColor.black
         self.tableView.separatorColor = UIColor.white
         tableView.tableFooterView = UIView()
+        self.tableView.estimatedRowHeight = 80
+        self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.alpha = 0.85
     }
     

@@ -58,7 +58,7 @@ class SignUpTableViewController: UITableViewController {
                 if error != nil {
                     //Report error
                 } else if let firUser = firUser {
-                    let newUser = User(uid: firUser.uid, username: username, fullName: fullName, bio: "", website: "", follows: [], followedBy: [], profileImage: self.profileImage, dimes: [])
+                    let newUser = User(uid: firUser.uid, username: username, fullName: fullName, bio: "", website: "", friends: [], topFriends: [], profileImage: self.profileImage, dimes: [])
                     newUser.save(completion: { (error) in
                             FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (firUser, error) in
                                 if let error = error {

@@ -25,10 +25,9 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
-        
-
-        navBar.middleButton.title = passedDime.createdBy.fullName
-        navBar.leftButton.title = "<"
+       
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.navigationItem.title = passedDime.createdBy.fullName
         
         self.navBar.delegate = self
         self.view.addSubview(navBar)
@@ -107,7 +106,8 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
         mediaCollectionView.dataSource = self
         mediaCollectionView.delegate = self
         self.mediaCollectionView.register(ViewMediaCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        mediaCollectionView.backgroundColor = UIColor.clear
+        mediaCollectionView.backgroundColor = UIColor.black
+        mediaCollectionView.isPagingEnabled = true
         self.view.addSubview(mediaCollectionView)
         
         //dimeCollectionView.isPagingEnabled = true
@@ -136,12 +136,13 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
 extension ViewMediaCollectionViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {
+        
         print("Not sure what the right bar button will do yet.")
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
         
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
         print("Not sure what the left bar button will do yet.")
     }
     

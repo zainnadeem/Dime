@@ -78,6 +78,7 @@ extension CreateDimeViewController : NavBarViewDelegate {
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
         print("Not sure what the left bar button will do yet.")
     }
     

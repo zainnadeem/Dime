@@ -53,7 +53,7 @@ class MediaHeaderCell: UITableViewCell {
         followButton.layer.borderColor = followButton.tintColor.cgColor
         followButton.layer.masksToBounds = true
         
-        if currentUser.follows.contains(media.createdBy) || media.createdBy.uid == currentUser.uid {
+        if currentUser.friends.contains(media.createdBy) || media.createdBy.uid == currentUser.uid {
             followButton.isEnabled = true
         }else {
             followButton.isHidden = false
@@ -61,7 +61,7 @@ class MediaHeaderCell: UITableViewCell {
     }
    
     @IBAction func followButtonTapped(_ sender: Any) {
-       currentUser.follow(user: media.createdBy)
+       currentUser.friendUser(user: media.createdBy)
 
     }
 

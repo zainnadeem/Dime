@@ -30,6 +30,7 @@ class TrendingCollectionViewController: UIViewController, UICollectionViewDelega
         self.view.insertSubview(backgroundImage, at: 0)
         
         setUpCollectionView()
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.navBar.delegate = self
         self.view.addSubview(navBar)
         configureTitleLabel()
@@ -97,6 +98,7 @@ class TrendingCollectionViewController: UIViewController, UICollectionViewDelega
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DimeCollectionViewCell
         
+        cell.parentCollectionView = self
         cell.currentUser = store.currentUser
         cell.dime = passedDimes[indexPath.row]
         
@@ -132,10 +134,10 @@ class TrendingCollectionViewController: UIViewController, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //show mediaCollection
+        
         let destinationVC = ViewMediaCollectionViewController()
         destinationVC.passedDime = passedDimes[indexPath.row]
-        destinationVC.modalTransitionStyle = .crossDissolve
-        self.present(destinationVC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
     

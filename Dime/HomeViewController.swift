@@ -23,6 +23,8 @@ class HomeViewController: UIViewController {
         self.view.addSubview(navBar)
     }
 
+    @IBAction func topDimesTapped(_ sender: Any) {
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         

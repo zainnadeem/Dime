@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+var borderWidth            : CGFloat       = 3.0
+var profileImageHeightMultiplier : CGFloat =      (0.75)
 
 extension UIFont {
     class func dimeFont(_ size : CGFloat) -> UIFont {
@@ -119,5 +121,6 @@ class Constants {
         }
     }
     
+
 
 }

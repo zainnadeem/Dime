@@ -18,14 +18,14 @@ class User {
     var website: String
     var profileImage: UIImage?
     
-    var follows: [User]
-    var followedBy: [User]
+    var friends: [User]
+    var topFriends: [User]
     var dimes: [Media]
     
     
     // Mark: - Initialize   rs
     
-    init(uid: String, username: String, fullName: String, bio: String, website: String, follows: [User], followedBy: [User], profileImage: UIImage?, dimes: [Media])
+    init(uid: String, username: String, fullName: String, bio: String, website: String, friends: [User], topFriends: [User], profileImage: UIImage?, dimes: [Media])
         
     {
         self.uid = uid
@@ -33,8 +33,8 @@ class User {
         self.fullName = fullName
         self.bio = bio
         self.website = website
-        self.follows = follows
-        self.followedBy = followedBy
+        self.friends = friends
+        self.topFriends = friends
         self.profileImage = profileImage
         self.dimes = dimes
         
@@ -51,23 +51,23 @@ class User {
         
         
         //follows
-        self.follows = []
-        if let followsDict = dictionary["follows"] as? [String : Any]
+        self.friends = []
+        if let friendsDict = dictionary["friends"] as? [String : Any]
         {
-            for (_, userDict) in followsDict {
+            for (_, userDict) in friendsDict {
                 if let userDict = userDict as? [String : Any]{
-                    self.follows.append(User(dictionary: userDict))
+                    self.friends.append(User(dictionary: userDict))
                 }
             }
         }
         
         //followedBy
-        self.followedBy = []
-        if let followedByDict = dictionary["followedBy"] as? [String : Any]
+        self.topFriends = []
+        if let topFriendsDict = dictionary["topFriends"] as? [String : Any]
         {
-            for (_, userDict) in followedByDict {
+            for (_, userDict) in topFriendsDict {
                 if let userDict = userDict as? [String : Any]{
-                    self.followedBy.append(User(dictionary: userDict))
+                    self.topFriends.append(User(dictionary: userDict))
                 }
             }
         }
@@ -95,13 +95,13 @@ class User {
         ref.setValue(toDictionary())
         
         //2 - save follows
-        for user in follows {
-            ref.child("follows/\(user.uid)").setValue(user.toDictionary())
+        for user in friends {
+            ref.child("friends/\(user.uid)").setValue(user.toDictionary())
         }
         
         //3 save the followed by
-        for user in followedBy {
-            ref.child("followedBy/\(user.uid)").setValue(user.toDictionary())
+        for user in topFriends {
+            ref.child("topFriends/\(user.uid)").setValue(user.toDictionary())
         }
         //4 - save the profile image
         if let profileImage = self.profileImage {
@@ -139,11 +139,10 @@ extension User {
     }
     
     func shareDime(newDime: Dime){
-        DatabaseReference.users(uid: uid).reference().child("dimes").childByAutoId().setValue(newDime)
+        DatabaseReference.users(uid: uid).reference().child("dimes").childByAutoId().setValue(newDime.uid)
     }
     
     func addToDime(newMedia: Media, caption: String){
-       // self.currentDime.media.append(newMedia)
        
         DatabaseReference.users(uid: uid).reference().child("dimes").childByAutoId().setValue(newMedia.uid)
     }
@@ -155,9 +154,15 @@ extension User {
         })
     }
     
-    func follow(user: User) {
-        self.follows.append(user)
-        let ref = DatabaseReference.users(uid: uid).reference().child("follows/\(user.uid)")
+    func friendUser(user: User) {
+        self.friends.append(user)
+        let ref = DatabaseReference.users(uid: uid).reference().child("friends/\(user.uid)")
+        ref.setValue(user.toDictionary())
+    }
+    
+    func topFriendUser(user: User) {
+        self.topFriends.append(user)
+        let ref = DatabaseReference.users(uid: uid).reference().child("topFriends/\(user.uid)")
         ref.setValue(user.toDictionary())
     }
     

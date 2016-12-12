@@ -33,11 +33,21 @@ class MediaCollectionViewController: UICollectionViewController
     
     @IBAction func postButtonTapped(_ sender: Any) {
         store.currentDime = dime
-        store.currentDime?.save(caption: "Set Title of Dime", completion: { (error) in
+       
+        self.store.currentDime?.saveToUser(saveToUser: store.currentUser!, completion: { (error) in
             if error != nil {
                 print(error?.localizedDescription)
+                
             }
-       
+        })
+        
+        store.currentDime?.save(completion: { (error) in
+            
+            if error != nil {
+                print(error?.localizedDescription)
+                
+            }
+
         
         })
     
@@ -46,8 +56,7 @@ class MediaCollectionViewController: UICollectionViewController
     @IBAction func changeCoverPhoto(_ sender: Any) {
         
     }
-    
-    
+
     @IBAction func homeButtonTap(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }

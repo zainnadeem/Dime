@@ -30,6 +30,7 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         backgroundImage.image = #imageLiteral(resourceName: "background_GREY")
         self.view.insertSubview(backgroundImage, at: 0)
         
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         self.navBar.delegate = self
         self.view.addSubview(navBar)
@@ -74,12 +75,19 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
-        Dime.observeNewDime { (dime) in
-            if !self.passedDimes.contains(dime) {
-                self.passedDimes.insert(dime, at: 0)
-                self.dimeCollectionView.reloadData()
+        
+        if let friends = store.currentUser?.topFriends{
+            for friend in friends{
+                Dime.observeFriendsDimes(user: friend, { (dime) in
+                    if !self.passedDimes.contains(dime) {
+                        self.passedDimes.insert(dime, at: 0)
+                        self.dimeCollectionView.reloadData()
+                        
+                    }
+                })
             }
         }
+        
     }
 
 
@@ -98,7 +106,8 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
      func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DimeCollectionViewCell
-        
+       
+        cell.parentCollectionView = self
         cell.currentUser = store.currentUser
         cell.dime = passedDimes[indexPath.row]
     
@@ -130,7 +139,13 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         return CGSize(width: collectionViewWidth, height: collectionViewHeight)
     }
     
-
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //show mediaCollection
+        
+        let destinationVC = ViewMediaCollectionViewController()
+        destinationVC.passedDime = passedDimes[indexPath.row]
+        self.navigationController?.pushViewController(destinationVC, animated: true)
+    }
     
     
 }

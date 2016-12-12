@@ -14,7 +14,6 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     var blurEffectView: UIVisualEffectView!
     var backgroundLocationImage = UIImageView()
     var imageView : UIImageView!
-    var circleProfileView = UIImageView()
     
     //var captionLabel = UILabel()
     var locationLabel = UILabel()
@@ -47,8 +46,6 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
         configureBackgroundImage()
         configureImageView()
-        configureProfilePic()
-        configureUsernameButton()
         configureDimeNameLabel()
         configureLikeButton()
         configureLikeLabel()
@@ -74,22 +71,6 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             })
         }
         
-        if let image = cache?.object(forKey: "\(media.createdBy.uid)-profileImage") as? UIImage {
-            self.circleProfileView.image = image
-        }else{
-            
-            media.createdBy.downloadProfilePicture { [weak self] (image, error) in
-                if let image = image {
-                    self?.circleProfileView.image = image
-                    self?.cache?.setObject(image, forKey: "\(self?.media.uid)- profileImage")
-                }else if error != nil {
-                    print(error?.localizedDescription)
-                }
-            }
-        }
-        
-        circleProfileView.layer.cornerRadius = circleProfileView.bounds.width / 2.0
-        circleProfileView.layer.masksToBounds = true
         
         captionLabel.text = "Night Out"
         captionLabel.textColor = UIColor.black
@@ -98,21 +79,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     }
     
     
-    func configureProfilePic() {
-        contentView.addSubview(circleProfileView)
-        circleProfileView.contentMode = UIViewContentMode.scaleAspectFill
-        circleProfileView.clipsToBounds = true
-        circleProfileView.layer.cornerRadius = circleProfileView.bounds.width / 2.0
-        circleProfileView.layer.masksToBounds = true
-        
-        self.circleProfileView.translatesAutoresizingMaskIntoConstraints = false
-        self.circleProfileView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 130).isActive = true
-        self.circleProfileView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 20).isActive = true
-        
-        self.circleProfileView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.04).isActive = true
-        
-        self.circleProfileView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.07).isActive = true
-    }
+
     
     func configureDimeNameLabel() {
         contentView.addSubview(captionLabel)
@@ -159,8 +126,6 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         self.imageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -10).isActive = true
         
-        self.imageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 20).isActive = true
-        
         self.imageView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.35).isActive = true
         
         self.imageView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor).isActive = true
@@ -168,20 +133,6 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     
     
-    func configureUsernameButton() {
-        contentView.addSubview(usernameButton)
-        
-        usernameButton.titleLabel?.font = UIFont.dimeFont(16)
-        usernameButton.setTitleColor(UIColor.black, for: .normal)
-        usernameButton.tintColor = UIColor.black
-        
-        self.usernameButton.translatesAutoresizingMaskIntoConstraints = false
-        self.usernameButton.leadingAnchor.constraint(equalTo: self.circleProfileView.trailingAnchor, constant: 10).isActive = true
-        self.usernameButton.centerYAnchor.constraint(equalTo: self.circleProfileView.centerYAnchor).isActive = true
-        
-        self.usernameButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.1)
-        self.usernameButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.3)
-    }
     
     func configureLikeButton(){
         contentView.addSubview(likeButton)

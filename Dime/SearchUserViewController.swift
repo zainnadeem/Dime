@@ -28,8 +28,8 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
         view.backgroundColor = UIColor.clear
         view.isOpaque = false
         searchBar.becomeFirstResponder()
-        if let usersFollowed = userForView?.follows {
-            UsersToSearch = usersFollowed
+        if let friends = userForView?.friends {
+            UsersToSearch = friends
     }
 
     

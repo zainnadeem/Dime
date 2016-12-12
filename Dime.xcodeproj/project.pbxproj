@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		17C0EA221BDC559CBCFF8F24 /* Pods_Dime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 423E19BC95A6B01B838A4DD9 /* Pods_Dime.framework */; };
+		BF1BBC161DFDED230031A5FE /* ProfileCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1BBC151DFDED230031A5FE /* ProfileCollectionViewController.swift */; };
 		BF2A9B401DE35FCB001A7704 /* DimesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2A9B3F1DE35FCB001A7704 /* DimesCollectionViewController.swift */; };
 		BF2A9B421DE3652A001A7704 /* Dime.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2A9B411DE3652A001A7704 /* Dime.swift */; };
 		BF2A9B441DE36B7B001A7704 /* DimeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */; };
@@ -47,6 +48,7 @@
 		BF6FCE001DDE433600AC5A71 /* MediaHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDFF1DDE433600AC5A71 /* MediaHeaderCell.swift */; };
 		BF6FCE051DDE451900AC5A71 /* DummyPostComposerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCE041DDE451900AC5A71 /* DummyPostComposerViewController.swift */; };
 		BF6FCE071DDE452100AC5A71 /* PostComposerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCE061DDE452100AC5A71 /* PostComposerViewController.swift */; };
+		BF90FA051DFF291F004E14A0 /* ProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF90FA041DFF291F004E14A0 /* ProfileCollectionViewCell.swift */; };
 		BF9342A31DCE744E006BE70C /* DimeDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342A21DCE744E006BE70C /* DimeDisplayViewController.swift */; };
 		BF9342A51DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342A41DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift */; };
 		BF9342AA1DCE8A4B006BE70C /* DimeAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342A81DCE8A4B006BE70C /* DimeAlbum.swift */; };
@@ -72,6 +74,7 @@
 		35FC2D94581D3F3D58B00A26 /* Pods-Dime.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dime.release.xcconfig"; path = "Pods/Target Support Files/Pods-Dime/Pods-Dime.release.xcconfig"; sourceTree = "<group>"; };
 		423E19BC95A6B01B838A4DD9 /* Pods_Dime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		67DA19E38EAB55B578D203F9 /* Pods-Dime.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dime.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Dime/Pods-Dime.debug.xcconfig"; sourceTree = "<group>"; };
+		BF1BBC151DFDED230031A5FE /* ProfileCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileCollectionViewController.swift; sourceTree = "<group>"; };
 		BF2A9B3F1DE35FCB001A7704 /* DimesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimesCollectionViewController.swift; sourceTree = "<group>"; };
 		BF2A9B411DE3652A001A7704 /* Dime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dime.swift; sourceTree = "<group>"; };
 		BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -111,6 +114,7 @@
 		BF6FCDFF1DDE433600AC5A71 /* MediaHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaHeaderCell.swift; sourceTree = "<group>"; };
 		BF6FCE041DDE451900AC5A71 /* DummyPostComposerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DummyPostComposerViewController.swift; sourceTree = "<group>"; };
 		BF6FCE061DDE452100AC5A71 /* PostComposerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostComposerViewController.swift; sourceTree = "<group>"; };
+		BF90FA041DFF291F004E14A0 /* ProfileCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileCollectionViewCell.swift; sourceTree = "<group>"; };
 		BF9342A21DCE744E006BE70C /* DimeDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeDisplayViewController.swift; sourceTree = "<group>"; };
 		BF9342A41DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeImageDisplayCollectionViewCell.swift; sourceTree = "<group>"; };
 		BF9342A81DCE8A4B006BE70C /* DimeAlbum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeAlbum.swift; sourceTree = SOURCE_ROOT; };
@@ -166,7 +170,14 @@
 		BF2F2CA91DEE004400014BB0 /* Not In Use */ = {
 			isa = PBXGroup;
 			children = (
-				BF2A9B4B1DEB6C7C001A7704 /* PopularTableViewController.swift */,
+				BF35B8C61DFB3663006D87D1 /* CommentTableViewCell.swift */,
+				BF6FCDFF1DDE433600AC5A71 /* MediaHeaderCell.swift */,
+				BF5090821DD02A42000AF7B6 /* MediaTableViewCell.swift */,
+				BF6FCDF91DDE42CB00AC5A71 /* MediaDetailTableViewController.swift */,
+				BF6FCDFA1DDE42CB00AC5A71 /* CommentComposerViewController.swift */,
+				BF6FCDF81DDE42CB00AC5A71 /* NewsFeedTableViewController.swift */,
+				BF2A9B491DEB6C6F001A7704 /* TrendingTableViewController.swift */,
+				BF2A9B471DEB6C5E001A7704 /* FriendsTableViewController.swift */,
 				BF9342A81DCE8A4B006BE70C /* DimeAlbum.swift */,
 				BF5090881DD10A28000AF7B6 /* User(dime).swift */,
 				BF9342AB1DCE8A92006BE70C /* DimeMedia.swift */,
@@ -174,6 +185,7 @@
 				BF50907C1DD020B6000AF7B6 /* MediaTableViewController.swift */,
 				BF2A9B3F1DE35FCB001A7704 /* DimesCollectionViewController.swift */,
 				BF5090801DD02A2E000AF7B6 /* UserTableViewCell.swift */,
+				BF2A9B4B1DEB6C7C001A7704 /* PopularTableViewController.swift */,
 				BF9342A41DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift */,
 			);
 			name = "Not In Use";
@@ -224,11 +236,12 @@
 			isa = PBXGroup;
 			children = (
 				BF2A9B4D1DEB74D0001A7704 /* TabBarViewController.swift */,
-				BF6FCDF91DDE42CB00AC5A71 /* MediaDetailTableViewController.swift */,
-				BF6FCDFA1DDE42CB00AC5A71 /* CommentComposerViewController.swift */,
-				BF6FCDF81DDE42CB00AC5A71 /* NewsFeedTableViewController.swift */,
-				BF2A9B491DEB6C6F001A7704 /* TrendingTableViewController.swift */,
-				BF2A9B471DEB6C5E001A7704 /* FriendsTableViewController.swift */,
+				BF5564EF1DF7335F0086290D /* TopDimesCollectionViewController.swift */,
+				BFA3F6101DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift */,
+				BF5564F11DF88D0C0086290D /* TrendingCollectionViewController.swift */,
+				BF5564F31DF8A2100086290D /* FriendsCollectionViewController.swift */,
+				BF1BBC151DFDED230031A5FE /* ProfileCollectionViewController.swift */,
+				BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -236,20 +249,12 @@
 		BF6FCDFE1DDE42D900AC5A71 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				BF6FCDFF1DDE433600AC5A71 /* MediaHeaderCell.swift */,
-				BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */,
-				BF5090821DD02A42000AF7B6 /* MediaTableViewCell.swift */,
+				BF5564F51DF8AA0C0086290D /* PopularTableViewCell.swift */,
 				BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */,
-				BFA3F6101DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift */,
+				BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */,
 				BFA3F60E1DF9DC3700EE0A0A /* ViewMediaCollectionViewCell.swift */,
 				BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */,
-				BF5564F11DF88D0C0086290D /* TrendingCollectionViewController.swift */,
-				BF5564F31DF8A2100086290D /* FriendsCollectionViewController.swift */,
-				BF5564EF1DF7335F0086290D /* TopDimesCollectionViewController.swift */,
-				BF35B8C61DFB3663006D87D1 /* CommentTableViewCell.swift */,
-				BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */,
-				BF5564F51DF8AA0C0086290D /* PopularTableViewCell.swift */,
-				BF5564ED1DF72EC40086290D /* Constants.swift */,
+				BF90FA041DFF291F004E14A0 /* ProfileCollectionViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -314,11 +319,12 @@
 				BF2A9B451DE5012C001A7704 /* Main.storyboard */,
 				BF5A008D1DDA40E500F825DD /* HomeViewController.swift */,
 				BF5564EB1DF37D880086290D /* NavBarView.swift */,
+				BF5564ED1DF72EC40086290D /* Constants.swift */,
+				BF9342A91DCE8A4B006BE70C /* Models */,
 				BF5A008A1DDA3BCE00F825DD /* Newsfeed */,
 				BF5090851DD039BF000AF7B6 /* Dime Creation Controllers */,
 				BF5A00871DDA3B7E00F825DD /* Helper Classes */,
 				BF5A00771DDA390500F825DD /* User Authentification */,
-				BF9342A91DCE8A4B006BE70C /* Models */,
 				BF9342C21DCFCCA1006BE70C /* Newsreader */,
 				BF6FCE031DDE450C00AC5A71 /* Post Composer Tab */,
 				BFE387951DCCE902000FA9EA /* LaunchScreen.storyboard */,
@@ -464,6 +470,7 @@
 				BF5564F21DF88D0C0086290D /* TrendingCollectionViewController.swift in Sources */,
 				BF6FCE051DDE451900AC5A71 /* DummyPostComposerViewController.swift in Sources */,
 				BF2A9B421DE3652A001A7704 /* Dime.swift in Sources */,
+				BF90FA051DFF291F004E14A0 /* ProfileCollectionViewCell.swift in Sources */,
 				BF5A00841DDA39CF00F825DD /* FIRImage.swift in Sources */,
 				BFAA92D91DF203650063F660 /* TaggingViewController.swift in Sources */,
 				BF9342AE1DCE913A006BE70C /* DataStore.swift in Sources */,
@@ -474,6 +481,7 @@
 				BF5564F41DF8A2100086290D /* FriendsCollectionViewController.swift in Sources */,
 				BF5564EC1DF37D880086290D /* NavBarView.swift in Sources */,
 				BF5A007D1DDA392100F825DD /* LoginTableViewController.swift in Sources */,
+				BF1BBC161DFDED230031A5FE /* ProfileCollectionViewController.swift in Sources */,
 				BFE387921DCCE902000FA9EA /* Dime.xcdatamodeld in Sources */,
 				BF35B8C71DFB3663006D87D1 /* CommentTableViewCell.swift in Sources */,
 				BF2A9B4A1DEB6C6F001A7704 /* TrendingTableViewController.swift in Sources */,

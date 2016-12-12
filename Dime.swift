@@ -65,7 +65,7 @@ class Dime {
         comments = []
     }
     
-    func save(caption: String, completion: @escaping (Error?) -> Void) {
+    func save(completion: @escaping (Error?) -> Void) {
         let ref = DatabaseReference.dimes.reference().child(uid)
         ref.setValue(toDictionary())
         
@@ -87,9 +87,38 @@ class Dime {
         for comment in comments {
             ref.child("comments/\(comment.uid)").setValue(comment.toDictionary())
         }
-        
 
     }
+    
+    func saveToUser(saveToUser user : User, completion: @escaping (Error?) -> Void) {
+        let ref = DatabaseReference.users(uid: user.uid).reference().child("dimes/\(uid)")
+        ref.setValue(toDictionary())
+        
+        for media in media{
+            ref.child("media/\(media.uid)").setValue(media.toDictionary())
+            media.save(ref: ref, completion: { (error) in
+                if error != nil{
+                    print(error?.localizedDescription)
+                }
+            })
+        }
+        
+        //save likes
+        for like in likes {
+            ref.child("likes/\(like.uid)").setValue(like.toDictionary())
+        }
+        
+        //save comments
+        for comment in comments {
+            ref.child("comments/\(comment.uid)").setValue(comment.toDictionary())
+        }
+        
+    }
+    
+    
+    
+    
+    
     
     func toDictionary() -> [String: Any] {
         return [
@@ -119,7 +148,41 @@ extension Dime {
         })
     }
     
+    class func observeNewDimeForUser(user: User, _ completion: @escaping (Dime) -> Void) {
+        
+        DatabaseReference.users(uid: user.uid).reference().child("dimes").observe(.childAdded, with: { (snapshot) in
+            let dime = Dime(dictionary: snapshot.value as! [String : Any])
+            completion(dime)
+        })
+    }
     
+    class func observeFriendsDimes(user: User, _ completion: @escaping (Dime) -> Void) {
+        
+        DatabaseReference.users(uid: user.uid).reference().child("dimes").observe(.childAdded, with: { (snapshot) in
+            let dime = Dime(dictionary: snapshot.value as! [String : Any])
+            completion(dime)
+        })
+    }
+    
+    
+    
+//    class func getDimeValuesForUser(user: User, _ completion: @escaping (NSDictionary) -> Void) {
+//
+//        DatabaseReference.users(uid: user.uid).reference().observe(.childAdded, with: { (snapshot) in
+//            let values = snapshot.value as! [String : String]
+//            completion(values as NSDictionary)
+//        })
+//
+//    }
+//    
+//    class func getDimesForProfile(userUIDS: [NSDictionary],_ completion: @escaping (Dime) -> Void){
+//        
+//        DatabaseReference.dimes.reference().child(<#T##pathString: String##String#>).observe(.childAdded, with: { (snapshot) in
+//            let dime = Dime(dictionary: snapshot.value as! [String : Any])
+//            completion(dime)
+//        })
+//    }
+//    
     
     func observeNewComment(_ completion: @escaping (Comment) -> Void){
         //.childAdded: (1) download everything fo the first time

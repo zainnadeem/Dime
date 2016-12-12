@@ -27,6 +27,8 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         backgroundImage.image = #imageLiteral(resourceName: "background_YELLOW")
         self.view.insertSubview(backgroundImage, at: 0)
         
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
@@ -130,7 +132,12 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
     }
 
     
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let destinationVC = ProfileCollectionViewController()
+        destinationVC.user = passedDimes[indexPath.row].createdBy
+        self.navigationController?.pushViewController(destinationVC, animated: true)
+    }
     
  
 }

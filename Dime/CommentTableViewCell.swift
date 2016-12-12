@@ -79,6 +79,7 @@ class CommentTableViewCell: UITableViewCell {
         commentLabel.text = comment.caption
         commentLabel.textColor = UIColor.white
         commentLabel.font = UIFont.dimeFont(10)
+        commentLabel.numberOfLines = 10
         
         timeAgoLabel.text = parseDate(comment.createdTime)
         //parseDate(business.latestVideo["dateCreated"] as! String)
