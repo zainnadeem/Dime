@@ -175,7 +175,11 @@ class PopularTableViewCell: UITableViewCell {
         self.timeAgoLabel.font = UIFont.dimeFont(12)
         self.timeAgoLabel.textColor = UIColor.lightGray
         
-    
+        if dime.likes == [] {
+            self.averageLikesLabel.text = "0"
+        }else{
+            self.averageLikesLabel.text = dime.likes.count.description
+        }
     }
     
     func setImageViewCircular() {

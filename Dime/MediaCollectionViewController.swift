@@ -47,8 +47,6 @@ class MediaCollectionViewController: UICollectionViewController
                 print(error?.localizedDescription)
                 
             }
-
-        
         })
     
     }

@@ -16,6 +16,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     
     let store = DataStore.sharedInstance
+    var dime: Dime!
     var media: Media!
     var currentUser: User!
     var comments = [Comment]()
@@ -30,6 +31,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.media.comments = sortByMostRecentlyCreated(self.media.comments)
         view.backgroundColor = UIColor.clear
 
         
@@ -102,12 +104,12 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.view.addSubview(self.captionTextView)
         
         self.captionTextView.translatesAutoresizingMaskIntoConstraints = false
-        self.captionTextView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.08).isActive = true
+        self.captionTextView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.07).isActive = true
 
         self.captionTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
         
         self.captionTextView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -60).isActive = true
-        self.captionTextView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -10).isActive = true
+        self.captionTextView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -65).isActive = true
         
         self.captionTextView.layer.borderWidth = 1.0
         self.captionTextView.layer.borderColor = UIColor.white.cgColor
@@ -138,8 +140,17 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func postDidTap(){
         let comment = Comment(dimeUID: media.dimeUID, mediaUID: media.uid, from: store.currentUser!, caption:captionTextView.text!)
+        
+        //add to dime
         comment.save()
+        
         media.comments.append(comment)
+        
+        //add to user
+        let ref = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/comments/\(comment.uid)")
+        ref.setValue(comment.toDictionary())
+        
+        
         self.tableView.reloadData()
     }
 }

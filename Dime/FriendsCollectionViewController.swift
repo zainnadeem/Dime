@@ -72,6 +72,19 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
     
     
     
+//    func fetchDimes() {
+//        self.dimeCollectionView.reloadData()
+//        Dime.observeNewDime { (dime) in
+//            if !self.passedDimes.contains(dime) {
+//                self.passedDimes.insert(dime, at: 0)
+//                self.passedDimes = sortByMostRecentlyCreated(self.passedDimes)
+//                self.dimeCollectionView.reloadData()
+//            }
+//        }
+//    }
+//    
+    
+//    
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
         

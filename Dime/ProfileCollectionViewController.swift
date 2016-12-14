@@ -107,8 +107,6 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.viewControllerBanner.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.74).isActive = true
     }
     
- 
-    
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
         Dime.observeNewDimeForUser(user: user!, { (dime) in
@@ -164,8 +162,6 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.dimeCollectionView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         dimeCollectionView.backgroundColor = UIColor.clear
         self.view.addSubview(dimeCollectionView)
-        
-        //dimeCollectionView.isPagingEnabled = true
         
         
     }

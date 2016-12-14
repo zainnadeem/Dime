@@ -76,8 +76,8 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
         
-        if let friends = store.currentUser?.topFriends{
-            for friend in friends{
+        if let topFriends = store.currentUser?.topFriends{
+            for friend in topFriends{
                 Dime.observeFriendsDimes(user: friend, { (dime) in
                     if !self.passedDimes.contains(dime) {
                         self.passedDimes.insert(dime, at: 0)

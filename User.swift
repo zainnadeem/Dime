@@ -143,7 +143,6 @@ extension User {
     }
     
     func addToDime(newMedia: Media, caption: String){
-       
         DatabaseReference.users(uid: uid).reference().child("dimes").childByAutoId().setValue(newMedia.uid)
     }
     
@@ -165,20 +164,20 @@ extension User {
         let ref = DatabaseReference.users(uid: uid).reference().child("topFriends/\(user.uid)")
         ref.setValue(user.toDictionary())
     }
-    
-//    func fetchUsersFollowed(uid: String, completion: (_ result: [User]) -> Void) {
-//        var arrayOfFollowedUsers = [User]()
-//        DatabaseReference.users(uid: uid).reference().child("follows").observe(.childAdded, with: { (snapshot) in
-//            print(snapshot)
-//            
-//            if let dictionary = snapshot.value as? [String: AnyObject] {
-//                let user = User(dictionary: dictionary)
-//                arrayOfFollowedUsers.append(user)
-//                
-//            }
-//        })
-//       completion(arrayOfFollowedUsers)
-//    }
+
+   func UserFromSnapshot(_ snapshot : FIRDataSnapshot, uid : String) -> User? {
+        
+        if let userDictionary = snapshot.value as? [String : AnyObject] {
+            
+            return User(dictionary: userDictionary)
+        }
+        else {
+            print("Couldn't get Consumer info from Firebase snapshot.")
+            return nil
+        }
+    }
+
+
 
 
 }
@@ -188,3 +187,9 @@ extension User: Equatable { }
 func == (lhs: User, rhs: User) -> Bool {
     return lhs.uid == rhs.uid
 }
+
+
+    
+    
+    
+

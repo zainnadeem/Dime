@@ -24,20 +24,6 @@ class Media {
     var comments: [Comment]
     var mediaImage: UIImage!
     
-//    init(type: String, caption: String, createdBy: User, image: UIImage)
-//    {
-//        self.type = type
-//        self.caption = caption
-//        self.createdBy = createdBy
-//        self.mediaImage = image
-//        
-//        
-//        createdTime = Date().timeIntervalSince1970 // number of seconds from 1970 to now
-//        comments = []
-//        likes = []
-//        uid = DatabaseReference.media.reference().childByAutoId().key
-//        
-//    }
     
     init(dimeUID: String, type: String, caption: String, createdBy: User, image: UIImage, location: String)
     {
@@ -76,6 +62,7 @@ class Media {
                 }
             }
         }
+        
         
         comments = []
         if let commentsDict = dictionary["comments"] as? [String : Any] {
@@ -163,16 +150,14 @@ extension Media {
     
     func likedBy(user: User) {
         self.likes.append(user)
-        let ref = DatabaseReference.media.reference().child("\(uid)/likes/\(user.uid)")
-        
+        let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)/likes/\(user.uid)")
         ref.setValue(user.toDictionary())
     }
     
     func unlikedBy(user: User){
         if let index = likes.index(of: user){
             likes.remove(at: index)
-            let ref = DatabaseReference.media.reference().child("\(uid)/likes/\(user.uid)")
-            
+            let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)/likes/\(user.uid)")
             ref.setValue(nil)
         }
     }

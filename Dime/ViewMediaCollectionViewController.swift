@@ -91,6 +91,7 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ViewMediaCollectionViewCell
         
+        cell.dime = passedDime
         cell.currentUser = store.currentUser
         cell.media = passedDime.media[indexPath.row]
         
@@ -128,6 +129,7 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
         let destinationVC = CommentsViewController()
         destinationVC.modalPresentationStyle = .overCurrentContext
         destinationVC.media = passedDime.media[indexPath.row]
+        destinationVC.dime = passedDime
         self.present(destinationVC, animated: true, completion: nil)
     }
     

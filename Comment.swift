@@ -19,6 +19,7 @@ class Comment{
     var from: User
     var caption: String
     var ref: FIRDatabaseReference
+
     
     init(dimeUID: String, mediaUID: String, from: User, caption: String) {
         self.mediaUID = mediaUID
@@ -43,7 +44,6 @@ class Comment{
         
         mediaUID = dictionary["mediaUID"] as! String
         dimeUID = dictionary["dimeUID"] as! String
-        
         ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(mediaUID)/comments/\(uid)")
     }
     
@@ -69,3 +69,45 @@ extension Comment : Equatable{ }
 func == (lhs: Comment, rhs: Comment) -> Bool {
     return lhs.uid == rhs.uid
 }
+
+//func ==(lhs: Comment, rhs: Comment) -> Bool {
+//    
+//    return lhs.uid == rhs.uid && lhs.latestVideo["url"] as! String == rhs.latestVideo["url"] as! String
+//}
+
+ func sortByMostRecentlyCreated(_ arrayOfComments : [Comment]) -> [Comment] {
+    
+    var comments = arrayOfComments
+    comments.sort(by: { return $0 > $1 })
+    return comments
+}
+
+
+//func ==(lhs: Comment, rhs: Comment) -> Bool {
+//    return lhs.savedPathURL == rhs.savedPathURL
+//}
+
+func >(lhs: Comment, rhs: Comment) -> Bool {
+    
+    let lhsComment = Constants.dateFormatter().date(from: lhs.createdTime)
+    let rhsComment = Constants.dateFormatter().date(from: rhs.createdTime)
+    
+    return lhsComment?.compare(rhsComment!) == .orderedDescending ? true : false
+}
+
+func <(lhs: Comment, rhs: Comment) -> Bool {
+    
+    let lhsComment = Constants.dateFormatter().date(from: lhs.createdTime)
+    let rhsComment = Constants.dateFormatter().date(from: rhs.createdTime)
+    
+    return lhsComment?.compare(rhsComment!) == .orderedDescending ? false : true
+}
+
+
+
+
+//Sort
+
+
+
+

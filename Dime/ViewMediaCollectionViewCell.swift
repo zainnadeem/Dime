@@ -21,14 +21,17 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     var captionLabel = UILabel()
     var likesLabel = UILabel()
     var superLikeLabel = UILabel()
-    
     var dismiss = UIButton()
     var usernameButton = UIButton()
-    var likeButton = UIButton()
     var superLikeButton = UIButton()
     var background: UIImageView = UIImageView()
     
+    lazy var likeButton      : UIButton      = UIButton(type: .custom)
+    
+    lazy var isLikedByUser       : Bool          = Bool()
+    
     var currentUser: User!
+    var dime: Dime!
     var media: Media! {
         didSet{
             if currentUser != nil {
@@ -74,12 +77,17 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
         captionLabel.text = "Night Out"
         captionLabel.textColor = UIColor.black
-        
-        
+
+        if media.likes.contains(currentUser){
+            self.isLikedByUser = true
+            likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue"), for: .normal)
+        }else{
+            self.isLikedByUser = false
+            likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue2"), for: .normal)
+        }
+        reloadLabels()
     }
     
-    
-
     
     func configureDimeNameLabel() {
         contentView.addSubview(captionLabel)
@@ -136,26 +144,78 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func configureLikeButton(){
         contentView.addSubview(likeButton)
-        likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue"), for: .normal)
-        likeButton.setTitle("10", for: .normal)
-        likeButton.titleLabel?.font = UIFont.dimeFont(16)
+        likeButton.titleLabel?.font = UIFont.dimeFont(20)
         
-        
+        self.likeButton.addTarget(self, action: #selector(likeUnLikeButtonTapped), for: .touchUpInside)
         self.likeButton.translatesAutoresizingMaskIntoConstraints = false
         self.likeButton.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor, constant: 5).isActive = true
         self.likeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 5).isActive = true
         
         self.likeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
         self.likeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.05).isActive = true
+        
+    }
+    
+    func likeUnLikeButtonTapped() {
+        
+        if isLikedByUser{
+            media.unlikedBy(user: currentUser)
+            dime.unlikedBy(user: currentUser)
+            
+            //find place for updating user
+            let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/likes/\(currentUser.uid)")
+            mediaRef.setValue(nil)
+            
+            let dimeRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/likes/\(currentUser.uid)")
+            dimeRef.setValue(nil)
+            
+            
+            
+            likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue2"), for: .normal)
+            isLikedByUser = false
+        }else{
+            media.likedBy(user: currentUser)
+            dime.likedBy(user: currentUser)
+            
+             //find place for updating user
+            let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/likes/\(currentUser.uid)")
+            mediaRef.setValue(currentUser.toDictionary())
+            
+            let dimeRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/likes/\(currentUser.uid)")
+            dimeRef.setValue(currentUser.toDictionary())
+            
+            
+            
+            likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue"), for: .normal)
+            isLikedByUser = true
+        }
+        reloadLabels()
+    }
+    
+    
+    
+    func reloadLabels(){
+        if media.likes != [] {
+            likesLabel.text = media.likes.count.description
+        }else{
+            likesLabel.text = "0"
+        }
+        
+        if dime.superLikes != [] {
+            superLikeLabel.text = dime.superLikes.count.description
+        }else{
+            superLikeLabel.text = "0"
+        }
     }
     
     func configureLikeLabel(){
         contentView.addSubview(likesLabel)
         likesLabel.backgroundColor = UIColor.clear
         likesLabel.textAlignment = NSTextAlignment.center
-        likesLabel.textColor = UIColor.black
+        likesLabel.textColor = UIColor.white
         likesLabel.font = UIFont.dimeFont(9)
-        likesLabel.text = "10"
+        
+    
         
         self.likesLabel.translatesAutoresizingMaskIntoConstraints = false
         self.likesLabel.leadingAnchor.constraint(equalTo: self.likeButton.trailingAnchor, constant:2).isActive = true
@@ -168,13 +228,11 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         contentView.addSubview(superLikeButton)
         superLikeButton.setImage(#imageLiteral(resourceName: "icon-diamond-black"), for: .normal)
         superLikeButton.setTitle("10", for: .normal)
-        superLikeButton.titleLabel?.font = UIFont.dimeFont(16)
-        
-        
+        superLikeButton.titleLabel?.font = UIFont.dimeFont(20)
+       
         self.superLikeButton.translatesAutoresizingMaskIntoConstraints = false
         self.superLikeButton.leadingAnchor.constraint(equalTo: self.likesLabel.trailingAnchor, constant: 5).isActive = true
         self.superLikeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 5).isActive = true
-        
         self.superLikeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
         self.superLikeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.05).isActive = true
     }
@@ -183,10 +241,10 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         contentView.addSubview(superLikeLabel)
         superLikeLabel.backgroundColor = UIColor.clear
         superLikeLabel.textAlignment = NSTextAlignment.center
-        superLikeLabel.textColor = UIColor.black
+        superLikeLabel.textColor = UIColor.white
         superLikeLabel.font = UIFont.dimeFont(9)
-        superLikeLabel.text = "0"
         
+ 
         self.superLikeLabel.translatesAutoresizingMaskIntoConstraints = false
         self.superLikeLabel.leadingAnchor.constraint(equalTo: self.superLikeButton.trailingAnchor, constant:2).isActive = true
         self.superLikeLabel.centerYAnchor.constraint(equalTo: self.likeButton.centerYAnchor).isActive = true

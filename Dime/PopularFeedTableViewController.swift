@@ -45,12 +45,19 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
 
     func fetchDimes() {
         self.tableView.reloadData()
-        Dime.observeNewDime { (dime) in
-            if !self.passedDimes.contains(dime) {
-                self.passedDimes.insert(dime, at: 0)
-                self.tableView.reloadData()
+        if let friends = store.currentUser?.friends{
+            for friend in friends{
+                Dime.observeFriendsDimes(user: friend, { (dime) in
+                    if !self.passedDimes.contains(dime) {
+                        self.passedDimes.insert(dime, at: 0)
+                        self.passedDimes = sortByTrending(self.passedDimes)
+                        self.tableView.reloadData()
+                        
+                    }
+                })
             }
         }
+        
     }
     
     

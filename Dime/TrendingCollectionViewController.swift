@@ -76,6 +76,7 @@ class TrendingCollectionViewController: UIViewController, UICollectionViewDelega
         Dime.observeNewDime { (dime) in
             if !self.passedDimes.contains(dime) {
                 self.passedDimes.insert(dime, at: 0)
+                self.passedDimes = sortByTrending(self.passedDimes)
                 self.dimeCollectionView.reloadData()
             }
         }
