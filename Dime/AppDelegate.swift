@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import Firebase
 import GooglePlaces
+import IQKeyboardManagerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -37,6 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      
         
     }
+         IQKeyboardManager.sharedManager().enable = true
            return true
     }
 

@@ -10,7 +10,7 @@ import UIKit
 
 class DummyPostComposerViewController: UIViewController {
 
-    var imagePickerHelper: ImagePickerHelper!
+    var mediaPickerHelper: MediaPickerHelper!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,12 +32,12 @@ class DummyPostComposerViewController: UIViewController {
         
         
         
-            imagePickerHelper = ImagePickerHelper(viewController: self, completion: { (image) in
+            mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (image) in
             
             let postComposerNVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Storyboard.postComposerNVC) as! UINavigationController
             let postComposerVC = postComposerNVC.topViewController as! PostComposerViewController
             
-            postComposerVC.image = image
+            postComposerVC.image = image as! UIImage!
             self.present(postComposerNVC, animated: true, completion: nil)
             
             

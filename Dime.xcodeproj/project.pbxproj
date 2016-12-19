@@ -39,7 +39,7 @@
 		BF5A00831DDA39CF00F825DD /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A007F1DDA39CF00F825DD /* User.swift */; };
 		BF5A00841DDA39CF00F825DD /* FIRImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A00801DDA39CF00F825DD /* FIRImage.swift */; };
 		BF5A00851DDA39CF00F825DD /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A00811DDA39CF00F825DD /* Media.swift */; };
-		BF5A00891DDA3BA200F825DD /* imagePickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A00881DDA3BA200F825DD /* imagePickerHelper.swift */; };
+		BF5A00891DDA3BA200F825DD /* MediaPickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A00881DDA3BA200F825DD /* MediaPickerHelper.swift */; };
 		BF5A008E1DDA40E500F825DD /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A008D1DDA40E500F825DD /* HomeViewController.swift */; };
 		BF6FCDF51DDE427900AC5A71 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDF41DDE427900AC5A71 /* Comment.swift */; };
 		BF6FCDFB1DDE42CB00AC5A71 /* NewsFeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDF81DDE42CB00AC5A71 /* NewsFeedTableViewController.swift */; };
@@ -48,6 +48,8 @@
 		BF6FCE001DDE433600AC5A71 /* MediaHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDFF1DDE433600AC5A71 /* MediaHeaderCell.swift */; };
 		BF6FCE051DDE451900AC5A71 /* DummyPostComposerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCE041DDE451900AC5A71 /* DummyPostComposerViewController.swift */; };
 		BF6FCE071DDE452100AC5A71 /* PostComposerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCE061DDE452100AC5A71 /* PostComposerViewController.swift */; };
+		BF86AC451E0790BE00431E32 /* GeneralHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF86AC441E0790BE00431E32 /* GeneralHelper.swift */; };
+		BF86AC471E07954C00431E32 /* FIRVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF86AC461E07954C00431E32 /* FIRVideo.swift */; };
 		BF90FA051DFF291F004E14A0 /* ProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF90FA041DFF291F004E14A0 /* ProfileCollectionViewCell.swift */; };
 		BF9342A31DCE744E006BE70C /* DimeDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342A21DCE744E006BE70C /* DimeDisplayViewController.swift */; };
 		BF9342A51DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9342A41DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift */; };
@@ -105,7 +107,7 @@
 		BF5A007F1DDA39CF00F825DD /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		BF5A00801DDA39CF00F825DD /* FIRImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FIRImage.swift; sourceTree = "<group>"; };
 		BF5A00811DDA39CF00F825DD /* Media.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
-		BF5A00881DDA3BA200F825DD /* imagePickerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = imagePickerHelper.swift; sourceTree = "<group>"; };
+		BF5A00881DDA3BA200F825DD /* MediaPickerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPickerHelper.swift; sourceTree = "<group>"; };
 		BF5A008D1DDA40E500F825DD /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		BF6FCDF41DDE427900AC5A71 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		BF6FCDF81DDE42CB00AC5A71 /* NewsFeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsFeedTableViewController.swift; sourceTree = "<group>"; };
@@ -114,6 +116,8 @@
 		BF6FCDFF1DDE433600AC5A71 /* MediaHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaHeaderCell.swift; sourceTree = "<group>"; };
 		BF6FCE041DDE451900AC5A71 /* DummyPostComposerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DummyPostComposerViewController.swift; sourceTree = "<group>"; };
 		BF6FCE061DDE452100AC5A71 /* PostComposerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostComposerViewController.swift; sourceTree = "<group>"; };
+		BF86AC441E0790BE00431E32 /* GeneralHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralHelper.swift; sourceTree = "<group>"; };
+		BF86AC461E07954C00431E32 /* FIRVideo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FIRVideo.swift; sourceTree = "<group>"; };
 		BF90FA041DFF291F004E14A0 /* ProfileCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileCollectionViewCell.swift; sourceTree = "<group>"; };
 		BF9342A21DCE744E006BE70C /* DimeDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeDisplayViewController.swift; sourceTree = "<group>"; };
 		BF9342A41DCE74AF006BE70C /* DimeImageDisplayCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeImageDisplayCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -218,7 +222,8 @@
 		BF5A00871DDA3B7E00F825DD /* Helper Classes */ = {
 			isa = PBXGroup;
 			children = (
-				BF5A00881DDA3BA200F825DD /* imagePickerHelper.swift */,
+				BF5A00881DDA3BA200F825DD /* MediaPickerHelper.swift */,
+				BF86AC441E0790BE00431E32 /* GeneralHelper.swift */,
 			);
 			name = "Helper Classes";
 			sourceTree = "<group>";
@@ -275,6 +280,7 @@
 				BF5A007F1DDA39CF00F825DD /* User.swift */,
 				BF2A9B411DE3652A001A7704 /* Dime.swift */,
 				BF5A00801DDA39CF00F825DD /* FIRImage.swift */,
+				BF86AC461E07954C00431E32 /* FIRVideo.swift */,
 				BF5A00811DDA39CF00F825DD /* Media.swift */,
 				BF6FCDF41DDE427900AC5A71 /* Comment.swift */,
 				BF9342AD1DCE913A006BE70C /* DataStore.swift */,
@@ -465,9 +471,11 @@
 				BF5A00851DDA39CF00F825DD /* Media.swift in Sources */,
 				BF2A9B481DEB6C5E001A7704 /* FriendsTableViewController.swift in Sources */,
 				BF6FCE001DDE433600AC5A71 /* MediaHeaderCell.swift in Sources */,
-				BF5A00891DDA3BA200F825DD /* imagePickerHelper.swift in Sources */,
+				BF86AC471E07954C00431E32 /* FIRVideo.swift in Sources */,
+				BF5A00891DDA3BA200F825DD /* MediaPickerHelper.swift in Sources */,
 				BF50907D1DD020B6000AF7B6 /* MediaTableViewController.swift in Sources */,
 				BF5564F21DF88D0C0086290D /* TrendingCollectionViewController.swift in Sources */,
+				BF86AC451E0790BE00431E32 /* GeneralHelper.swift in Sources */,
 				BF6FCE051DDE451900AC5A71 /* DummyPostComposerViewController.swift in Sources */,
 				BF2A9B421DE3652A001A7704 /* Dime.swift in Sources */,
 				BF90FA051DFF291F004E14A0 /* ProfileCollectionViewCell.swift in Sources */,

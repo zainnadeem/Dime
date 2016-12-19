@@ -8,12 +8,15 @@
 
 import UIKit
 import Firebase
+import NVActivityIndicatorView
 
 class LoginTableViewController: UITableViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
     
     @IBOutlet weak var passwordTextField: UITextField!
+    
+      let activityData = ActivityData()
     
     
     override func viewDidLoad() {
@@ -45,17 +48,22 @@ class LoginTableViewController: UITableViewController {
         let email = emailTextField.text!
         let password = passwordTextField.text!
         
-        
         if emailTextField.text != ""
             && (passwordTextField.text?.characters.count)! > 6 {
             FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (firUser, error) in
+                NVActivityIndicatorPresenter.sharedInstance.startAnimating(self.activityData)
                 if let error = error {
+                    NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
                     self.alert(title: "Oops!", message: error.localizedDescription, buttonTitle: "OK")
                 }else{
                     self.dismissKeyboard()
-                    self.dismiss(animated: true, completion: nil)
+                    self.dismiss(animated: true, completion: { 
+                        NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
+                    })
                 }
             })
+        }else{
+            self.alert(title: "Oops!", message: "Please enter a valid email address and password", buttonTitle: "Okay")
         }
         
         

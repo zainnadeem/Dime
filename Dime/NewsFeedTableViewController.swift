@@ -29,7 +29,7 @@ public struct Storyboard {
 
 class NewsFeedTableViewController: UITableViewController {
 
-    var imagePickerHelper: ImagePickerHelper!
+    var mediaPickerHelper: MediaPickerHelper!
     var currentUser: User?
     var media = [Media]()
     
@@ -100,13 +100,13 @@ extension NewsFeedTableViewController: UITabBarControllerDelegate
 {
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         if let _ = viewController as? DummyPostComposerViewController{
-            imagePickerHelper = ImagePickerHelper(viewController: self, completion: { (image) in
+            mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (image) in
                 
                 let postComposerNVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Storyboard.postComposerNVC) as!
                 UINavigationController
                 
                 let postComposerVC =  postComposerNVC.topViewController as! PostComposerViewController
-                postComposerVC.image = image
+                postComposerVC.image = image as! UIImage!
                 self.present(postComposerNVC, animated: true, completion: nil)
                 
                 

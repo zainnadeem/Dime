@@ -39,6 +39,10 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         fetchDimes()
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        fetchDimes()
+    }
 
     func configureTitleLabel(){
         self.view.addSubview(viewControllerTitle)

@@ -10,11 +10,18 @@ import UIKit
 import Firebase
 
 
+enum MediaType {
+    case Video
+    case Image
+}
+
+
+
 class Media {
     
     var uid: String
     var dimeUID: String
-    let type: String //"image" or "video"
+    var type: String //"image" or "video"
     var caption: String
     var location: String
     var createdTime: String
@@ -22,24 +29,25 @@ class Media {
     var likes: [User]
     var usersTagged: [User]
     var comments: [Comment]
+    var mediaURL: String
     var mediaImage: UIImage!
     
     
-    init(dimeUID: String, type: String, caption: String, createdBy: User, image: UIImage, location: String)
+    init(dimeUID: String, type: String, caption: String, createdBy: User, mediaURL: String, location: String, mediaImage:UIImage)
     {
         self.type = type
         self.caption = caption
         self.createdBy = createdBy
-        self.mediaImage = image
+        self.mediaURL = mediaURL
         self.location = location
         self.dimeUID = dimeUID
+        self.mediaImage = mediaImage
         
         createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
         comments = []
         likes = []
         usersTagged = []
         uid = DatabaseReference.media.reference().childByAutoId().key
-        
     }
     
     init (dictionary: [String: Any]){
@@ -50,6 +58,7 @@ class Media {
         caption = dictionary["caption"] as! String
         createdTime = dictionary["createdTime"] as! String
         location = dictionary["location"] as! String
+        mediaURL = dictionary["mediaURL"] as! String
         
         let createdByDict = dictionary["createdBy"] as! [String : Any]
         createdBy = User(dictionary: createdByDict)
@@ -86,6 +95,7 @@ class Media {
     
     func save(ref: FIRDatabaseReference, completion: @escaping (Error?) -> Void) {
         let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)")
+        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(dimeUID)/media/\(uid)")
         //ref.setValue(toDictionary())
         
         //save likes
@@ -107,6 +117,16 @@ class Media {
         firImage.save(self.uid, completion: { error in
             completion(error)
         })
+        
+        if type == "video" {
+            let firVideo = FIRVideo(videoURL: URL(fileURLWithPath: mediaURL))
+            firVideo.save(self.uid, completion: { (meta, error) in
+            
+            ref.child("mediaURL").setValue(meta?.downloadURL()?.absoluteString)
+            userRef.child("mediaURL").setValue(meta?.downloadURL()?.absoluteString)
+            
+            })
+}
     }
     
     func toDictionary() -> [String: Any] {
@@ -117,6 +137,7 @@ class Media {
             "caption" : caption,
             "createdTime" : createdTime,
             "createdBy" : createdBy.toDictionary(),
+            "mediaURL"  : mediaURL,
             "location"  : location
         ]
     }
@@ -130,6 +151,24 @@ extension Media {
             completion(image, error)
         })
     }
+    
+   
+    func downloadVideo(completion: @escaping (URL, Error?) -> Void) {
+        
+        let storageRef = StorageReference.videos.reference().child(uid)
+        
+        storageRef.downloadURL { (url, error) in
+            
+            completion(url!, error)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
     
     class func observeNewMedia(_ completion: @escaping (Media) -> Void) {
         

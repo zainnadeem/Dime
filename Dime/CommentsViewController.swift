@@ -12,7 +12,7 @@ import Firebase
 
 private let reuseIdentifier = "CommentTableViewCell"
 
-class CommentsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate, UITextFieldDelegate {
+class CommentsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate {
     
     
     let store = DataStore.sharedInstance
@@ -149,8 +149,8 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         //add to user
         let ref = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/comments/\(comment.uid)")
         ref.setValue(comment.toDictionary())
-        
-        
+        self.captionTextView.text = ""
+        self.dismissKeyboard()
         self.tableView.reloadData()
     }
 }
@@ -173,5 +173,28 @@ extension CommentsViewController : NavBarViewDelegate {
         }
     
     
+}
+
+extension CommentsViewController: UITextFieldDelegate {
+    
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        self.view.endEditing(true)
+        return false
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+        
+    }
     
 }

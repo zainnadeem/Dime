@@ -85,6 +85,11 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
 //    
     
 //    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        fetchDimes()
+    }
+    
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
         

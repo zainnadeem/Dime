@@ -60,6 +60,9 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        fetchDimes()
+    }
     
     func setUpTableView(){
         self.view.addSubview(self.tableView)
@@ -72,6 +75,7 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         self.tableView.backgroundColor = UIColor.clear
         self.tableView.separatorColor = UIColor.black
+        tableView.tableFooterView = UIView()
     }
     
     

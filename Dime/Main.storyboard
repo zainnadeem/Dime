@@ -310,21 +310,29 @@
                                 <rect key="frame" x="56" y="204" width="75" height="70"/>
                                 <state key="normal" title="Button" image="icon-diamond-black"/>
                                 <connections>
-                                    <action selector="topDimesTapped:" destination="TCs-3l-xPX" eventType="touchUpInside" id="Yej-7h-oG3"/>
-                                    <segue destination="Duf-LJ-gXG" kind="show" id="2a5-vs-GvK"/>
+                                    <segue destination="Duf-LJ-gXG" kind="presentation" identifier="TopDimes" id="2a5-vs-GvK"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q7S-kM-spg">
                                 <rect key="frame" x="244" y="204" width="75" height="70"/>
                                 <state key="normal" title="Button" image="icon-diamond-blue"/>
+                                <connections>
+                                    <segue destination="Duf-LJ-gXG" kind="presentation" identifier="Dimes" id="kOx-50-GJd"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nu1-qF-Gdb">
                                 <rect key="frame" x="209" y="461" width="144" height="96"/>
                                 <state key="normal" image="icon-popular-filled-gold"/>
+                                <connections>
+                                    <segue destination="Duf-LJ-gXG" kind="presentation" identifier="Popular" id="4i5-Qa-yQs"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t2y-fn-vmq">
                                 <rect key="frame" x="29" y="466" width="129" height="87"/>
                                 <state key="normal" image="icon-trending-filled-red"/>
+                                <connections>
+                                    <segue destination="Duf-LJ-gXG" kind="presentation" identifier="Trending" id="OnQ-fD-9Ua"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -368,7 +376,7 @@
         <scene sceneID="MfD-XP-2FO">
             <objects>
                 <collectionViewController id="ULz-gi-PcG" customClass="DimesCollectionViewController" customModule="Dime" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="UrX-G4-WNY">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="UrX-G4-WNY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -732,7 +740,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lbf-4d-db6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3375" y="-483"/>
+            <point key="canvasLocation" x="-3375.1999999999998" y="-483.50824587706148"/>
         </scene>
         <!--Dime-->
         <scene sceneID="ORa-n3-3so">
@@ -1219,7 +1227,7 @@
             <objects>
                 <navigationController storyboardIdentifier="PostComposerNavigationVC" automaticallyAdjustsScrollViewInsets="NO" id="FkZ-SV-cmj" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Lat-5L-ajx">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Lat-5L-ajx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -1241,7 +1249,7 @@
         <scene sceneID="fji-Yh-18N">
             <objects>
                 <collectionViewController id="nWF-eD-Tt7" customClass="DimeDisplayViewController" customModule="Dime" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" pagingEnabled="YES" dataMode="prototypes" id="8Us-WR-jhx">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" pagingEnabled="YES" dataMode="prototypes" id="8Us-WR-jhx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -1486,7 +1494,7 @@
         <scene sceneID="AL1-Jb-X18">
             <objects>
                 <collectionViewController storyboardIdentifier="MediaCollectionViewController" id="qBO-UT-0T9" customClass="MediaCollectionViewController" customModule="Dime" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="jv9-b8-51X">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="jv9-b8-51X">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -2443,7 +2451,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="o76-3B-TIz" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3VH-1f-QBO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="3VH-1f-QBO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2461,7 +2469,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AGo-2E-7I5" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6hi-CC-MOZ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="6hi-CC-MOZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2479,7 +2487,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fhg-rO-zDH" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sim-20-vbz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="sim-20-vbz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2498,7 +2506,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="wce-ym-Mdm" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Top Dimes" id="LxB-lY-0tE"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="QuT-F0-ngm">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="QuT-F0-ngm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2517,7 +2525,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="HfZ-6i-R8G" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Trending" id="zim-4j-ozJ"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="dXd-qP-GU6">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="dXd-qP-GU6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2536,7 +2544,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AYq-j7-cFJ" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Popular" id="bIe-H9-8dj"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="EHQ-Hk-jrw">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="EHQ-Hk-jrw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2555,7 +2563,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="28m-Um-xrc" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Friends" id="eHk-Yg-a7o"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pmN-26-kOw">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pmN-26-kOw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2604,7 +2612,8 @@
         <image name="tagpeopleButton" width="252" height="228"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SmO-xU-xRA"/>
+        <segue reference="JxG-Wy-mQI"/>
+        <segue reference="OnQ-fD-9Ua"/>
         <segue reference="bPU-a2-gaI"/>
     </inferredMetricsTieBreakers>
 </document>

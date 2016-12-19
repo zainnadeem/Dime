@@ -28,6 +28,8 @@
 	<string>Allow Location Services </string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow Access to your Photos</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow Access to your Microphone</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

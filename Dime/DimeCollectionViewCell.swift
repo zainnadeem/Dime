@@ -75,12 +75,12 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         }
 
         if let image = cache?.object(forKey: "\(self.dime.createdBy.uid)-profileImage") as? UIImage {
-            self.circleProfileView.image = image
+            self.circleProfileView.image = image.circle
         }else{
             
             dime.createdBy.downloadProfilePicture { [weak self] (image, error) in
                 if let image = image {
-                    self?.circleProfileView.image = image
+                    self?.circleProfileView.image = image.circle
                     self?.cache?.setObject(image, forKey: "\(self?.dime.createdBy.uid)- profileImage")
                 }else if error != nil {
                     print(error?.localizedDescription)
@@ -94,7 +94,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         usernameButton.addTarget(self, action: #selector(usernameButtonPressed), for: .touchUpInside)
         
         
-        DimeNameLabel.text = "Dime Name"
+        DimeNameLabel.text = dime.caption
         DimeNameLabel.textColor = UIColor.black
         
         if dime.superLikes.contains(currentUser){
@@ -139,9 +139,9 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         contentView.addSubview(DimeNameLabel)
         
         self.DimeNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.DimeNameLabel.bottomAnchor.constraint(equalTo: self.imageView.topAnchor, constant: -10).isActive = true
+        self.DimeNameLabel.bottomAnchor.constraint(equalTo: self.imageView.topAnchor, constant: -7).isActive = true
         
-        self.DimeNameLabel.centerXAnchor.constraint(equalTo: self.imageView.centerXAnchor).isActive = true
+        self.DimeNameLabel.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor).isActive = true
         
         self.DimeNameLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.1)
         self.DimeNameLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.5)
@@ -184,7 +184,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
      
         self.imageView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.35).isActive = true
         
-           self.imageView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.7).isActive = true
+        self.imageView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.7).isActive = true
     }
     
 
@@ -260,12 +260,6 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.superLikeLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.05).isActive = true
     }
 
-
-    
-    
-    
-    
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
 }

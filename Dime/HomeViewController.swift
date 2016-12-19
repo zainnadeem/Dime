@@ -11,7 +11,7 @@ import Firebase
 
 class HomeViewController: UIViewController {
     
-    var imagePickerHelper: ImagePickerHelper!
+    var mediaPickerHelper: MediaPickerHelper!
     var currentUser: User?
     var store = DataStore.sharedInstance
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
@@ -60,19 +60,26 @@ class HomeViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == "trending"{
+        if segue.identifier == "TopDimes"{
+            if let nextViewController = segue.destination as? TabBarViewController{
+                nextViewController.tabBarIndex = 0
+            }
+        
+        } else if segue.identifier == "Dimes" {
+            if let nextViewController = segue.destination as? TabBarViewController{
+                nextViewController.tabBarIndex = 1
+            }
+        } else if segue.identifier == "Trending" {
+            if let nextViewController = segue.destination as? TabBarViewController{
+                nextViewController.tabBarIndex = 2
+            }
+        }else if segue.identifier == "Popular" {
             if let nextViewController = segue.destination as? TabBarViewController{
                 nextViewController.tabBarIndex = 3
             }
-        } else if segue.identifier == "Friends" {
-                if let nextViewController = segue.destination as? TabBarViewController{
-                    nextViewController.tabBarIndex = 1
-            }
-
         }
     }
 }
-
 extension HomeViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {

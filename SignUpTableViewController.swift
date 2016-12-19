@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import NVActivityIndicatorView
+import UIKit
 
 class SignUpTableViewController: UITableViewController {
 
@@ -16,9 +18,11 @@ class SignUpTableViewController: UITableViewController {
     @IBOutlet weak var fullNameTextField: UITextField!
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+
+    let activityData = ActivityData()
     
     
-    var imagePickerHelper: ImagePickerHelper!
+    var mediaPickerHelper: MediaPickerHelper!
     var profileImage: UIImage!
     
     override func viewDidLoad() {
@@ -55,24 +59,34 @@ class SignUpTableViewController: UITableViewController {
             
             
             FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (firUser, error) in
+                NVActivityIndicatorPresenter.sharedInstance.startAnimating(self.activityData)
                 if error != nil {
-                    //Report error
+                    NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
+                    self.alert(title: "Oops", message: (error?.localizedDescription)!, buttonTitle: "Okay")
                 } else if let firUser = firUser {
                     let newUser = User(uid: firUser.uid, username: username, fullName: fullName, bio: "", website: "", friends: [], topFriends: [], profileImage: self.profileImage, dimes: [])
                     newUser.save(completion: { (error) in
                             FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (firUser, error) in
                                 if let error = error {
                                         print(error.localizedDescription)
+                                    NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
+                                    self.alert(title: "Oops", message: (error.localizedDescription), buttonTitle: "Okay")
                                 } else {
                                        self.dismissKeyboard()
-                                       self.dismiss(animated: true, completion: {
+                                   
+                                        self.dismiss(animated: true, completion: {
+                                        NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
                                        })
                                 }
                             })
                     })
                 }
             })
+        }else{
+            self.alert(title: "Please fill in all fields", message: "Password/username fields must contain more than 6 characters and a profile picture is required", buttonTitle: "Got it")
         }
+        
+        
 
     }
     @IBAction func backDidTap(_ sender: Any) {
@@ -82,13 +96,17 @@ class SignUpTableViewController: UITableViewController {
     
     @IBAction func changeProfilePhotoDidTap() {
         
-        imagePickerHelper = ImagePickerHelper(viewController: self, completion: { (image) in
-            self.profileImageView.image = image
-            self.profileImage = image!
+        mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (image) in
+            
+            let profilePicture = image!
+            self.profileImageView.image = (profilePicture as! UIImage).rounded
+            self.profileImageView.image = (profilePicture as! UIImage).circle
+           
+            self.profileImage = (profilePicture as! UIImage).rounded
+            self.profileImage = (profilePicture as! UIImage).circle
         })
     }
     
-
     
 
 }
@@ -112,6 +130,13 @@ extension SignUpTableViewController : UITextFieldDelegate {
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
+    }
+    
+    func alert(title: String, message: String, buttonTitle: String) {
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: buttonTitle, style: .default, handler: nil)
+        alertVC.addAction(action)
+        present(alertVC, animated: true, completion: nil)
     }
 
 }

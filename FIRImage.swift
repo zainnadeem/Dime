@@ -49,6 +49,23 @@ extension FIRImage {
         }
         
     }
+
+
+    func saveToFirebaseStorage(_ uid:String, completion: @escaping (FIRStorageMetadata?, Error?) -> Void) {
+        
+        let imageUid = NSUUID().uuidString
+        
+        let resizedImage = image.resized()
+        let imageData = UIImageJPEGRepresentation(resizedImage, 0.9)
+        
+        ref = StorageReference.images.reference().child(uid)
+        
+        ref.put(imageData!, metadata: nil, completion: { (meta, error) in
+            completion(meta, error)
+        })
+    }
+
+
 }
 
 extension FIRImage {
@@ -79,7 +96,12 @@ extension FIRImage {
         
     }
     
+
+
+
+
 }
+
 
 
 

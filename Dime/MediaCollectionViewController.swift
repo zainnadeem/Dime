@@ -10,10 +10,14 @@ class MediaCollectionViewController: UICollectionViewController
     var store = DataStore.sharedInstance
     var selectedIndexPath: Int = Int()
     
-    var imagePickerHelper: ImagePickerHelper?
+    var mediaPickerHelper: MediaPickerHelper?
     var passedDime: Dime!
     
     var dime: Dime?
+    var newMedia: Media?
+    var videoURL: String = String()
+    
+    
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
 
     var finishedEditing: Bool = Bool()
@@ -93,11 +97,12 @@ class MediaCollectionViewController: UICollectionViewController
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int
     {
-        return 1
+        return 2
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
+        if section == 0 {
         if dime?.media.count == 9 {
             return 9
         }else{
@@ -105,6 +110,10 @@ class MediaCollectionViewController: UICollectionViewController
             return (dime?.media.count)! + 1
         }
         
+        }else if section == 1 {
+            return 1
+        }
+        return 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
@@ -165,22 +174,40 @@ class MediaCollectionViewController: UICollectionViewController
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         
-        imagePickerHelper = ImagePickerHelper(viewController: self, completion: { (image) in
+        mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
             
-            let newMedia = Media(dimeUID: (self.dime?.uid)!, type: "", caption: "", createdBy: self.store.currentUser!, image: image!, location: "")
+            if let dime = self.store.currentDime{
             
-            if (self.dime?.media.count)! >= indexPath.row + 1 { self.dime?.media.remove(at: indexPath.row) }
-            self.dime?.media.insert(newMedia, at: indexPath.row)
+            if let videoURL = mediaObject as? URL {
+                self.newMedia = Media(dimeUID: dime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path))
+                
+                if let media = self.newMedia{
+                let videoData = NSData(contentsOf: videoURL as URL)
+                let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
+                let dataPath = NSTemporaryDirectory().appendingPathComponent("/\(media.uid).mp4")
+                videoData?.write(toFile: dataPath, atomically: false)
+                
+                media.mediaURL = dataPath
+                }
+            } else if let snapshotImage = mediaObject as? UIImage {
+
+                self.newMedia = Media(dimeUID: dime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: snapshotImage)
+
+            }
+                
+                
+            if (dime.media.count) >= indexPath.row + 1 { dime.media.remove(at: indexPath.row) }
+            dime.media.insert(self.newMedia!, at: indexPath.row)
             collectionView.reloadData()
-            
-            
+        }
         })
-    }
+        
+        }
 
     
     override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
         
-        if indexPath.row == (collectionView.numberOfItems(inSection: 0) - 1) && (dime?.media.count)! < 9 {
+        if indexPath.row == (collectionView.numberOfItems(inSection: 0) - 1) && (dime?.media.count)! < 9 && indexPath.section == 0{
             return false
         }
         
@@ -223,6 +250,52 @@ extension MediaCollectionViewController {
         present(alertVC, animated: true, completion: nil)
     }
 }
+
+
+// Save Media
+//extension MediaCollectionViewController {
+//    func saveVideo(withVideoURL videoURL: URL) {
+//        
+//        let firVideo = FIRVideo(videoURL: videoURL)
+//        
+//        firVideo.saveToFirebaseStorage { (meta, error) in
+//            
+//            if error != nil {
+//                print("===NAG=== Unable to upload video to Firebase Storage")
+//                
+//            } else {
+//                print("===NAG=== Successfully video uploaded to Firebase Storage")
+//                let downloadURL = meta?.downloadURL()?.absoluteString
+//                if let url = downloadURL {
+//                    
+//                }
+//            }
+//        }
+//    }
+//    
+////    func saveMessage(withImage image: UIImage) {
+////        
+////        let firImage = FIRImage(image: image)
+////        
+////        firImage.saveToFirebaseStorage(uid: String, completion: { (meta, error) in
+////            
+////            if error != nil {
+////                GeneralHelper.sharedHelper.showAlertOnViewController(viewController: self, withTitle: "Send Image Error", message: "Unable to upload image to Firebase Storage", buttonTitle: "OK")
+////            } else {
+////                let downloadURL = meta?.downloadURL()?.absoluteString // URL for this image in storage
+////                
+////                if let url = downloadURL {
+////                    
+////                }
+////            }
+////        })
+////    }
+////    
+////}
+
+
+
+
 
 extension MediaCollectionViewController : NavBarViewDelegate {
     

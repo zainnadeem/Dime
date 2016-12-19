@@ -55,6 +55,7 @@ enum DatabaseReference {
 enum StorageReference {
     case root
     case images //for post
+    case videos 
     case profileImages //for user
     
     func reference() -> FIRStorageReference{
@@ -69,6 +70,8 @@ enum StorageReference {
         switch self {
         case .root:
             return ""
+        case .videos:
+            return "videos"
         case .images:
             return "images"
         case .profileImages:

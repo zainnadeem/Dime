@@ -51,12 +51,12 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.view.addSubview(circleProfileView)
         
         if let image = cache?.object(forKey: "\(user?.uid)-profileImage") as? UIImage {
-            self.circleProfileView.image = image
+            self.circleProfileView.image = image.circle
         }else{
             user?.downloadProfilePicture { [weak self] (image, error) in
                 if let image = image {
-                    self?.circleProfileView.image = image
-                    self?.cache?.setObject(image, forKey: "\(self?.user?.uid)- profileImage")
+                    self?.circleProfileView.image = image.circle
+                    self?.cache?.setObject(image.circle, forKey: "\(self?.user?.uid)- profileImage")
                 }else if error != nil {
                     print(error?.localizedDescription)
                 }
@@ -149,6 +149,10 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         return cell
     }
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.dimeCollectionView.reloadData()
+    }
     
     
     func setUpCollectionView(){

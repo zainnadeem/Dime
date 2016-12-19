@@ -8,6 +8,8 @@
 
 import UIKit
 import SAMCache
+import AVKit
+import AVFoundation
 
 class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
@@ -25,6 +27,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     var usernameButton = UIButton()
     var superLikeButton = UIButton()
     var background: UIImageView = UIImageView()
+    var playButton = UIButton()
     
     lazy var likeButton      : UIButton      = UIButton(type: .custom)
     
@@ -85,8 +88,54 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             self.isLikedByUser = false
             likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue2"), for: .normal)
         }
+        
+        
+        if media.type == "video" {
+            configurePlayButton()
+        }
+        
+        
+        
         reloadLabels()
     }
+    
+    func configurePlayButton(){
+        contentView.addSubview(playButton)
+        playButton.setImage(#imageLiteral(resourceName: "icon-email"), for: .normal)
+        
+        self.playButton.addTarget(self, action: #selector(createVideoPlayer), for: .touchUpInside)
+        self.playButton.translatesAutoresizingMaskIntoConstraints = false
+        self.playButton.centerXAnchor.constraint(equalTo: self.imageView.centerXAnchor).isActive = true
+        self.playButton.centerYAnchor.constraint(equalTo: self.imageView.centerYAnchor).isActive = true
+        
+        self.playButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07).isActive = true
+        self.likeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.1).isActive = true
+        
+    }
+    
+    func createVideoPlayer() {
+        
+            
+            media.downloadVideo(completion: { (url, error) in
+                
+                let player = AVPlayer(url: url)
+                
+                let playerViewController = AVPlayerViewController()
+                playerViewController.player = player
+                
+                let parentView = self.viewController()
+                
+                parentView?.present(playerViewController, animated: true, completion: {
+                    playerViewController.player?.play()
+                })
+            
+            
+            })
+            
+        }
+
+    
+    
     
     
     func configureDimeNameLabel() {
