@@ -18,7 +18,7 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
+      lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
     var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -28,9 +28,7 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
         backgroundImage.image = #imageLiteral(resourceName: "background_BLUE")
         self.view.insertSubview(backgroundImage, at: 0)
-        
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
         setUpCollectionView()
         self.navBar.delegate = self
         self.view.addSubview(navBar)
@@ -38,6 +36,8 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
         configureTitleIcon()
         fetchDimes()
     }
+    
+    
     
     func configureTitleLabel(){
         self.view.addSubview(viewControllerTitle)
@@ -72,19 +72,6 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
     
     
     
-//    func fetchDimes() {
-//        self.dimeCollectionView.reloadData()
-//        Dime.observeNewDime { (dime) in
-//            if !self.passedDimes.contains(dime) {
-//                self.passedDimes.insert(dime, at: 0)
-//                self.passedDimes = sortByMostRecentlyCreated(self.passedDimes)
-//                self.dimeCollectionView.reloadData()
-//            }
-//        }
-//    }
-//    
-    
-//    
     
     override func viewWillAppear(_ animated: Bool) {
         fetchDimes()
@@ -145,7 +132,7 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
         
         self.view.addSubview(dimeCollectionView)
         
-        //dimeCollectionView.isPagingEnabled = true
+        dimeCollectionView.isPagingEnabled = true
         
         
     }
@@ -182,7 +169,15 @@ extension FriendsCollectionViewController : NavBarViewDelegate {
     }
     
     func middleBarButtonTapped(_ Sender: AnyObject) {
-        print("Not sure what the middle bar button will do yet.")
+        if store.currentDime != nil {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
+            self.present(controller, animated: true, completion: nil)
+        }else{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "CreateDimeViewController") as! CreateDimeViewController
+            self.present(controller, animated: true, completion: nil)
+        }
     }
     
 }

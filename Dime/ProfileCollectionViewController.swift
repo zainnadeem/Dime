@@ -22,7 +22,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     var circleProfileView: UIImageView = UIImageView()
     var cache = SAMCache.shared()
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
+      lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
     var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -202,7 +202,15 @@ extension ProfileCollectionViewController : NavBarViewDelegate {
     }
     
     func middleBarButtonTapped(_ Sender: AnyObject) {
-        print("Not sure what the middle bar button will do yet.")
+        if store.currentDime != nil {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
+            self.present(controller, animated: true, completion: nil)
+        }else{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "CreateDimeViewController") as! CreateDimeViewController
+            self.present(controller, animated: true, completion: nil)
+        }
     }
     
 }

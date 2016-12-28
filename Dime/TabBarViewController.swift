@@ -25,6 +25,8 @@ class TabBarViewController: UITabBarController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+    
+    }
 
 }

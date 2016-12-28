@@ -17,15 +17,14 @@ class User {
     var bio: String
     var website: String
     var profileImage: UIImage?
-    
     var friends: [User]
     var topFriends: [User]
-    var dimes: [Media]
+    var dimes: [Dime]
     
     
     // Mark: - Initialize   rs
     
-    init(uid: String, username: String, fullName: String, bio: String, website: String, friends: [User], topFriends: [User], profileImage: UIImage?, dimes: [Media])
+    init(uid: String, username: String, fullName: String, bio: String, website: String, friends: [User], topFriends: [User], profileImage: UIImage?, dimes: [Dime])
         
     {
         self.uid = uid
@@ -74,21 +73,18 @@ class User {
 
         //dimeAlbum
         self.dimes = []
-//        if let dimes = dictionary["dimes"] as? [AnyObject]
-//        {
-//            for (_, dimes) in dimes{
-//                if let dimes = dimes as? [AnyObject]{
-//                    self.dimes.append(Dime(dictionary: dimesDict))
-//                }
-//           }
-//        }
+        if let dimesDict = dictionary["dimes"] as? [String : Any]
+        {
+            for (_, dimeDict) in dimesDict {
+                if let dimeDict = dimeDict as? [String : Any] {
+                    self.dimes.append(Dime(dictionary: dimeDict))
+                }
+            }
+        }
         
 
         
     }
-    
-    
-  
     
     func save(completion: @escaping (Error?) -> Void){
         let ref = DatabaseReference.users(uid: uid).reference()

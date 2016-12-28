@@ -14,7 +14,7 @@ class HomeViewController: UIViewController {
     var mediaPickerHelper: MediaPickerHelper!
     var currentUser: User?
     var store = DataStore.sharedInstance
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +33,11 @@ class HomeViewController: UIViewController {
                 // get current user
                 DatabaseReference.users(uid: user.uid).reference().observeSingleEvent(of: .value, with: { (snapshot) in
                     if let userDict = snapshot.value as? [String : Any] {
+                        self.store.currentDime = nil
                         self.currentUser = User(dictionary: userDict)
                         self.store.currentUser = User(dictionary: userDict)
+                        self.store.getCurrentDime()
+                        self.store.getImages()
                     }
                 })
                 
@@ -93,7 +96,15 @@ extension HomeViewController : NavBarViewDelegate {
     }
     
     func middleBarButtonTapped(_ Sender: AnyObject) {
-        print("Not sure what the middle bar button will do yet.")
-    }
+        if store.currentDime != nil {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
+        self.present(controller, animated: true, completion: nil)
+        }else{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "CreateDimeViewController") as! CreateDimeViewController
+            self.present(controller, animated: true, completion: nil)
+        }
     
+    }
 }

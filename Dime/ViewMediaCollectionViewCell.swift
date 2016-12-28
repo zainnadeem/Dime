@@ -177,7 +177,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     func configureImageView() {
         contentView.addSubview(imageView)
         
-        imageView.contentMode = UIViewContentMode.scaleAspectFill
+        imageView.contentMode = UIViewContentMode.scaleAspectFit
         imageView.clipsToBounds = true
         
         self.imageView.translatesAutoresizingMaskIntoConstraints = false

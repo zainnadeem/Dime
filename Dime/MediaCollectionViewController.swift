@@ -4,9 +4,11 @@
 //
 
 import UIKit
+import NVActivityIndicatorView
 
 class MediaCollectionViewController: UICollectionViewController
 {
+    
     var store = DataStore.sharedInstance
     var selectedIndexPath: Int = Int()
     
@@ -17,13 +19,14 @@ class MediaCollectionViewController: UICollectionViewController
     var newMedia: Media?
     var videoURL: String = String()
     
+    var existingDime: Bool = Bool()
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
+    let activityData = ActivityData()
+    
+    
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
 
     var finishedEditing: Bool = Bool()
-
-    
-    
     
     struct Storyboard {
         static let mediaCell = "mediaCell"
@@ -35,24 +38,35 @@ class MediaCollectionViewController: UICollectionViewController
         static let titleHeightAdjustment: CGFloat = 30.0
     }
     
+    func dimePostAlert(title: String, message: String, buttonTitle: String) {
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: buttonTitle, style: .default, handler: nil)
+        alertVC.addAction(action)
+        present(alertVC, animated: true, completion: nil)
+    }
+    
     @IBAction func postButtonTapped(_ sender: Any) {
         store.currentDime = dime
-       
+        self.dimePostAlert(title: "Nice...", message: "Your Dime is uploading", buttonTitle: "Okay")
         self.store.currentDime?.saveToUser(saveToUser: store.currentUser!, completion: { (error) in
+            self.store.getCurrentDime()
+            
             if error != nil {
                 print(error?.localizedDescription)
-                
+            }else{
+                //NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
             }
+            
         })
         
         store.currentDime?.save(completion: { (error) in
             
             if error != nil {
                 print(error?.localizedDescription)
-                
+            }else{
+
             }
         })
-    
     }
 
     @IBAction func changeCoverPhoto(_ sender: Any) {
@@ -97,23 +111,17 @@ class MediaCollectionViewController: UICollectionViewController
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int
     {
-        return 2
+        return 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
-        if section == 0 {
         if dime?.media.count == 9 {
             return 9
         }else{
-            
             return (dime?.media.count)! + 1
-        }
         
-        }else if section == 1 {
-            return 1
         }
-        return 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
@@ -217,11 +225,6 @@ class MediaCollectionViewController: UICollectionViewController
     
     
     override func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        
-//        let sourceCell = collectionView.dequeueReusableCell(withReuseIdentifier: Storyboard.mediaCell, for: sourceIndexPath) as! MediaCollectionViewCell
-//        let destCell = collectionView.dequeueReusableCell(withReuseIdentifier: Storyboard.mediaCell, for: destinationIndexPath) as! MediaCollectionViewCell
-//    
-
         collectionView.reloadData()
 
     }
@@ -250,49 +253,6 @@ extension MediaCollectionViewController {
         present(alertVC, animated: true, completion: nil)
     }
 }
-
-
-// Save Media
-//extension MediaCollectionViewController {
-//    func saveVideo(withVideoURL videoURL: URL) {
-//        
-//        let firVideo = FIRVideo(videoURL: videoURL)
-//        
-//        firVideo.saveToFirebaseStorage { (meta, error) in
-//            
-//            if error != nil {
-//                print("===NAG=== Unable to upload video to Firebase Storage")
-//                
-//            } else {
-//                print("===NAG=== Successfully video uploaded to Firebase Storage")
-//                let downloadURL = meta?.downloadURL()?.absoluteString
-//                if let url = downloadURL {
-//                    
-//                }
-//            }
-//        }
-//    }
-//    
-////    func saveMessage(withImage image: UIImage) {
-////        
-////        let firImage = FIRImage(image: image)
-////        
-////        firImage.saveToFirebaseStorage(uid: String, completion: { (meta, error) in
-////            
-////            if error != nil {
-////                GeneralHelper.sharedHelper.showAlertOnViewController(viewController: self, withTitle: "Send Image Error", message: "Unable to upload image to Firebase Storage", buttonTitle: "OK")
-////            } else {
-////                let downloadURL = meta?.downloadURL()?.absoluteString // URL for this image in storage
-////                
-////                if let url = downloadURL {
-////                    
-////                }
-////            }
-////        })
-////    }
-////    
-////}
-
 
 
 

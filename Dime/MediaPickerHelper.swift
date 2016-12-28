@@ -75,6 +75,7 @@ extension MediaPickerHelper: UIImagePickerControllerDelegate, UINavigationContro
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
         viewController.dismiss(animated: true, completion: nil)
         
         let mediaType = info[UIImagePickerControllerMediaType] as! String

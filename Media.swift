@@ -210,6 +210,30 @@ func ==(lhs: Media, rhs: Media) -> Bool {
     
 }
 
+func sortByMostRecentlyCreated(_ arrayOfMedia : [Media]) -> [Media] {
+    
+    var dime = arrayOfMedia
+    dime.sort(by: { return $0 > $1 })
+    return dime
+}
+
+func >(lhs: Media, rhs: Media) -> Bool {
+    
+    let lhsMedia = Constants.dateFormatter().date(from: lhs.createdTime)
+    let rhsMedia = Constants.dateFormatter().date(from: rhs.createdTime)
+    
+    return lhsMedia?.compare(rhsMedia!) == .orderedDescending ? true : false
+}
+
+func <(lhs: Media, rhs: Media) -> Bool {
+    
+    let lhsMedia = Constants.dateFormatter().date(from: lhs.createdTime)
+    let rhsMedia = Constants.dateFormatter().date(from: rhs.createdTime)
+    
+    return lhsMedia?.compare(rhsMedia!) == .orderedDescending ? true : false
+}
+
+
 
 
 

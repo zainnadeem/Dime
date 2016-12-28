@@ -20,6 +20,7 @@ target 'Dime' do
   pod ‘NSDate+TimeAgo’
   pod 'IQKeyboardManagerSwift'
   pod 'NVActivityIndicatorView'
+  pod 'DZNEmptyDataSet'
 
   
   #Messenger

@@ -127,6 +127,7 @@
 		BF9342B81DCFCC9A006BE70C /* MediaCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaCollectionViewController.swift; sourceTree = "<group>"; };
 		BF9342B91DCFCC9A006BE70C /* SectionHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
 		BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaCollectionViewCell.swift; sourceTree = "<group>"; };
+		BF9A75F61E14746C00679755 /* Dime-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dime-Bridging-Header.h"; sourceTree = "<group>"; };
 		BFA3F60E1DF9DC3700EE0A0A /* ViewMediaCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMediaCollectionViewCell.swift; sourceTree = "<group>"; };
 		BFA3F6101DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMediaCollectionViewController.swift; sourceTree = "<group>"; };
 		BFAA92D01DEF38800063F660 /* EditingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditingViewController.swift; sourceTree = "<group>"; };
@@ -334,6 +335,7 @@
 				BF9342C21DCFCCA1006BE70C /* Newsreader */,
 				BF6FCE031DDE450C00AC5A71 /* Post Composer Tab */,
 				BFE387951DCCE902000FA9EA /* LaunchScreen.storyboard */,
+				BF9A75F61E14746C00679755 /* Dime-Bridging-Header.h */,
 				BFE387A01DCCEF73000FA9EA /* GoogleService-Info.plist */,
 				BFE387981DCCE902000FA9EA /* Info.plist */,
 				BFE387901DCCE902000FA9EA /* Dime.xcdatamodeld */,

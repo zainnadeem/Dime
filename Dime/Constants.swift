@@ -96,19 +96,19 @@ class Constants {
         return dateFormatter
     }
     
-    class func timeRemainingForDeal(_ date: Date) -> String {
+    class func timeRemainingForDime(_ date: Date) -> String {
         
-        let twoHoursFromDate = date.addingTimeInterval(7200)
+        let twentyFourHoursFromDate = date.addingTimeInterval(86400)
         let now = Date(timeIntervalSinceNow: 0)
-        let secondsRemaining = twoHoursFromDate.timeIntervalSince(now)
+        let secondsRemaining = twentyFourHoursFromDate.timeIntervalSince(now)
         let minutesRemaining = secondsRemaining / 60
         
-        if minutesRemaining == 120 {
+        if minutesRemaining > 120 {
             let minuteString = Int(minutesRemaining)
-            return "Expires in \(minuteString) hrs"
+            return "Expires in \(minuteString / 60) hrs"
         }
         else if minutesRemaining > 59.9 && minutesRemaining < 61 {
-            let minuteString = Int(minutesRemaining)
+            let minuteString = Int(minutesRemaining / 60)
             return "Expires in 1 hr"
         }
         else if minutesRemaining >= 61 && minutesRemaining < 120 {
