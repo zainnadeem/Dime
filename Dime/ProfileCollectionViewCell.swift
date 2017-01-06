@@ -56,15 +56,17 @@ class ProfileCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     func updateUI() {
         createdTimeLabel.text = dime.createdTime.description
         
-        // profileImageView.image = #imageLiteral(resourceName: "icon-defaultAvatar")
-        if let image = cache?.object(forKey: "\(self.dime.media[0].uid)-coverImage") as? UIImage
+        self.imageView.image = nil
+        
+        let mediaImageKey = "\(self.dime.media[0].uid)-mediaImage"
+        if let image = cache?.object(forKey: mediaImageKey) as? UIImage
         {
             self.imageView.image = image
         }else {
             dime.media[0].downloadMediaImage(completion: { [weak self] (image, error) in
                 if let image = image {
                     self?.imageView.image = image
-                    self?.cache?.setObject(image, forKey: "\(self?.dime.media[0].uid)-coverImage")
+                    self?.cache?.setObject(image, forKey: mediaImageKey)
                 }
             })
         }

@@ -16,15 +16,18 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     let store = DataStore.sharedInstance
     var user : User?
-    var passedDimes: [Dime] = [Dime]()
-    var viewControllerTitle: UILabel = UILabel()
-    var viewControllerBanner: UIView = UIView()
-    var circleProfileView: UIImageView = UIImageView()
     var cache = SAMCache.shared()
     
-      lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+    lazy var passedDimes:               [Dime]  = [Dime]()
+    lazy var viewControllerTitle:       UILabel = UILabel()
     
-    var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
+    lazy var viewControllerBanner:      UIView  = UIView()
+    lazy var circleProfileView:         UIImageView = UIImageView()
+    
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+    
+    lazy var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,22 +44,33 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         configurerBanner()
         configureProfilePic()
         configureTitleLabel()
-       
+        
         fetchDimes()
         
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.dimeCollectionView.reloadData()
     }
     
     
     func configureProfilePic() {
         self.view.addSubview(circleProfileView)
         
-        if let image = cache?.object(forKey: "\(user?.uid)-profileImage") as? UIImage {
+        circleProfileView.image = #imageLiteral(resourceName: "icon-defaultAvatar")
+        guard let user = user else{ print("No user found")
+            return }
+        
+        let profileImageKey = "\(user.uid)-profileImage"
+        
+        if let image = cache?.object(forKey: profileImageKey) as? UIImage {
             self.circleProfileView.image = image.circle
         }else{
-            user?.downloadProfilePicture { [weak self] (image, error) in
+            user.downloadProfilePicture { [weak self] (image, error) in
                 if let image = image {
                     self?.circleProfileView.image = image.circle
-                    self?.cache?.setObject(image.circle, forKey: "\(self?.user?.uid)- profileImage")
+                    self?.cache?.setObject(image.circle, forKey: profileImageKey)
                 }else if error != nil {
                     print(error?.localizedDescription)
                 }
@@ -69,9 +83,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.circleProfileView.translatesAutoresizingMaskIntoConstraints = false
         self.circleProfileView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 85).isActive = true
         self.circleProfileView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
-        
         self.circleProfileView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.11).isActive = true
-        
         self.circleProfileView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.20).isActive = true
     }
     
@@ -81,15 +93,13 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         
         self.viewControllerTitle.translatesAutoresizingMaskIntoConstraints = false
         self.viewControllerTitle.topAnchor.constraint(equalTo: self.viewControllerBanner.topAnchor, constant: 5).isActive = true
-        
         self.viewControllerTitle.leadingAnchor.constraint(equalTo: self.viewControllerBanner.leadingAnchor, constant: 10).isActive = true
-        
         self.viewControllerTitle.heightAnchor.constraint(equalTo: self.viewControllerBanner.heightAnchor, multiplier: 0.5).isActive = true
         self.viewControllerTitle.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         
         viewControllerTitle.textAlignment = NSTextAlignment.left
         viewControllerTitle.textColor = UIColor.white
-
+        
         viewControllerTitle.font = UIFont.dimeFont(30)
         viewControllerTitle.text = user?.fullName
         
@@ -98,13 +108,32 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     func configurerBanner() {
         self.view.addSubview(viewControllerBanner)
         viewControllerBanner.backgroundColor = UIColor.dimeLightBlue()
-        
-        
+
         self.viewControllerBanner.translatesAutoresizingMaskIntoConstraints = false
         self.viewControllerBanner.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         self.viewControllerBanner.topAnchor.constraint(equalTo: self.navBar.bottomAnchor, constant: 20).isActive = true
         self.viewControllerBanner.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.1).isActive = true
         self.viewControllerBanner.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.74).isActive = true
+    }
+    
+    func setUpCollectionView(){
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.scrollDirection = UICollectionViewScrollDirection.horizontal
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        
+        dimeCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        
+        dimeCollectionView.dataSource = self
+        dimeCollectionView.delegate = self
+        
+        self.dimeCollectionView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        
+        dimeCollectionView.backgroundColor = UIColor.clear
+        dimeCollectionView.isPagingEnabled = true
+        
+        self.view.addSubview(dimeCollectionView)
+
     }
     
     func fetchDimes() {
@@ -113,22 +142,13 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             if !self.passedDimes.contains(dime) {
                 self.passedDimes.insert(dime, at: 0)
                 self.dimeCollectionView.reloadData()
-            
-            }  
+                
+            }
         })
     }
     
-        
-//        Dime.observeNewDimeForUser{ (dime) in
-//            if !self.passedDimes.contains(dime) {
-//                self.passedDimes.insert(dime, at: 0)
-//                self.dimeCollectionView.reloadData()
-//            }
-//        }
-//    }
-//    
-    
-    // MARK: UICollectionViewDataSource
+
+  // MARK - COLLECTIONVIEW METHODS
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -147,27 +167,6 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         cell.dime = passedDimes[indexPath.row]
         
         return cell
-    }
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.dimeCollectionView.reloadData()
-    }
-    
-    
-    func setUpCollectionView(){
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.scrollDirection = UICollectionViewScrollDirection.horizontal
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 0
-        dimeCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
-        dimeCollectionView.dataSource = self
-        dimeCollectionView.delegate = self
-        self.dimeCollectionView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        dimeCollectionView.backgroundColor = UIColor.clear
-        self.view.addSubview(dimeCollectionView)
-        
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

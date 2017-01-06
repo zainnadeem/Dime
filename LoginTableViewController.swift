@@ -24,11 +24,13 @@ class LoginTableViewController: UITableViewController {
         self.tableView.contentInset = UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0)
         title = "Log in"
         
-        emailTextField.becomeFirstResponder()
+        
         emailTextField.delegate = self
         passwordTextField.delegate = self
-        
-
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        emailTextField.becomeFirstResponder()
     }
 
     func alert(title: String, message: String, buttonTitle: String) {

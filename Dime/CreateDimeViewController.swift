@@ -73,6 +73,9 @@ class CreateDimeViewController: UIViewController {
         
         mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
             
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
+            
             let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [])
             
             self.store.currentDime = newDime
@@ -89,20 +92,16 @@ class CreateDimeViewController: UIViewController {
                 newMedia.mediaURL = dataPath
                 
                 self.store.currentDime?.media.append(newMedia)
-                
+                self.present(controller, animated: true, completion: nil)
                 
             } else if let snapshotImage = mediaObject as? UIImage {
                 
                 self.image = snapshotImage
                 let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image!)
                 self.store.currentDime?.media.append(newMedia)
+                self.present(controller, animated: true, completion: nil)
                 
             }
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
-            
-            self.present(controller, animated: true, completion: nil)
             
         })
         

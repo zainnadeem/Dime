@@ -1,13 +1,11 @@
 //
 //  CommentTableViewCell.swift
-//  Moments
-//
-//  Created by Duc Tran on 11/8/16.
-//  Copyright © 2016 Developers Academy. All rights reserved.
+
 //
 
 import UIKit
 import NSDate_TimeAgo
+import SAMCache
 
 class CommentTableViewCell: UITableViewCell {
 
@@ -19,6 +17,8 @@ class CommentTableViewCell: UITableViewCell {
     
     lazy var borderWidth                  : CGFloat =       3.0
     lazy var profileImageHeightMultiplier : CGFloat =      (0.75)
+    
+    var cache = SAMCache.shared()
     
 
     var comment: Comment! {
@@ -64,9 +64,18 @@ class CommentTableViewCell: UITableViewCell {
 
     func updateUI()
     {
-        profileImage.image = UIImage(named: "icon-defaultAvatar")
+        profileImage.image = #imageLiteral(resourceName: "icon-defaultAvatar")
+        
+        let profileImageKey = "\(self.comment.from.uid)-profileImage"
+        
+        if let image = cache?.object(forKey: profileImageKey) as? UIImage
+        {
+            self.profileImage.image = image
+        }else{
         comment.from.downloadProfilePicture { [weak self] (image, error) in
             self?.profileImage.image = image
+            self?.cache?.setObject(image, forKey: profileImageKey)
+        }
         }
         
         profileImage.layer.cornerRadius = profileImage.bounds.width / 2.0

@@ -70,10 +70,6 @@ func == (lhs: Comment, rhs: Comment) -> Bool {
     return lhs.uid == rhs.uid
 }
 
-//func ==(lhs: Comment, rhs: Comment) -> Bool {
-//    
-//    return lhs.uid == rhs.uid && lhs.latestVideo["url"] as! String == rhs.latestVideo["url"] as! String
-//}
 
  func sortByMostRecentlyCreated(_ arrayOfComments : [Comment]) -> [Comment] {
     

@@ -64,8 +64,11 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func updateUI() {
         
-        // profileImageView.image = #imageLiteral(resourceName: "icon-defaultAvatar")
-        if let image = cache?.object(forKey: "\(media.uid)-mediaImage") as? UIImage
+        self.imageView.image = nil
+        
+        let mediaImageKey = "\(media.uid)-mediaImage"
+       
+        if let image = cache?.object(forKey: mediaImageKey) as? UIImage
         {
             self.imageView.image = image
         }else {
@@ -101,7 +104,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func configurePlayButton(){
         contentView.addSubview(playButton)
-        playButton.setImage(#imageLiteral(resourceName: "icon-email"), for: .normal)
+        playButton.setImage(#imageLiteral(resourceName: "playIcon"), for: .normal)
         
         self.playButton.addTarget(self, action: #selector(createVideoPlayer), for: .touchUpInside)
         self.playButton.translatesAutoresizingMaskIntoConstraints = false
@@ -226,6 +229,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             media.likedBy(user: currentUser)
             dime.likedBy(user: currentUser)
             
+            createLikeNotification()
              //find place for updating user
             let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/likes/\(currentUser.uid)")
             mediaRef.setValue(currentUser.toDictionary())
@@ -241,7 +245,11 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         reloadLabels()
     }
     
-    
+    func createLikeNotification(){
+       let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) liked your picture!", notificationType: "like")
+        notification.save()
+    }
+
     
     func reloadLabels(){
         if media.likes != [] {

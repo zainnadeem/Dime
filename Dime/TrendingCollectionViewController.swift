@@ -124,7 +124,7 @@ class TrendingCollectionViewController: UIViewController, UICollectionViewDelega
         
         self.view.addSubview(dimeCollectionView)
         
-        //dimeCollectionView.isPagingEnabled = true
+        dimeCollectionView.isPagingEnabled = true
         
         
     }

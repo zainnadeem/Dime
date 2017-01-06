@@ -24,7 +24,7 @@ class MediaCollectionViewController: UICollectionViewController
     let activityData = ActivityData()
     
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "editIcon"), leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
 
     var finishedEditing: Bool = Bool()
     
@@ -185,32 +185,36 @@ class MediaCollectionViewController: UICollectionViewController
         mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
             
             if let dime = self.store.currentDime{
-            
-            if let videoURL = mediaObject as? URL {
-                self.newMedia = Media(dimeUID: dime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path))
                 
-                if let media = self.newMedia{
-                let videoData = NSData(contentsOf: videoURL as URL)
-                let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
-                let dataPath = NSTemporaryDirectory().appendingPathComponent("/\(media.uid).mp4")
-                videoData?.write(toFile: dataPath, atomically: false)
-                
-                media.mediaURL = dataPath
+                if let videoURL = mediaObject as? URL {
+                    self.newMedia = Media(dimeUID: dime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path))
+                    
+                    if let media = self.newMedia{
+                        let videoData = NSData(contentsOf: videoURL as URL)
+                        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
+                        let dataPath = NSTemporaryDirectory().appendingPathComponent("/\(media.uid).mp4")
+                        videoData?.write(toFile: dataPath, atomically: false)
+                        
+                        media.mediaURL = dataPath
+                    }
+                } else if let snapshotImage = mediaObject as? UIImage {
+                    
+                    self.newMedia = Media(dimeUID: dime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: snapshotImage)
+                    
                 }
-            } else if let snapshotImage = mediaObject as? UIImage {
-
-                self.newMedia = Media(dimeUID: dime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: snapshotImage)
-
+                
+                if let media = self.newMedia {
+                    
+                    if (dime.media.count) >= indexPath.row + 1 { dime.media.remove(at: indexPath.row) }
+                    dime.media.insert(media, at: indexPath.row)
+                    collectionView.reloadData()
+                    
+                }
+                
             }
-                
-                
-            if (dime.media.count) >= indexPath.row + 1 { dime.media.remove(at: indexPath.row) }
-            dime.media.insert(self.newMedia!, at: indexPath.row)
-            collectionView.reloadData()
-        }
         })
-        
-        }
+    }
+    
 
     
     override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
@@ -260,7 +264,11 @@ extension MediaCollectionViewController {
 extension MediaCollectionViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {
-        self.performSegue(withIdentifier: "showEditView", sender: nil)
+        if (dime?.media.count)! > 3 {
+            self.performSegue(withIdentifier: "showEditView", sender: nil)
+        } else {
+            alert(title: "Oops!", message: "Please select at least four items to edit", buttonTitle: "Got it!")
+        }
         print("Not sure what the right bar button will do yet.")
     }
     

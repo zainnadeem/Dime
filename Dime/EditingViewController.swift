@@ -17,6 +17,8 @@ class EditingViewController: UIViewController {
     var passedDime: Dime!
     var dime: Dime?
     
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "editIcon"), leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
+    
     @IBOutlet weak var dimeNumberLabel: UILabel!
     @IBOutlet weak var dimeImage: UIImageView!
     @IBOutlet weak var captionButton: UIButton!
@@ -31,14 +33,23 @@ class EditingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+     
      captionTextField.isHidden = true
      captionTextField.delegate = self
+     
      dime = passedDime
      currentImageNumber = 1
+     
      backButton.isEnabled = false
      numberOfImagesToEdit = (dime?.media.count)!
+     
      dimeNumberLabel.text = "\(currentImageNumber)/\(numberOfImagesToEdit)"
      dimeImage.image = dime?.media[currentImageNumber-1].mediaImage
+   
+    self.navigationController?.setNavigationBarHidden(true, animated: false)
+    self.navBar.delegate = self
+    self.view.addSubview(navBar)
+    navBar.rightButton.title = "Next"
 
     }
     
@@ -103,8 +114,10 @@ class EditingViewController: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTaggingController"{
+            
             let destinationVC = segue.destination as! UINavigationController
             let targetController = destinationVC.topViewController as! TaggingViewController
+            
             targetController.editViewController = self
             targetController.passedMedia = dime?.media[currentImageNumber - 1]
         }
@@ -168,3 +181,23 @@ extension EditingViewController: GMSAutocompleteViewControllerDelegate {
     }
     
 }
+
+extension EditingViewController : NavBarViewDelegate {
+    
+    func rightBarButtonTapped(_ sender: AnyObject) {
+        mediaCollectionViewController.passedDime = dime
+        dismiss(animated: true, completion: nil)
+        print("Not sure what the right bar button will do yet.")
+    }
+    
+    func leftBarButtonTapped(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
+        print("Not sure what the left bar button will do yet.")
+    }
+    
+    func middleBarButtonTapped(_ Sender: AnyObject) {
+        print("Not sure what the middle bar button will do yet.")
+    }
+    
+}
+

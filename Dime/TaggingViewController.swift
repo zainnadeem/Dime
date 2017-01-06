@@ -23,7 +23,9 @@ class TaggingViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         media = passedMedia
+        
         mediaImageView.image = media?.mediaImage
+        mediaImageView.contentMode = .scaleAspectFill
     }
     
    func hideButtons() {

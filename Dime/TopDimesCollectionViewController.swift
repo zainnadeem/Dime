@@ -132,10 +132,7 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         self.dimeCollectionView.register(DimeCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         dimeCollectionView.backgroundColor = UIColor.clear
         self.view.addSubview(dimeCollectionView)
-        
-        //dimeCollectionView.isPagingEnabled = true
-        
-        
+        dimeCollectionView.isPagingEnabled = true
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

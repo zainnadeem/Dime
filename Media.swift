@@ -170,7 +170,7 @@ extension Media {
     
     
     
-    class func observeNewMedia(_ completion: @escaping (Media) -> Void) {
+class func observeNewMedia(_ completion: @escaping (Media) -> Void) {
         
         DatabaseReference.media.reference().observe(.childAdded, with: { (snapshot) in
             let media = Media(dictionary: snapshot.value as! [String : Any])

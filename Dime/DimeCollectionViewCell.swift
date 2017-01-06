@@ -61,27 +61,34 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     func updateUI() {
         createdTimeLabel.text = dime.createdTime.description
         
-       // profileImageView.image = #imageLiteral(resourceName: "icon-defaultAvatar")
-        if let image = cache?.object(forKey: "\(self.dime.media[0].uid)-coverImage") as? UIImage
+        self.imageView.image = nil
+        
+        let mediaImageKey = "\(self.dime.media[0].uid)-coverImage"
+        
+        if let image = cache?.object(forKey: mediaImageKey) as? UIImage
             {
                 self.imageView.image = image
         }else {
             dime.media[0].downloadMediaImage(completion: { [weak self] (image, error) in
                 if let image = image {
                     self?.imageView.image = image
-                    self?.cache?.setObject(image, forKey: "\(self?.dime.media[0].uid)-coverImage")
+                    self?.cache?.setObject(image, forKey: mediaImageKey)
                 }
             })
         }
-
-        if let image = cache?.object(forKey: "\(self.dime.createdBy.uid)-profileImage") as? UIImage {
+        
+        circleProfileView.image = #imageLiteral(resourceName: "icon-defaultAvatar")
+        
+        let profileImageKey = "\(self.dime.createdBy.uid)-profileImage"
+        
+        if let image = cache?.object(forKey: profileImageKey) as? UIImage {
             self.circleProfileView.image = image.circle
         }else{
             
             dime.createdBy.downloadProfilePicture { [weak self] (image, error) in
                 if let image = image {
                     self?.circleProfileView.image = image.circle
-                    self?.cache?.setObject(image, forKey: "\(self?.dime.createdBy.uid)- profileImage")
+                    self?.cache?.setObject(image, forKey: profileImageKey)
                 }else if error != nil {
                     print(error?.localizedDescription)
                 }
@@ -336,7 +343,7 @@ extension DimeCollectionViewCell {
         }
     }
     
-    
+
 }
 
 

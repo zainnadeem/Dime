@@ -24,11 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GMSPlacesClient.provideAPIKey("AIzaSyB7hGvbTz2rMiS3E5Dpb8W03CkyCCB-ARE")
     
         if let user = FIRAuth.auth()?.currentUser {
-
+    
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let initialViewController = storyboard.instantiateViewController(withIdentifier: "HomeViewController")
-                //let navVC = initialViewController.parent
-                self.window!.rootViewController = initialViewController
+                let initialViewController = storyboard.instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
+                 var rootViewController = self.window!.rootViewController as! UINavigationController
+                rootViewController.pushViewController(initialViewController, animated: true)
+            
             print("User Logged In")
             
             

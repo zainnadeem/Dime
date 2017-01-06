@@ -18,9 +18,10 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.navBar.delegate = self
         self.view.addSubview(navBar)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     @IBAction func topDimesTapped(_ sender: Any) {
@@ -38,6 +39,7 @@ class HomeViewController: UIViewController {
                         self.store.currentUser = User(dictionary: userDict)
                         self.store.getCurrentDime()
                         self.store.getImages()
+                        //self.enableButtons()
                     }
                 })
                 
@@ -48,6 +50,15 @@ class HomeViewController: UIViewController {
        
     }
     
+//    func enableButtons(){
+//        if self.currentUser != nil {
+//            self.navBar.rightButton.isEnabled = true
+//            self.navBar.leftButton.isEnabled = true
+//        }else{
+//            self.navBar.rightButton.isEnabled = false
+//            self.navBar.leftButton.isEnabled = false
+//        }
+//    }
     
     @IBAction func photoButtonDidTap(_ sender: Any) {
       
@@ -80,13 +91,21 @@ class HomeViewController: UIViewController {
             if let nextViewController = segue.destination as? TabBarViewController{
                 nextViewController.tabBarIndex = 3
             }
+        }else if segue.identifier == "ShowNotifications"{
+            
         }
+        
     }
+
+
+
 }
 extension HomeViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {
-        print("Not sure what the right bar button will do yet.")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "NotificationsViewController") as! NotificationTableViewController
+        self.navigationController?.pushViewController(controller, animated: true)
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
@@ -107,4 +126,7 @@ extension HomeViewController : NavBarViewDelegate {
         }
     
     }
+
+
+
 }

@@ -20,11 +20,12 @@ class User {
     var friends: [User]
     var topFriends: [User]
     var dimes: [Dime]
+    var notifications: [Notification]
     
     
     // Mark: - Initialize   rs
     
-    init(uid: String, username: String, fullName: String, bio: String, website: String, friends: [User], topFriends: [User], profileImage: UIImage?, dimes: [Dime])
+    init(uid: String, username: String, fullName: String, bio: String, website: String, friends: [User], topFriends: [User], profileImage: UIImage?, dimes: [Dime], notifications: [Notification])
         
     {
         self.uid = uid
@@ -36,6 +37,7 @@ class User {
         self.topFriends = friends
         self.profileImage = profileImage
         self.dimes = dimes
+        self.notifications = notifications
         
     }
     
@@ -81,6 +83,18 @@ class User {
                 }
             }
         }
+        
+        //notifications
+        self.notifications = []
+        if let notificationsDict = dictionary["notifications"] as? [String : Any]
+        {
+            for (_, notificationDict) in notificationsDict {
+                if let notificationDict = notificationDict as? [String : Any] {
+                    self.notifications.append(Notification(dictionary: notificationDict))
+                }
+            }
+        }
+        
         
 
         
@@ -159,6 +173,22 @@ extension User {
         self.topFriends.append(user)
         let ref = DatabaseReference.users(uid: uid).reference().child("topFriends/\(user.uid)")
         ref.setValue(user.toDictionary())
+    }
+    
+    func addNotification(notification: Notification){
+        self.notifications.append(notification)
+        let ref = DatabaseReference.users(uid: uid).reference().child("notifications/\(notification.uid)")
+        ref.setValue(notification.toDictionary())
+        
+    }
+    
+    func observeNewNotification(_ completion: @escaping (Notification) -> Void){
+        //.childAdded: (1) download everything fo the first time
+        //(2)download the new child added to the ref
+        DatabaseReference.users(uid: uid).reference().child("notifications").observe(.childAdded, with: { snapshot in
+            let notification = Notification(dictionary: snapshot.value as! [String : Any])
+            completion(notification)
+        })
     }
 
    func UserFromSnapshot(_ snapshot : FIRDataSnapshot, uid : String) -> User? {

@@ -30,8 +30,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.media.comments = sortByMostRecentlyCreated(self.media.comments)
+        fetchComments()
         view.backgroundColor = UIColor.clear
 
         
@@ -50,7 +49,16 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
  
     }
     
-    // Mark - UITableView
+    func fetchComments(){
+        media.observeNewComment { (comment) in
+            if !self.media.comments.contains(comment){
+                self.media.comments.insert(comment, at: 0)
+                self.comments = sortByMostRecentlyCreated(self.media.comments)
+                self.tableView.reloadData()
+                
+            }
+        }
+    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -149,10 +157,17 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         //add to user
         let ref = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/comments/\(comment.uid)")
         ref.setValue(comment.toDictionary())
+        createLikeNotification()
         self.captionTextView.text = ""
         self.dismissKeyboard()
         self.tableView.reloadData()
     }
+
+    func createLikeNotification(){
+//        let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) commented on your picture!", notificationType: "comment")
+//        notification.save()
+    }
+
 }
 
     
@@ -163,7 +178,6 @@ extension CommentsViewController : NavBarViewDelegate {
         }
         
         func leftBarButtonTapped(_ sender: AnyObject) {
-            
             self.dismiss(animated: true, completion: nil)
 
         }

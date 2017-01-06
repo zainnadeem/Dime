@@ -12,13 +12,13 @@ import NVActivityIndicatorView
 import UIKit
 
 class SignUpTableViewController: UITableViewController {
-
+    
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var fullNameTextField: UITextField!
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
-
+    
     let activityData = ActivityData()
     
     
@@ -37,12 +37,12 @@ class SignUpTableViewController: UITableViewController {
         fullNameTextField.delegate = self
         usernameTextField.delegate = self
         passwordTextField.delegate = self
-
+        
     }
-
+    
     @IBAction func createNewAccountDidTap() {
         
-        //create a new account 
+        //create a new account
         //save the user data, take a photo
         //log in user
         
@@ -60,25 +60,28 @@ class SignUpTableViewController: UITableViewController {
             
             FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (firUser, error) in
                 NVActivityIndicatorPresenter.sharedInstance.startAnimating(self.activityData)
+                
                 if error != nil {
                     NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
                     self.alert(title: "Oops", message: (error?.localizedDescription)!, buttonTitle: "Okay")
+                
                 } else if let firUser = firUser {
-                    let newUser = User(uid: firUser.uid, username: username, fullName: fullName, bio: "", website: "", friends: [], topFriends: [], profileImage: self.profileImage, dimes: [])
+                    let newUser = User(uid: firUser.uid, username: username, fullName: fullName, bio: "", website: "", friends: [], topFriends: [], profileImage: self.profileImage, dimes: [], notifications: [])
+                    
                     newUser.save(completion: { (error) in
-                            FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (firUser, error) in
-                                if let error = error {
-                                        print(error.localizedDescription)
+                        FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (firUser, error) in
+                            if let error = error {
+                                print(error.localizedDescription)
+                                NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
+                                self.alert(title: "Oops", message: (error.localizedDescription), buttonTitle: "Okay")
+                            } else {
+                                self.dismissKeyboard()
+                                
+                                self.dismiss(animated: true, completion: {
                                     NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
-                                    self.alert(title: "Oops", message: (error.localizedDescription), buttonTitle: "Okay")
-                                } else {
-                                       self.dismissKeyboard()
-                                   
-                                        self.dismiss(animated: true, completion: {
-                                        NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
-                                       })
-                                }
-                            })
+                                })
+                            }
+                        })
                     })
                 }
             })
@@ -87,7 +90,7 @@ class SignUpTableViewController: UITableViewController {
         }
         
         
-
+        
     }
     @IBAction func backDidTap(_ sender: Any) {
         self.dismissKeyboard()
@@ -101,14 +104,14 @@ class SignUpTableViewController: UITableViewController {
             let profilePicture = image!
             self.profileImageView.image = (profilePicture as! UIImage).rounded
             self.profileImageView.image = (profilePicture as! UIImage).circle
-           
+            
             self.profileImage = (profilePicture as! UIImage).rounded
             self.profileImage = (profilePicture as! UIImage).circle
         })
     }
     
     
-
+    
 }
 
 extension SignUpTableViewController : UITextFieldDelegate {
@@ -126,7 +129,7 @@ extension SignUpTableViewController : UITextFieldDelegate {
         }
         return true
     }
-
+    
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
@@ -138,6 +141,6 @@ extension SignUpTableViewController : UITextFieldDelegate {
         alertVC.addAction(action)
         present(alertVC, animated: true, completion: nil)
     }
-
+    
 }
 
