@@ -83,7 +83,7 @@ class MediaCollectionViewController: UICollectionViewController
         self.view.addSubview(navBar)
         
         dime = self.store.currentDime
-        
+
         let bgImage = UIImageView()
         bgImage.image = #imageLiteral(resourceName: "background_GREY")
         bgImage.contentMode = .scaleToFill

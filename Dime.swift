@@ -12,16 +12,17 @@ import UIKit
 
 class Dime {
     
-    var uid: String
-    var caption: String
-    var createdTime: String
+    var uid                     : String
+    var caption                 : String
+    var createdTime             : String
     //var coverMedia: Media
-    var media: [Media]
-    var createdBy: User
-    var likes: [User]
-    var superLikes: [User]
-    var comments: [Comment]
-    
+    var media                   : [Media]
+    var createdBy               : User
+    var likes                   : [User]
+    var superLikes              : [User]
+    var comments                : [Comment]
+    var totalLikes              : Int?
+   
     
     init(caption: String, createdBy: User, media: [Media])
     {
@@ -42,6 +43,7 @@ class Dime {
         uid = dictionary["uid"] as! String
         caption = dictionary["caption"] as! String
         createdTime = dictionary["createdTime"] as! String
+        
         
         let createdByDict = dictionary["createdBy"] as! [String : Any]
         createdBy = User(dictionary: createdByDict)
@@ -221,7 +223,6 @@ extension Dime {
             if let index = likes.index(of: user){
                 likes.remove(at: index)
                 let ref = DatabaseReference.dimes.reference().child("\(uid)/likes/\(user.uid)")
-                
                 ref.setValue(nil)
             }
     }
@@ -244,7 +245,13 @@ func sortByMostRecentlyCreated(_ arrayOfDimes : [Dime]) -> [Dime] {
 
 func sortByTrending(_ arrayOfDimes: [Dime]) -> [Dime] {
     var dimes = arrayOfDimes
-    dimes.sort(by: {$0.likes.count > $1.likes.count})
+    for dime in dimes {
+        dime.totalLikes = 0
+        for media in dime.media{
+             dime.totalLikes! += media.likes.count
+        }
+    }
+    dimes.sort(by: {$0.totalLikes! > $1.totalLikes!})
     return dimes
 }
 

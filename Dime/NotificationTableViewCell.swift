@@ -50,7 +50,7 @@ class NotificationsTableViewCell: UITableViewCell {
         
         self.contentView.addSubview(self.mediaButton)
         self.mediaButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
-        self.mediaButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -12.5).isActive = true
+        self.mediaButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -11.5).isActive = true
         self.mediaButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: profileImageHeightMultiplier).isActive = true
         self.mediaButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.25*0.75).isActive = true
         

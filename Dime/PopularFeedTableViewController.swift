@@ -166,15 +166,9 @@ extension PopularFeedTableViewController : NavBarViewDelegate {
     }
     
     func middleBarButtonTapped(_ Sender: AnyObject) {
-        if store.currentDime != nil {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
-            self.present(controller, animated: true, completion: nil)
-        }else{
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "CreateDimeViewController") as! CreateDimeViewController
-            self.present(controller, animated: true, completion: nil)
-        }
+        let destinationVC = ProfileCollectionViewController()
+        destinationVC.user = store.currentUser
+        self.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
 }

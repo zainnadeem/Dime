@@ -11,16 +11,17 @@ import Firebase
 
 class User {
     
-    let uid: String
-    var username: String
-    var fullName: String
-    var bio: String
-    var website: String
-    var profileImage: UIImage?
-    var friends: [User]
-    var topFriends: [User]
-    var dimes: [Dime]
-    var notifications: [Notification]
+    let uid                       : String
+    var username                  : String
+    var fullName                  : String
+    var bio                       : String
+    var website                   : String
+    var lastSuperLikeTime         : String
+    var profileImage              : UIImage?
+    var friends                   : [User]
+    var topFriends                : [User]
+    var dimes                     : [Dime]
+    var notifications             : [Notification]
     
     
     // Mark: - Initialize   rs
@@ -38,6 +39,8 @@ class User {
         self.profileImage = profileImage
         self.dimes = dimes
         self.notifications = notifications
+        self.lastSuperLikeTime = Constants.oneDayAgo()
+        
         
     }
     
@@ -49,6 +52,7 @@ class User {
         fullName = dictionary["fullName"] as! String
         bio = dictionary["bio"] as! String
         website = dictionary["website"] as! String
+        lastSuperLikeTime = dictionary["lastSuperLikeTime"] as! String
         
         
         //follows
@@ -131,6 +135,7 @@ class User {
             "username" : username,
             "fullName" : fullName,
             "bio" : bio,
+            "lastSuperLikeTime" : lastSuperLikeTime,
             "website" : website
             
         ]
@@ -161,6 +166,13 @@ extension User {
             self.profileImage = image
             completion(image, error as NSError?)
         })
+    }
+    
+    func superLikeDime(){
+        let currentTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
+        self.lastSuperLikeTime = currentTime
+        let ref = DatabaseReference.users(uid: uid).reference().child("lastSuperLikeTime")
+        ref.setValue(currentTime)
     }
     
     func friendUser(user: User) {

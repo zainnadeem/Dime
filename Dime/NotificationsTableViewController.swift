@@ -30,29 +30,30 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = UIColor.white
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
         currentUser = self.store.currentUser
         fetchNotifications()
-        self.notifications = sortByMostRecentlyCreated(self.currentUser.notifications)
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        
         self.navBar.delegate = self
         self.view.addSubview(navBar)
+        
         setUpTableView()
 
         self.tableView.register(NotificationsTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
-        
-    
-        
     }
+
 
     func fetchNotifications() {
         self.tableView.reloadData()
         self.currentUser.observeNewNotification { (notification) in
-            if !self.currentUser.notifications.contains(notification) {
-                self.currentUser.notifications.insert(notification, at: 0)
+            if !self.notifications.contains(notification) {
+                self.notifications.insert(notification, at: 0)
+                self.notifications = sortByMostRecentlyCreated(self.notifications)
                 self.tableView.reloadData()
             }
         }
@@ -69,7 +70,7 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return currentUser.notifications.count
+       return self.notifications.count
         
     }
     

@@ -26,7 +26,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     
     lazy var tableView : UITableView = UITableView()
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "icon-home"), leftButtonImage: #imageLiteral(resourceName: "icon-inbox"), middleButtonImage: #imageLiteral(resourceName: "icon-inbox"))
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "icon-close"), middleButtonImage: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()

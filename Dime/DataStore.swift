@@ -30,14 +30,16 @@ class DataStore {
             let lastDimeCreatedTime = dimes.first?.createdTime
             if self.isDimeWithinOneDay(videoDate: lastDimeCreatedTime!){
                 self.currentDime = dimes.first
+                self.getImages({ 
+                    
+                })
                 }
             
             }
         }
     }
     
-    
-    func getImages(){
+    func getImages( _ completion: @escaping () -> Void){
         if currentDime != nil{
         for media in (currentDime?.media)!{
         if let image = cache?.object(forKey: "\(media.uid)-mediaImage") as? UIImage
@@ -52,9 +54,11 @@ class DataStore {
             })
         }
     }
+            completion()
         }
-}
-    
+    }
+
+
  
     func isDimeWithinOneDay(videoDate date : String) -> Bool {
         if let creationDate = Constants.dateFormatter().date(from: date) {

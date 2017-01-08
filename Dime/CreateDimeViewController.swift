@@ -34,14 +34,15 @@ class CreateDimeViewController: UIViewController {
         self.view.addSubview(navBar)
         dimeCoverPhoto.isEnabled = false
         updateDimeInfo()
+        self.store.getImages { 
+            
+        }
     }
     
     @IBAction func dimeCoverPhotoTapped(_ sender: Any) {
-        
-        
+   
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
-        controller.existingDime = true
         self.present(controller, animated: true, completion: nil)
     }
 

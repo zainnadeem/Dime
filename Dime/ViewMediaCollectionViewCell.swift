@@ -86,10 +86,10 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
 
         if media.likes.contains(currentUser){
             self.isLikedByUser = true
-            likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue"), for: .normal)
+            likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamond"), for: .normal)
         }else{
             self.isLikedByUser = false
-            likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue2"), for: .normal)
+            likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
         }
         
         
@@ -209,35 +209,28 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     }
     
     func likeUnLikeButtonTapped() {
+       
+        let dimeRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/likes/\(currentUser.uid)")
+        let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/likes/\(currentUser.uid)")
         
         if isLikedByUser{
             media.unlikedBy(user: currentUser)
             dime.unlikedBy(user: currentUser)
             
             //find place for updating user
-            let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/likes/\(currentUser.uid)")
+
             mediaRef.setValue(nil)
-            
-            let dimeRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/likes/\(currentUser.uid)")
             dimeRef.setValue(nil)
-            
-            
-            
-            likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue2"), for: .normal)
+
+            likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
             isLikedByUser = false
         }else{
             media.likedBy(user: currentUser)
             dime.likedBy(user: currentUser)
             
             createLikeNotification()
-             //find place for updating user
-            let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/likes/\(currentUser.uid)")
-            mediaRef.setValue(currentUser.toDictionary())
-            
-            let dimeRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/likes/\(currentUser.uid)")
+
             dimeRef.setValue(currentUser.toDictionary())
-            
-            
             
             likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue"), for: .normal)
             isLikedByUser = true
@@ -246,8 +239,8 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     }
     
     func createLikeNotification(){
-       let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) liked your picture!", notificationType: "like")
-        notification.save()
+        let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) liked your \(self.media.type)!", notificationType: "like")
+            notification.save()
     }
 
     
@@ -283,7 +276,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func configureSuperLikeButton(){
         contentView.addSubview(superLikeButton)
-        superLikeButton.setImage(#imageLiteral(resourceName: "icon-diamond-black"), for: .normal)
+        superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
         superLikeButton.setTitle("10", for: .normal)
         superLikeButton.titleLabel?.font = UIFont.dimeFont(20)
        
