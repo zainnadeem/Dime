@@ -112,6 +112,7 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DimeCollectionViewCell
         
         cell.parentCollectionView = self
+        cell.collectionView = dimeCollectionView
         cell.currentUser = store.currentUser
         cell.dime = passedDimes[indexPath.row]
         

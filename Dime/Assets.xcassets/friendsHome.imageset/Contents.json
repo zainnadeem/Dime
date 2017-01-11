@@ -2,25 +2,22 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "icon-blueDiamondUnfilled.png",
+      "filename" : "friendsHome.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icon-blueDiamondUnfilled2x.png",
+      "filename" : "friendsHome2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icon-blueDiamondUnfilled3x.png",
+      "filename" : "friendsHome3x.png",
       "scale" : "3x"
     }
   ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
-  },
-  "properties" : {
-    "template-rendering-intent" : "original"
   }
 }

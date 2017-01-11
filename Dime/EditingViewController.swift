@@ -17,7 +17,7 @@ class EditingViewController: UIViewController {
     var passedDime: Dime!
     var dime: Dime?
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "editIcon"), leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
     
     @IBOutlet weak var dimeNumberLabel: UILabel!
     @IBOutlet weak var dimeImage: UIImageView!
@@ -27,6 +27,7 @@ class EditingViewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var captionTextField: UITextField!
+    @IBOutlet weak var dimeNameTextField: UITextField!
    
     var currentImageNumber = Int()
     var numberOfImagesToEdit = Int()
@@ -36,6 +37,7 @@ class EditingViewController: UIViewController {
      
      captionTextField.isHidden = true
      captionTextField.delegate = self
+     dimeNameTextField.delegate = self
      
      dime = passedDime
      currentImageNumber = 1
@@ -45,16 +47,21 @@ class EditingViewController: UIViewController {
      
      dimeNumberLabel.text = "\(currentImageNumber)/\(numberOfImagesToEdit)"
      dimeImage.image = dime?.media[currentImageNumber-1].mediaImage
+        
+     if dime?.caption != ""{
+        dimeNameTextField.text = dime?.caption
+        }
    
     self.navigationController?.setNavigationBarHidden(true, animated: false)
     self.navBar.delegate = self
     self.view.addSubview(navBar)
-    navBar.rightButton.title = "Next"
 
     }
     
     @IBAction func nextButtonTapped(_ sender: Any) {
+        dime?.caption = dimeNameTextField.text!
         mediaCollectionViewController.passedDime = dime
+        mediaCollectionViewController.finishedEditing = true
         dismiss(animated: true, completion: nil)
     }
 
@@ -185,8 +192,6 @@ extension EditingViewController: GMSAutocompleteViewControllerDelegate {
 extension EditingViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {
-        mediaCollectionViewController.passedDime = dime
-        dismiss(animated: true, completion: nil)
         print("Not sure what the right bar button will do yet.")
     }
     

@@ -13,7 +13,7 @@ private let reuseIdentifier = "PopularTableViewCell"
 class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let store = DataStore.sharedInstance
-    var passedDimes: [Dime] = [Dime]()
+    var usersFriends: [User] = [User]()
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
     
@@ -39,29 +39,26 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         configureTitleLabel()
         configureTitleIcon()
         setUpTableView()
-        fetchDimes()
+        fetchUsers()
 
     }
 
-    func fetchDimes() {
+    func fetchUsers() {
         self.tableView.reloadData()
         if let friends = store.currentUser?.friends{
             for friend in friends{
-                Dime.observeFriendsDimes(user: friend, { (dime) in
-                    if !self.passedDimes.contains(dime) {
-                        self.passedDimes.insert(dime, at: 0)
-                        self.passedDimes = sortByTrending(self.passedDimes)
+                    if !self.usersFriends.contains(friend) {
+                        self.usersFriends.insert(friend, at: 0)
+                        //self.usersFriends = sortByPopular(self.usersFriends)
                         self.tableView.reloadData()
                         
                     }
-                })
+                }
             }
         }
-        
-    }
     
     override func viewWillAppear(_ animated: Bool) {
-        fetchDimes()
+        fetchUsers()
     }
     
     func setUpTableView(){
@@ -124,17 +121,15 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
 
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return passedDimes.count
+        return usersFriends.count
     }
 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! PopularTableViewCell
-        
-        cell.setViewConstraints()
-        cell.currentUser = store.currentUser
-        cell.dime = passedDimes[indexPath.row]
         cell.backgroundColor = UIColor.clear
+        cell.setViewConstraints()
+        cell.updateUI(user: usersFriends[indexPath.row])
         return cell
     }
     
@@ -146,7 +141,7 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let destinationVC = ProfileCollectionViewController()
-        destinationVC.user = passedDimes[indexPath.row].createdBy
+        destinationVC.user = usersFriends[indexPath.row]
         self.navigationController?.pushViewController(destinationVC, animated: true)
     }
     

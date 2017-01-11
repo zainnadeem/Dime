@@ -44,6 +44,16 @@ extension FIRImage {
         ref = StorageReference.images.reference().child(uid)
         downloadLink = ref.description
         
+        
+        // Delete the file
+        ref.delete { error in
+            if let error = error {
+                // Uh-oh, an error occurred!
+            } else {
+                // File deleted successfully
+            }
+        }
+        
         ref.put(imageData!, metadata: nil) { (metaData, error) in
             completion(error)
         }

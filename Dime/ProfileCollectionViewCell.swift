@@ -70,12 +70,8 @@ class ProfileCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 }
             })
         }
-        
-
         DimeNameLabel.text = "Dime Name"
         DimeNameLabel.textColor = UIColor.black
-        
-        
     }
     
     
@@ -184,8 +180,7 @@ class ProfileCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func configureLikeButton(){
         contentView.addSubview(likeButton)
-        likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue"), for: .normal)
-        likeButton.setTitle("10", for: .normal)
+        likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamond"), for: .normal)
         likeButton.titleLabel?.font = UIFont.dimeFont(16)
         
         
@@ -193,8 +188,8 @@ class ProfileCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.likeButton.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor, constant: 5).isActive = true
         self.likeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 5).isActive = true
         
-        self.likeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
-        self.likeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.05).isActive = true
+        self.likeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07).isActive = true
+        self.likeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.09).isActive = true
     }
     
     func configureLikeLabel(){
@@ -203,7 +198,6 @@ class ProfileCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         likesLabel.textAlignment = NSTextAlignment.center
         likesLabel.textColor = UIColor.black
         likesLabel.font = UIFont.dimeFont(9)
-        likesLabel.text = "10"
         
         self.likesLabel.translatesAutoresizingMaskIntoConstraints = false
         self.likesLabel.leadingAnchor.constraint(equalTo: self.likeButton.trailingAnchor, constant:2).isActive = true
@@ -214,8 +208,7 @@ class ProfileCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func configureSuperLikeButton(){
         contentView.addSubview(superLikeButton)
-        superLikeButton.setImage(#imageLiteral(resourceName: "icon-diamond-black"), for: .normal)
-        superLikeButton.setTitle("10", for: .normal)
+        superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
         superLikeButton.titleLabel?.font = UIFont.dimeFont(16)
         
         
@@ -223,8 +216,8 @@ class ProfileCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.superLikeButton.leadingAnchor.constraint(equalTo: self.likesLabel.trailingAnchor, constant: 5).isActive = true
         self.superLikeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 5).isActive = true
         
-        self.superLikeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
-        self.superLikeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.05).isActive = true
+        self.superLikeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07).isActive = true
+        self.superLikeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.09).isActive = true
     }
     
     func configureSuperLikeLabel(){

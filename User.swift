@@ -22,6 +22,7 @@ class User {
     var topFriends                : [User]
     var dimes                     : [Dime]
     var notifications             : [Notification]
+    var averageLikes              : Int?
     
     
     // Mark: - Initialize   rs
@@ -79,10 +80,10 @@ class User {
 
         //dimeAlbum
         self.dimes = []
-        if let dimesDict = dictionary["dimes"] as? [String : Any]
+        if let dimesDict = dictionary["dimes"] as? [String : AnyObject]
         {
             for (_, dimeDict) in dimesDict {
-                if let dimeDict = dimeDict as? [String : Any] {
+                if let dimeDict = dimeDict as? [String : AnyObject] {
                     self.dimes.append(Dime(dictionary: dimeDict))
                 }
             }
@@ -179,6 +180,14 @@ extension User {
         self.friends.append(user)
         let ref = DatabaseReference.users(uid: uid).reference().child("friends/\(user.uid)")
         ref.setValue(user.toDictionary())
+        
+    }
+    
+    func unFriendUser(user: User){
+        self.friends = self.friends.filter() {$0 !== user}
+        let ref = DatabaseReference.users(uid: uid).reference().child("friends/\(user.uid)")
+        ref.setValue(nil)
+        
     }
     
     func topFriendUser(user: User) {
@@ -186,7 +195,13 @@ extension User {
         let ref = DatabaseReference.users(uid: uid).reference().child("topFriends/\(user.uid)")
         ref.setValue(user.toDictionary())
     }
-    
+    func unTopFriendUser(user: User){
+        self.topFriends = self.topFriends.filter() {$0 !== user}
+        let ref = DatabaseReference.users(uid: uid).reference().child("topFriends/\(user.uid)")
+        ref.setValue(nil)
+        
+    }
+   
     func addNotification(notification: Notification){
         self.notifications.append(notification)
         let ref = DatabaseReference.users(uid: uid).reference().child("notifications/\(notification.uid)")
@@ -226,8 +241,26 @@ func == (lhs: User, rhs: User) -> Bool {
     return lhs.uid == rhs.uid
 }
 
+func sortByPopular(_ arrayOfUsers: [User]) -> [User] {
+    var users = arrayOfUsers
+    for user in users {
+        var totalLikes = 0
+        user.averageLikes = 0
+        var numberOfMedia = 0
+        for dime in user.dimes{
+            for media in dime.media{
+                numberOfMedia += 1
+                totalLikes += media.likes.count
+            }
+        }
+        user.averageLikes! = totalLikes / numberOfMedia
+    }
+    users.sort(by: {$0.averageLikes! > $1.averageLikes!})
+    return users
+}
 
-    
-    
-    
+
+
+
+
 

@@ -8,30 +8,30 @@
 
 import UIKit
 import Firebase
+import DZNEmptyDataSet
 import SAMCache
 
-private let reuseIdentifier = "profileCollectionViewCell"
+private let reuseIdentifier = "dimeCollectionViewCell"
 
 class ProfileCollectionViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UITextViewDelegate {
     
-    let store = DataStore.sharedInstance
+
     var user : User?
     var cache = SAMCache.shared()
+    let store = DataStore.sharedInstance
+    var passedDimes: [Dime] = [Dime]()
+    var viewControllerTitle: UILabel = UILabel()
+    var viewControllerIcon: UIButton = UIButton()
     
-    lazy var passedDimes:               [Dime]  = [Dime]()
-    lazy var viewControllerTitle:       UILabel = UILabel()
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
-    lazy var viewControllerBanner:      UIView  = UIView()
-    lazy var circleProfileView:         UIImageView = UIImageView()
-    
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
-    
-    lazy var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
-    
+    var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
+        //self.dimeCollectionView.emptyDataSetDelegate = self
+        //self.dimeCollectionView.emptyDataSetSource = self
         
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
         backgroundImage.image = #imageLiteral(resourceName: "background_GREY")
@@ -41,100 +41,49 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         
         self.navBar.delegate = self
         self.view.addSubview(navBar)
-        configurerBanner()
-        configureProfilePic()
         configureTitleLabel()
-        
+        configureTitleIcon()
         fetchDimes()
         
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
-        self.dimeCollectionView.reloadData()
+        fetchDimes()
     }
-    
-    
-    func configureProfilePic() {
-        self.view.addSubview(circleProfileView)
-        
-        circleProfileView.image = #imageLiteral(resourceName: "icon-defaultAvatar")
-        guard let user = user else{ print("No user found")
-            return }
-        
-        let profileImageKey = "\(user.uid)-profileImage"
-        
-        if let image = cache?.object(forKey: profileImageKey) as? UIImage {
-            self.circleProfileView.image = image.circle
-        }else{
-            user.downloadProfilePicture { [weak self] (image, error) in
-                if let image = image {
-                    self?.circleProfileView.image = image.circle
-                    self?.cache?.setObject(image.circle, forKey: profileImageKey)
-                }else if error != nil {
-                    print(error?.localizedDescription)
-                }
-            }
-        }
-        
-        circleProfileView.layer.cornerRadius = circleProfileView.bounds.width / 2.0
-        circleProfileView.layer.masksToBounds = true
-        
-        self.circleProfileView.translatesAutoresizingMaskIntoConstraints = false
-        self.circleProfileView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 85).isActive = true
-        self.circleProfileView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
-        self.circleProfileView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.11).isActive = true
-        self.circleProfileView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.20).isActive = true
-    }
-    
     
     func configureTitleLabel(){
         self.view.addSubview(viewControllerTitle)
         
         self.viewControllerTitle.translatesAutoresizingMaskIntoConstraints = false
-        self.viewControllerTitle.topAnchor.constraint(equalTo: self.viewControllerBanner.topAnchor, constant: 5).isActive = true
-        self.viewControllerTitle.leadingAnchor.constraint(equalTo: self.viewControllerBanner.leadingAnchor, constant: 10).isActive = true
-        self.viewControllerTitle.heightAnchor.constraint(equalTo: self.viewControllerBanner.heightAnchor, multiplier: 0.5).isActive = true
+        self.viewControllerTitle.topAnchor.constraint(equalTo: self.navBar.bottomAnchor).isActive = true
+        
+        self.viewControllerTitle.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        
+        self.viewControllerTitle.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.07).isActive = true
         self.viewControllerTitle.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         
+        viewControllerTitle.backgroundColor = UIColor.darkGray
         viewControllerTitle.textAlignment = NSTextAlignment.left
         viewControllerTitle.textColor = UIColor.white
-        
-        viewControllerTitle.font = UIFont.dimeFont(30)
-        viewControllerTitle.text = user?.fullName
-        
+        viewControllerTitle.font = UIFont.dimeFont(15)
+        if let currentUser = self.user{
+        viewControllerTitle.text = "        \(currentUser.username)"
+        }
     }
     
-    func configurerBanner() {
-        self.view.addSubview(viewControllerBanner)
-        viewControllerBanner.backgroundColor = UIColor.dimeLightBlue()
-
-        self.viewControllerBanner.translatesAutoresizingMaskIntoConstraints = false
-        self.viewControllerBanner.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        self.viewControllerBanner.topAnchor.constraint(equalTo: self.navBar.bottomAnchor, constant: 20).isActive = true
-        self.viewControllerBanner.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.1).isActive = true
-        self.viewControllerBanner.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.74).isActive = true
+    func configureTitleIcon() {
+        self.view.addSubview(viewControllerIcon)
+        viewControllerIcon.setImage(#imageLiteral(resourceName: "icon-diamond-black"), for: .normal)
+        
+        
+        self.viewControllerIcon.translatesAutoresizingMaskIntoConstraints = false
+        self.viewControllerIcon.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 5).isActive = true
+        self.viewControllerIcon.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
+        self.viewControllerIcon.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.03).isActive = true
+        self.viewControllerIcon.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
     }
     
-    func setUpCollectionView(){
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.scrollDirection = UICollectionViewScrollDirection.horizontal
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 0
-        
-        dimeCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
-        
-        dimeCollectionView.dataSource = self
-        dimeCollectionView.delegate = self
-        
-        self.dimeCollectionView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        
-        dimeCollectionView.backgroundColor = UIColor.clear
-        dimeCollectionView.isPagingEnabled = true
-        
-        self.view.addSubview(dimeCollectionView)
-
-    }
+    
     
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
@@ -147,8 +96,8 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         })
     }
     
-
-  // MARK - COLLECTIONVIEW METHODS
+    
+    // MARK: UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -162,11 +111,28 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProfileCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DimeCollectionViewCell
+        
+        cell.parentCollectionView = self
+        cell.collectionView = dimeCollectionView
         cell.currentUser = store.currentUser
         cell.dime = passedDimes[indexPath.row]
         
         return cell
+    }
+    
+    func setUpCollectionView(){
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.scrollDirection = UICollectionViewScrollDirection.horizontal
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        dimeCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        dimeCollectionView.dataSource = self
+        dimeCollectionView.delegate = self
+        self.dimeCollectionView.register(DimeCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        dimeCollectionView.backgroundColor = UIColor.clear
+        self.view.addSubview(dimeCollectionView)
+        dimeCollectionView.isPagingEnabled = true
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -207,3 +173,64 @@ extension ProfileCollectionViewController : NavBarViewDelegate {
     }
     
 }
+
+//extension ProfileCollectionViewController : DZNEmptyDataSetSource {
+//    
+//    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+//        
+//        let image = #imageLiteral(resourceName: "icon-logo")
+//        
+//        let size = image.size.applying(CGAffineTransform(scaleX: 0.2, y: 0.2))
+//        let hasAlpha = true
+//        let scale : CGFloat = 0.0
+//        
+//        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
+//        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
+//        
+//        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
+//        
+//        return scaledImage
+//    }
+//}
+//
+//func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+//    let text = "You have No Top Friends"
+//    
+//    let attributes = [NSFontAttributeName : UIFont.dimeFont(24.0),
+//                      NSForegroundColorAttributeName : UIColor.darkGray]
+//    
+//    
+//    return NSAttributedString(string: text, attributes: attributes)
+//    
+//    
+//}
+//
+//func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+//    
+//    var text = ""
+//    
+//    let paragraph = NSMutableParagraphStyle()
+//    paragraph.lineBreakMode = .byWordWrapping
+//    paragraph.alignment = .center
+//    
+//    let attributes = [NSFontAttributeName : UIFont.dimeFont(14.0),
+//                      NSForegroundColorAttributeName : UIColor.lightGray,
+//                      NSParagraphStyleAttributeName : paragraph]
+//    
+//    text = ""
+//    return NSAttributedString(string: text, attributes: attributes)
+//    
+//}
+//
+//func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
+//    return UIColor.white
+//}
+//
+//
+////extension ProfileCollectionViewController : DZNEmptyDataSetDelegate {
+////    
+////    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
+////        return true
+////    }
+////}

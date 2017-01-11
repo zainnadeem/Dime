@@ -209,6 +209,7 @@
 				BFAA92D01DEF38800063F660 /* EditingViewController.swift */,
 				BFAA92D81DF203650063F660 /* TaggingViewController.swift */,
 				BFAA92D41DF0BFDA0063F660 /* SearchUserViewController.swift */,
+				BF5A00871DDA3B7E00F825DD /* Helper Classes */,
 			);
 			name = "Dime Creation Controllers";
 			sourceTree = "<group>";
@@ -245,13 +246,13 @@
 		BF6FCDF71DDE42BF00AC5A71 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */,
 				BF2A9B4D1DEB74D0001A7704 /* TabBarViewController.swift */,
 				BF5564EF1DF7335F0086290D /* TopDimesCollectionViewController.swift */,
 				BFA3F6101DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift */,
 				BF5564F11DF88D0C0086290D /* TrendingCollectionViewController.swift */,
 				BF5564F31DF8A2100086290D /* FriendsCollectionViewController.swift */,
 				BF1BBC151DFDED230031A5FE /* ProfileCollectionViewController.swift */,
-				BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */,
 				BFF5A5161E1C186C00F81B62 /* NotificationsTableViewController.swift */,
 				BF35B8C81DFB39CB006D87D1 /* CommentsViewController.swift */,
 			);
@@ -263,12 +264,12 @@
 			children = (
 				BF35B8C61DFB3663006D87D1 /* CommentTableViewCell.swift */,
 				BFF5A5181E1C197F00F81B62 /* NotificationTableViewCell.swift */,
-				BF5564F51DF8AA0C0086290D /* PopularTableViewCell.swift */,
 				BF9342BA1DCFCC9A006BE70C /* MediaCollectionViewCell.swift */,
-				BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */,
 				BFA3F60E1DF9DC3700EE0A0A /* ViewMediaCollectionViewCell.swift */,
 				BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */,
 				BF90FA041DFF291F004E14A0 /* ProfileCollectionViewCell.swift */,
+				BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */,
+				BF5564F51DF8AA0C0086290D /* PopularTableViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -339,7 +340,6 @@
 				BF9342A91DCE8A4B006BE70C /* Models */,
 				BF5A008A1DDA3BCE00F825DD /* Newsfeed */,
 				BF5090851DD039BF000AF7B6 /* Dime Creation Controllers */,
-				BF5A00871DDA3B7E00F825DD /* Helper Classes */,
 				BF5A00771DDA390500F825DD /* User Authentification */,
 				BF9342C21DCFCCA1006BE70C /* Newsreader */,
 				BF6FCE031DDE450C00AC5A71 /* Post Composer Tab */,

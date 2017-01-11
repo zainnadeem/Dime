@@ -1,98 +1,35 @@
+
 import UIKit
-import Firebase
+import NSDate_TimeAgo
 import SAMCache
 
 
 class PopularTableViewCell: UITableViewCell {
-
-    lazy var profileImage           : UIImageView   = UIImageView()
     
+    lazy var profileImage           : UIImageView   = UIImageView()
     lazy var mainLabelStackview     : UIStackView   = UIStackView()
     lazy var fullName               : UILabel       = UILabel()
-    lazy var tagsLabel              : UILabel       = UILabel()
+    lazy var notificationLabel      : UILabel       = UILabel()
     lazy var timeAgoLabel           : UILabel       = UILabel()
     lazy var averageLikesLabel      : UILabel       = UILabel()
     
-    lazy var rightLabelStackview    : UIStackView   = UIStackView()
+    weak var parentTableView = UIViewController()
     
-    lazy var distanceStack          : UIStackView   = UIStackView()
-    lazy var distanceLabel          : UILabel       = UILabel()
-    lazy var distanceIcon           : UIImageView   = UIImageView()
-    
-    lazy var roarsStack             : UIStackView   = UIStackView()
-    lazy var roarsCountLabel        : UILabel       = UILabel()
-    lazy var roarsIcon              : UIImageView   = UIImageView()
-    
-    lazy var dealsStack             : UIStackView   = UIStackView()
-    lazy var dealCountLabel         : UILabel       = UILabel()
-    lazy var dealsIcon              : UIImageView   = UIImageView()
-    
-    lazy var iconsStack             : UIStackView   = UIStackView()
-    lazy var textLabelsStack        : UIStackView   = UIStackView()
-
-    
-    lazy var activitySpinner        : UIActivityIndicatorView
-        = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-    
-    lazy var borderWidth            : CGFloat       = 3.0
+    lazy var borderWidth                  : CGFloat =       3.0
     lazy var profileImageHeightMultiplier : CGFloat =      (0.75)
     
-    lazy var orangeSideBar          : UIView        = UIView(frame: CGRect(x: 0, y: 0, width: 7.5, height: self.contentView.bounds.height))
-    
-    var currentUser: User!
-    var dime: Dime! {
-        didSet{
-            if currentUser != nil {
-                self.setViewProperties()
-            }
-        }
-    }
-    
     var cache = SAMCache.shared()
-    
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    let store = DataStore.sharedInstance
 
-    }
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-      
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-    
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        super.setHighlighted(highlighted, animated: animated)
-        
-        if highlighted {
-            self.orangeSideBar.backgroundColor = UIColor.dimeLightBlue()
-            self.profileImage.layer.borderColor = UIColor.dimeLightRed().cgColor
-        }
-        else {
-            self.orangeSideBar.backgroundColor = UIColor.clear
-            self.profileImage.layer.borderColor = UIColor.black.cgColor
-        }
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
-    }
     
     func setViewConstraints() {
         
         
         self.profileImage.translatesAutoresizingMaskIntoConstraints = false
-        
         self.mainLabelStackview.translatesAutoresizingMaskIntoConstraints = false
         self.fullName.translatesAutoresizingMaskIntoConstraints = false
-        self.tagsLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.notificationLabel.translatesAutoresizingMaskIntoConstraints = false
         self.timeAgoLabel.translatesAutoresizingMaskIntoConstraints = false
         self.averageLikesLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -101,8 +38,12 @@ class PopularTableViewCell: UITableViewCell {
         self.profileImage.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 12.5).isActive = true
         self.profileImage.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: profileImageHeightMultiplier).isActive = true
         self.profileImage.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.25*0.75).isActive = true
-
         
+        self.contentView.addSubview(self.averageLikesLabel)
+        self.averageLikesLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+        self.averageLikesLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -11.5).isActive = true
+        self.averageLikesLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: profileImageHeightMultiplier).isActive = true
+        self.averageLikesLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.25*0.75).isActive = true
         
         
         // Main center labels stack
@@ -111,76 +52,66 @@ class PopularTableViewCell: UITableViewCell {
         self.mainLabelStackview.axis = .vertical
         self.mainLabelStackview.distribution = .fillProportionally
         
-        self.mainLabelStackview.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
+        self.mainLabelStackview.trailingAnchor.constraint(equalTo: self.averageLikesLabel.leadingAnchor).isActive = true
         self.mainLabelStackview.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
         self.mainLabelStackview.leadingAnchor.constraint(equalTo: self.profileImage.trailingAnchor, constant: 7).isActive = true
         self.mainLabelStackview.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.65).isActive = true
         self.mainLabelStackview.addArrangedSubview(self.fullName)
-        self.mainLabelStackview.addArrangedSubview(self.tagsLabel)
+        self.mainLabelStackview.addArrangedSubview(self.notificationLabel)
         self.mainLabelStackview.addArrangedSubview(self.timeAgoLabel)
         
-        self.contentView.addSubview(self.orangeSideBar)
-        self.orangeSideBar.backgroundColor = UIColor.clear
-        
-        
-        
-        self.contentView.addSubview(self.averageLikesLabel)
-        self.averageLikesLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
-        self.averageLikesLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 2).isActive = true
-        self.averageLikesLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.2).isActive = true
-        self.averageLikesLabel.heightAnchor.constraint(equalTo: self.fullName.heightAnchor).isActive = true
-        self.averageLikesLabel.text = "55"
-        
         
     }
     
     
-    
-    func setViewProperties() {
-        
-        //timeAgoLabel.text = dime.createdTime.description
-        
-        if let image = cache?.object(forKey: "\(self.dime.createdBy.uid)-profileImage") as? UIImage {
-            self.profileImage.image = image
-        }else{
+    func updateUI(user: User){
+            self.profileImage.image = #imageLiteral(resourceName: "icon-defaultAvatar")
             
-            dime.createdBy.downloadProfilePicture { [weak self] (image, error) in
-                if let image = image {
-                    self?.profileImage.image = image
-                    self?.cache?.setObject(image, forKey: "\(self?.dime.createdBy.uid)-profileImage")
-                }else if error != nil {
-                    print(error?.localizedDescription)
+            if let image = cache?.object(forKey: "\(user.uid)-headerImage") as? UIImage {
+                self.profileImage.image = image
+            }else{
+                
+                user.downloadProfilePicture { [weak self] (image, error) in
+                    if let image = image {
+                        self?.profileImage.image = image
+                        self?.cache?.setObject(image, forKey: "\(user.uid)-headerImage")
+                    }else if error != nil {
+                        print(error?.localizedDescription)
+                    }
                 }
             }
-        }
-        
+            
 
-        //self.profileImage.image = nil
-        self.profileImage.contentMode = .scaleAspectFill
-        self.profileImage.layer.cornerRadius = self.profileImage.frame.width / 2
-        self.profileImage.layer.borderWidth = borderWidth
-        self.profileImage.layer.borderColor = UIColor.white.cgColor
-        self.profileImage.clipsToBounds = true
         
-
-        self.setImageViewCircular()
-        self.fullName.textColor = UIColor.black
-        self.fullName.font = UIFont.dimeFont(18)
-        self.fullName.text = dime.createdBy.fullName
+        fullName.text = user.fullName
+        profileImage.layer.cornerRadius = profileImage.bounds.width / 2.0
+        profileImage.layer.masksToBounds = true
+        setImageViewCircular()
+        fullName.text = user.fullName
+        fullName.textColor = UIColor.darkGray
+        fullName.font = UIFont.dimeFontBold(12)
         
-//        self.tagsLabel.font = UIFont.manestreamFont(15)
-//        self.tagsLabel.textColor = UIColor.darkGray
-//        self.tagsLabel.text = business.locationText
-        
-        self.timeAgoLabel.font = UIFont.dimeFont(12)
-        self.timeAgoLabel.textColor = UIColor.lightGray
-        
-        if dime.likes == [] {
-            self.averageLikesLabel.text = "0"
-        }else{
-            self.averageLikesLabel.text = dime.likes.count.description
-        }
+        notificationLabel.text = "Last SuperLike: \(parseDate(user.lastSuperLikeTime))"
+        notificationLabel.textColor = UIColor.black
+        notificationLabel.font = UIFont.dimeFontBold(12)
+        notificationLabel.numberOfLines = 10
+        getPopularDimesNumber(user: user)
+       
+        //parseDate(business.latestVideo["dateCreated"] as! String)
+        //timeAgoLabel.text = parse   comment.createdTime.description
+        timeAgoLabel.textColor = UIColor.black
+        timeAgoLabel.font = UIFont.dimeFont(10)
     }
+    
+    func getPopularDimesNumber(user: User){
+        var totalLikes = Int()
+        var numberOfMedia = Int()
+        for dime in user.dimes{
+            totalLikes += dime.totalLikes
+        }
+        timeAgoLabel.text = totalLikes.description
+    }
+
     
     func setImageViewCircular() {
         self.profileImage.contentMode = .scaleAspectFill
@@ -191,3 +122,14 @@ class PopularTableViewCell: UITableViewCell {
         self.profileImage.clipsToBounds = true
     }
 }
+
+fileprivate func parseDate(_ date : String) -> String {
+    
+    if let timeAgo = (Constants.dateFormatter().date(from: date) as NSDate?)?.timeAgo() {
+        return timeAgo
+    }
+    else { return "" }
+}
+
+
+

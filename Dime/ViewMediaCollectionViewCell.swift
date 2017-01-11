@@ -29,9 +29,11 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     var background: UIImageView = UIImageView()
     var playButton = UIButton()
     
-    lazy var likeButton      : UIButton      = UIButton(type: .custom)
+  
     
-    lazy var isLikedByUser       : Bool          = Bool()
+    lazy var likeButton      :  UIButton       = UIButton(type: .custom)
+    
+    lazy var isLikedByUser   :  Bool           = Bool()
     
     var currentUser: User!
     var dime: Dime!
@@ -50,13 +52,13 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
         imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
         
-        configureBackgroundImage()
+        configureCaptionNameLabel()
         configureImageView()
-        configureDimeNameLabel()
         configureLikeButton()
         configureLikeLabel()
         configureSuperLikeButton()
         configureSuperLikeLabel()
+        configureCreatedTimeLabel()
         self.backgroundColor = UIColor.clear
         
     }
@@ -81,9 +83,29 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         }
         
         
-        captionLabel.text = "Night Out"
-        captionLabel.textColor = UIColor.black
+        captionLabel.text = media.caption
+        captionLabel.textColor = UIColor.white
+        
+        createdTimeLabel.textColor = UIColor.white
+        createdTimeLabel.text = parseDate(dime.createdTime)
+        
+        
+        setUpLikeButton()
 
+        
+        
+        if media.type == "video" {
+            configurePlayButton()
+        }else{
+            playButton.setImage(nil, for: .normal)
+        }
+        
+        likesLabel.text = media.likesCount.description
+        
+       
+    }
+    
+    func setUpLikeButton(){
         if media.likes.contains(currentUser){
             self.isLikedByUser = true
             likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamond"), for: .normal)
@@ -92,15 +114,9 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
         }
         
-        
-        if media.type == "video" {
-            configurePlayButton()
-        }
-        
-        
-        
-        reloadLabels()
     }
+    
+ 
     
     func configurePlayButton(){
         contentView.addSubview(playButton)
@@ -138,43 +154,24 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         }
 
     
-    
-    
-    
-    func configureDimeNameLabel() {
+    func configureCaptionNameLabel() {
         contentView.addSubview(captionLabel)
         
         self.captionLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.captionLabel.bottomAnchor.constraint(equalTo: self.imageView.topAnchor, constant: -10).isActive = true
+        self.captionLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 100).isActive = true
+        self.captionLabel.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
         
-        self.captionLabel.centerXAnchor.constraint(equalTo: self.imageView.centerXAnchor).isActive = true
+        self.captionLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07).isActive = true
         
-        self.captionLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.1)
-        self.captionLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.5)
+        self.captionLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8).isActive = true
         
-        captionLabel.backgroundColor = UIColor.clear
-        captionLabel.textAlignment = NSTextAlignment.center
+        captionLabel.textAlignment = .center
+        captionLabel.font = UIFont.dimeFont(14)
         captionLabel.textColor = UIColor.black
-        captionLabel.font = UIFont.dimeFont(13)
     }
     
     
-    
-    
-    func configureBackgroundImage() {
-        contentView.addSubview(backgroundLocationImage)
-        backgroundLocationImage.image = background.image
-        backgroundLocationImage.contentMode = UIViewContentMode.scaleAspectFill
-        backgroundLocationImage.clipsToBounds = true
-        
-        self.backgroundLocationImage.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundLocationImage.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-        self.backgroundLocationImage.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
-        self.backgroundLocationImage.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
-        self.backgroundLocationImage.heightAnchor.constraint(equalTo: self.contentView.heightAnchor).isActive = true
-    }
-    
-    
+
     
     
     func configureImageView() {
@@ -184,9 +181,9 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         imageView.clipsToBounds = true
         
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
-        self.imageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -10).isActive = true
+        self.imageView.topAnchor.constraint(equalTo: self.captionLabel.bottomAnchor, constant: 5).isActive = true
         
-        self.imageView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.35).isActive = true
+        self.imageView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.55).isActive = true
         
         self.imageView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor).isActive = true
     }
@@ -209,33 +206,53 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     }
     
     func likeUnLikeButtonTapped() {
-       
+
         let dimeRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/likes/\(currentUser.uid)")
+        
         let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/likes/\(currentUser.uid)")
         
         if isLikedByUser{
+            
             media.unlikedBy(user: currentUser)
             dime.unlikedBy(user: currentUser)
+            
+            dime.updateLikes(.decrement)
+            media.updateLikes(.decrement)
             
             //find place for updating user
 
             mediaRef.setValue(nil)
             dimeRef.setValue(nil)
-
+           
+            
+        
+            
+            
             likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
             isLikedByUser = false
+        
         }else{
+            
             media.likedBy(user: currentUser)
             dime.likedBy(user: currentUser)
+            
+            dime.updateLikes(.increment)
+            media.updateLikes(.increment)
             
             createLikeNotification()
 
             dimeRef.setValue(currentUser.toDictionary())
+            mediaRef.setValue(currentUser.toDictionary())
             
             likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue"), for: .normal)
+            
+            
             isLikedByUser = true
+            
         }
-        reloadLabels()
+        
+        likesLabel.text = media.likesCount.description
+
     }
     
     func createLikeNotification(){
@@ -246,16 +263,11 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func reloadLabels(){
         if media.likes != [] {
-            likesLabel.text = media.likes.count.description
+            likesLabel.text = media.likesCount.description
         }else{
             likesLabel.text = "0"
         }
-        
-        if dime.superLikes != [] {
-            superLikeLabel.text = dime.superLikes.count.description
-        }else{
-            superLikeLabel.text = "0"
-        }
+
     }
     
     func configureLikeLabel(){
@@ -302,6 +314,21 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.superLikeLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.05).isActive = true
     }
     
+    func configureCreatedTimeLabel(){
+        contentView.addSubview(createdTimeLabel)
+        createdTimeLabel.backgroundColor = UIColor.clear
+        createdTimeLabel.textAlignment = NSTextAlignment.right
+        createdTimeLabel.textColor = UIColor.black
+        createdTimeLabel.font = UIFont.dimeFont(9)
+        
+        self.createdTimeLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.createdTimeLabel.leadingAnchor.constraint(equalTo: self.superLikeLabel.trailingAnchor, constant:2).isActive = true
+        self.createdTimeLabel.centerYAnchor.constraint(equalTo: self.likeButton.centerYAnchor).isActive = true
+        self.createdTimeLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
+        self.createdTimeLabel.trailingAnchor.constraint(equalTo: self.imageView.trailingAnchor, constant: -3).isActive = true
+    }
+    
+    
 
     
     required init?(coder aDecoder: NSCoder) {
@@ -311,7 +338,13 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     
     
-    
+    fileprivate func parseDate(_ date : String) -> String {
+        
+        if let timeAgo = (Constants.dateFormatter().date(from: date) as NSDate?)?.timeAgo() {
+            return timeAgo
+        }
+        else { return "" }
+    }
     
     
 }

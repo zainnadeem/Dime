@@ -21,7 +21,12 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     var superLikeButton = UIButton()
     var background: UIImageView = UIImageView()
     
+    lazy var friendDiamond   :  UIButton       = UIButton()
+    lazy var profileImageHeightMultiplier : CGFloat =      (0.75)
     weak var parentCollectionView = UIViewController()
+    
+    var collectionView:UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout.init())
+    var layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
     
     lazy var isLikedByUser            : Bool          = Bool()
     lazy var isSuperLikedByUser       : Bool          = Bool()
@@ -43,38 +48,38 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
         imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
         
-        configureBackgroundImage()
-        configureImageView()
+        //configureBackgroundImage()
+        
         configureProfilePic()
         configureUsernameButton()
-        configureDimeNameLabel()
+        configureFriendDiamond()
+        configureCaptionNameLabel()
+        configureImageView()
         configureLikeButton()
         configureLikeLabel()
         configureSuperLikeButton()
         configureSuperLikeLabel()
-        self.backgroundColor = UIColor.clear
+        configureCreatedTimeLabel()
         
-     
+        self.backgroundColor = UIColor.clear
 
     }
     
     
     func updateUI() {
-        createdTimeLabel.text = dime.createdTime.description
         
         self.imageView.image = nil
         
-        let mediaImageKey = "\(self.dime.media[0].uid)-coverImage"
+        let mediaImageKey = "\(self.dime.uid)-\(dime.createdTime)-coverImage"
         
         if let image = cache?.object(forKey: mediaImageKey) as? UIImage
-            {
-                self.imageView.image = image
+        {
+            self.imageView.image = image
         }else {
-            dime.media[0].downloadMediaImage(completion: { [weak self] (image, error) in
-                if let image = image {
-                    self?.imageView.image = image
-                    self?.cache?.setObject(image, forKey: mediaImageKey)
-                }
+            
+            dime.downloadCoverImage(coverPhoto: mediaImageKey, completion: {  [weak self] (image, error)in
+                self?.imageView.image = image
+                self?.cache?.setObject(image, forKey: mediaImageKey)
             })
         }
         
@@ -96,53 +101,82 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             }
         }
         
-
-         // setImageViewCircular()
+        
+        // updateLabels()
         usernameButton.setTitle(dime.createdBy.fullName, for: .normal)
         usernameButton.addTarget(self, action: #selector(usernameButtonPressed), for: .touchUpInside)
+        captionLabel.text = dime.caption
+        likesLabel.text = dime.totalLikes.description
+        createdTimeLabel.text = parseDate(dime.createdTime)
         
-        
-        DimeNameLabel.text = dime.caption
-        DimeNameLabel.textColor = UIColor.black
-        
-        if dime.superLikes.contains(currentUser){
-            self.isSuperLikedByUser = true
-            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
-        }else{
-            self.isSuperLikedByUser = false
-            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamondUnfilled"), for: .normal)
-        }
-        
-        if self.didSuperLikeWithinOneDay(superLikeDate: self.currentUser!.lastSuperLikeTime) || isSuperLikedByUser == true{
-            canSuperLike = false
-            self.superLikeButton.removeTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
-            self.superLikeButton.addTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
-        }else{
-            canSuperLike = true
-             self.superLikeButton.removeTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
-            self.superLikeButton.addTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
-        }
-
-        calculateTotalLikes()
+        isDimeSuperLiked()
+        configureSuperLikeFunctionality()
+        configureFriendButton()
         reloadLabels()
-   
+        
     }
     
     
     
-    func calculateTotalLikes(){
-        var totalLikes = 0
-        for media in dime.media{
-             totalLikes += media.likes.count
+    func configureFriendButton(){
+        if currentUser.topFriends.contains(dime.createdBy){
+            friendDiamond.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
+        }else if currentUser.friends.contains(dime.createdBy){
+            friendDiamond.setImage(#imageLiteral(resourceName: "icon-blueDiamond"), for: .normal)
+        }else{
+            friendDiamond.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
         }
-        likesLabel.text = totalLikes.description
     }
+    
+    func filterFriendAlert(){
+            let actionSheet = UIAlertController(title: "\(dime.createdBy.username)", message: "Where would you like to put \(dime.createdBy.username)", preferredStyle: .actionSheet)
+            
+            let topFriends = UIAlertAction(title: "Top Dimes", style: .default, handler: {
+                action in
+                
+                
+                self.currentUser.topFriendUser(user: self.dime.createdBy)
+                self.currentUser.friendUser(user: self.dime.createdBy)
+                self.configureFriendButton()
+                
+                
+                
+                
+                
+            })
 
-    func usernameButtonPressed() {
-        let destinationVC = ProfileCollectionViewController()
-        destinationVC.user = dime.createdBy
-        self.parentCollectionView?.navigationController?.pushViewController(destinationVC, animated: true)
-    }
+            let friend = UIAlertAction(title: "Friends", style: .default, handler: {
+                action in
+                
+                self.currentUser.friendUser(user: self.dime.createdBy)
+                self.currentUser.unTopFriendUser(user: self.dime.createdBy)
+                self.configureFriendButton()
+                
+                
+            })
+            
+        
+            let unfriend = UIAlertAction(title: "unfriend", style: .default, handler: {
+                action in
+                
+                self.currentUser.unTopFriendUser(user: self.dime.createdBy)
+                self.currentUser.unFriendUser(user: self.dime.createdBy)
+                self.configureFriendButton()
+                
+                
+            })
+            
+            
+            actionSheet.addAction(topFriends)
+            actionSheet.addAction(friend)
+        if currentUser.topFriends.contains(dime.createdBy) || currentUser.friends.contains(dime.createdBy){
+            actionSheet.addAction(unfriend)
+        }
+            self.parentCollectionView?.present(actionSheet, animated: true, completion: nil)
+        }
+    
+
+    
     
     func configureProfilePic() {
         contentView.addSubview(circleProfileView)
@@ -150,65 +184,11 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.circleProfileView.translatesAutoresizingMaskIntoConstraints = false
         self.circleProfileView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 130).isActive = true
         self.circleProfileView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 20).isActive = true
-
-        self.circleProfileView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.04).isActive = true
         
-        self.circleProfileView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.07).isActive = true
+        self.circleProfileView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07).isActive = true
+        
+        self.circleProfileView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.12).isActive = true
     }
-
-    func configureDimeNameLabel() {
-        contentView.addSubview(DimeNameLabel)
-        
-        self.DimeNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.DimeNameLabel.bottomAnchor.constraint(equalTo: self.imageView.topAnchor, constant: -7).isActive = true
-        
-        self.DimeNameLabel.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor).isActive = true
-        
-        self.DimeNameLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.1)
-        self.DimeNameLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.5)
-
-        DimeNameLabel.backgroundColor = UIColor.clear
-        DimeNameLabel.textAlignment = NSTextAlignment.center
-        DimeNameLabel.textColor = UIColor.black
-        DimeNameLabel.font = UIFont.dimeFont(13)
-    }
-    
-    
-    
-    
-    func configureBackgroundImage() {
-        contentView.addSubview(backgroundLocationImage)
-        backgroundLocationImage.image = background.image
-        backgroundLocationImage.contentMode = UIViewContentMode.scaleAspectFill
-        backgroundLocationImage.clipsToBounds = true
-        
-        self.backgroundLocationImage.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundLocationImage.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-        self.backgroundLocationImage.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
-        self.backgroundLocationImage.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
-        self.backgroundLocationImage.heightAnchor.constraint(equalTo: self.contentView.heightAnchor).isActive = true
-    }
-    
-    
-    
-    
-    func configureImageView() {
-        contentView.addSubview(imageView)
-        
-        imageView.contentMode = UIViewContentMode.scaleAspectFill
-        imageView.clipsToBounds = true
-        
-        self.imageView.translatesAutoresizingMaskIntoConstraints = false
-        self.imageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -10).isActive = true
-        
-        self.imageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 20).isActive = true
-     
-        self.imageView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.35).isActive = true
-        
-        self.imageView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.7).isActive = true
-    }
-    
-
     
     func configureUsernameButton() {
         contentView.addSubview(usernameButton)
@@ -221,9 +201,60 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.usernameButton.leadingAnchor.constraint(equalTo: self.circleProfileView.trailingAnchor, constant: 10).isActive = true
         self.usernameButton.centerYAnchor.constraint(equalTo: self.circleProfileView.centerYAnchor).isActive = true
         
-       self.usernameButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.1)
-         self.usernameButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.3)
+        self.usernameButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.1)
+        self.usernameButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.3)
     }
+    
+    func configureFriendDiamond(){
+        contentView.addSubview(friendDiamond)
+        friendDiamond.titleLabel?.font = UIFont.dimeFont(16)
+        friendDiamond.setTitleColor(UIColor.black, for: .normal)
+        friendDiamond.tintColor = UIColor.black
+        friendDiamond.addTarget(self, action: #selector(filterFriendAlert), for: .touchUpInside)
+        
+        self.friendDiamond.translatesAutoresizingMaskIntoConstraints = false
+        self.friendDiamond.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10).isActive = true
+        self.friendDiamond.centerYAnchor.constraint(equalTo: self.circleProfileView.centerYAnchor).isActive = true
+        
+        self.friendDiamond.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07)
+        self.friendDiamond.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.12)
+        
+    }
+    
+    func configureCaptionNameLabel() {
+        contentView.addSubview(captionLabel)
+        
+        self.captionLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.captionLabel.topAnchor.constraint(equalTo: self.circleProfileView.bottomAnchor, constant: 5).isActive = true
+        self.captionLabel.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
+        
+        self.captionLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07).isActive = true
+        
+        self.captionLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8).isActive = true
+        
+        captionLabel.textAlignment = .center
+        captionLabel.font = UIFont.dimeFont(14)
+        captionLabel.textColor = UIColor.black
+    }
+    
+    
+    func configureImageView() {
+        contentView.addSubview(imageView)
+        
+        imageView.contentMode = UIViewContentMode.scaleAspectFill
+        imageView.layer.cornerRadius = 8.0
+        imageView.clipsToBounds = true
+        
+        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        self.imageView.topAnchor.constraint(equalTo: self.captionLabel.bottomAnchor).isActive = true
+        
+        self.imageView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
+        
+        self.imageView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.4).isActive = true
+        
+        self.imageView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8).isActive = true
+    }
+    
     
     func configureLikeButton(){
         contentView.addSubview(likeButton)
@@ -259,8 +290,6 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         contentView.addSubview(superLikeButton)
         superLikeButton.titleLabel?.font = UIFont.dimeFont(16)
         
-
-        
         self.superLikeButton.translatesAutoresizingMaskIntoConstraints = false
         self.superLikeButton.leadingAnchor.constraint(equalTo: self.likesLabel.trailingAnchor, constant: 5).isActive = true
         self.superLikeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 5).isActive = true
@@ -283,10 +312,26 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.superLikeLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
         self.superLikeLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.05).isActive = true
     }
-
+    
+    func configureCreatedTimeLabel(){
+        contentView.addSubview(createdTimeLabel)
+        createdTimeLabel.backgroundColor = UIColor.clear
+        createdTimeLabel.textAlignment = NSTextAlignment.right
+        createdTimeLabel.textColor = UIColor.black
+        createdTimeLabel.font = UIFont.dimeFont(9)
+        
+        self.createdTimeLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.createdTimeLabel.leadingAnchor.constraint(equalTo: self.superLikeLabel.trailingAnchor, constant:2).isActive = true
+        self.createdTimeLabel.centerYAnchor.constraint(equalTo: self.likeButton.centerYAnchor).isActive = true
+        self.createdTimeLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
+        self.createdTimeLabel.trailingAnchor.constraint(equalTo: self.imageView.trailingAnchor, constant: -3).isActive = true
+        
+    }
+    
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-}
+    }
     
     func setImageViewCircular() {
         self.circleProfileView.contentMode = .scaleAspectFill
@@ -296,13 +341,53 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.circleProfileView.layer.borderWidth = borderWidth
         self.circleProfileView.clipsToBounds = true
     }
-
-
+    
+    
+    func isDimeSuperLiked(){
+        
+        if dime.superLikes.contains(currentUser){
+            self.isSuperLikedByUser = true
+            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
+        }else{
+            self.isSuperLikedByUser = false
+            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamondUnfilled"), for: .normal)
+        }
+        
+    }
+    
+    func configureSuperLikeFunctionality(){
+        if self.didSuperLikeWithinOneDay(superLikeDate: self.currentUser!.lastSuperLikeTime) || isSuperLikedByUser == true{
+            canSuperLike = false
+            self.superLikeButton.removeTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
+            self.superLikeButton.addTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
+        }else{
+            canSuperLike = true
+            self.superLikeButton.removeTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
+            self.superLikeButton.addTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
+        }
+    }
+    
+//    func calculateTotalLikes(){
+//        var totalLikes = 0
+//        for media in dime.media{
+//            totalLikes += media.likes.count
+//        }
+//        likesLabel.text = totalLikes.description
+//    }
+    
+    func usernameButtonPressed() {
+        let destinationVC = ProfileCollectionViewController()
+        destinationVC.user = dime.createdBy
+        self.parentCollectionView?.navigationController?.pushViewController(destinationVC, animated: true)
+    }
+    
+    
+    
 }
 
 // button
 extension DimeCollectionViewCell {
-
+    
     func superLikeUnLikeButtonTapped() {
         if isSuperLikedByUser{
             dime.unSuperLikedBy(user: currentUser)
@@ -343,7 +428,7 @@ extension DimeCollectionViewCell {
             return false
         }
     }
-
+    
     func superLikeAlert() {
         let alertVC = UIAlertController(title: "SuperLiked!", message: "You can only super like one dime every 24 hours, you cannot undo this action, is this your superlike today?", preferredStyle: .alert)
         
@@ -355,7 +440,7 @@ extension DimeCollectionViewCell {
         })
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-       
+        
         
         alertVC.addAction(yesAction)
         alertVC.addAction(cancelAction)
@@ -374,7 +459,14 @@ extension DimeCollectionViewCell {
         alertVC.addAction(cancelAction)
         self.parentCollectionView?.present(alertVC, animated: true, completion: nil)
     }
-
+    
+    fileprivate func parseDate(_ date : String) -> String {
+        
+        if let timeAgo = (Constants.dateFormatter().date(from: date) as NSDate?)?.timeAgo() {
+            return timeAgo
+        }
+        else { return "" }
+    }
 }
 
 

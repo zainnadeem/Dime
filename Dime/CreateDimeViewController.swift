@@ -43,6 +43,8 @@ class CreateDimeViewController: UIViewController {
    
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
+        controller.finishedEditing = true
+        controller.coverPhoto = dimeCoverPhoto.imageView?.image
         self.present(controller, animated: true, completion: nil)
     }
 
@@ -77,13 +79,13 @@ class CreateDimeViewController: UIViewController {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
             
-            let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [])
+            let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalLikes: 0)
             
             self.store.currentDime = newDime
             
             if let videoURL = mediaObject as? URL {
                 
-                let newMedia = Media(dimeUID: newDime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path))
+                let newMedia = Media(dimeUID: newDime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0)
                 let videoData = NSData(contentsOf: videoURL as URL)
                 
                 let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
@@ -98,8 +100,9 @@ class CreateDimeViewController: UIViewController {
             } else if let snapshotImage = mediaObject as? UIImage {
                 
                 self.image = snapshotImage
-                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image!)
+                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image!, likesCount: 0)
                 self.store.currentDime?.media.append(newMedia)
+                controller.finishedEditing = false
                 self.present(controller, animated: true, completion: nil)
                 
             }
@@ -119,27 +122,31 @@ class CreateDimeViewController: UIViewController {
             }else{
                 self.dimeCoverPhoto.isEnabled = true
             }
+            guard let currentDime = self.store.currentDime else { print("no current dime")
+                return }
             self.numberOfImages.text = self.store.currentDime?.media.count.description
             
-            if let image = cache?.object(forKey: "\(self.store.currentDime?.media[0].uid)-coverImage") as? UIImage
+            let mediaImageKey = "\(currentDime.uid)-\(currentDime.createdTime)-coverImage"
+            
+            if let image = cache?.object(forKey: mediaImageKey) as? UIImage
             {
                 dimeCoverPhoto.setImage(image, for: .normal)
-            
             }else {
                 
-                self.store.currentDime?.media[0].downloadMediaImage(completion: { [weak self] (image, error) in
-                    if let image = image {
-                        self?.dimeCoverPhoto.setImage(image, for: .normal)
-                        self?.cache?.setObject(image, forKey: "\(self?.store.currentDime?.media[0].uid)-coverImage")
-                    }
+                self.store.currentDime?.downloadCoverImage(coverPhoto: mediaImageKey, completion: {  [weak self] (image, error)in
+                    self?.dimeCoverPhoto.setImage(image, for: .normal)
+                    self?.cache?.setObject(image, forKey: mediaImageKey)
                 })
+
             }
+         
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "mediaCollectionSegue" {
             let destinationVC = segue.destination as! MediaCollectionViewController
+            destinationVC.coverPhoto = dimeCoverPhoto.imageView?.image
             destinationVC.passedDime = store.currentDime
         }
     }

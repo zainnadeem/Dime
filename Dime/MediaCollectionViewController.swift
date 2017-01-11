@@ -5,8 +5,9 @@
 
 import UIKit
 import NVActivityIndicatorView
+import SAMCache
 
-class MediaCollectionViewController: UICollectionViewController
+class MediaCollectionViewController: UICollectionViewController, UIGestureRecognizerDelegate
 {
     
     var store = DataStore.sharedInstance
@@ -15,6 +16,7 @@ class MediaCollectionViewController: UICollectionViewController
     var mediaPickerHelper: MediaPickerHelper?
     var passedDime: Dime!
     
+    var coverPhoto: UIImage?
     var dime: Dime?
     var newMedia: Media?
     var videoURL: String = String()
@@ -22,6 +24,7 @@ class MediaCollectionViewController: UICollectionViewController
     var existingDime: Bool = Bool()
     
     let activityData = ActivityData()
+    var cache = SAMCache.shared()
     
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "editIcon"), leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
@@ -46,27 +49,37 @@ class MediaCollectionViewController: UICollectionViewController
     }
     
     @IBAction func postButtonTapped(_ sender: Any) {
+        if finishedEditing {
+        dime?.createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
         store.currentDime = dime
-        self.dimePostAlert(title: "Nice...", message: "Your Dime is uploading", buttonTitle: "Okay")
-        self.store.currentDime?.saveToUser(saveToUser: store.currentUser!, completion: { (error) in
-            self.store.getCurrentDime()
-            
-            if error != nil {
-                print(error?.localizedDescription)
-            }else{
-                //NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
-            }
-            
-        })
         
-        store.currentDime?.save(completion: { (error) in
+            guard let currentDime = dime else{  print("NO CURRENT DIME")
+                return }
+        
+            self.dimePostAlert(title: "Nice...", message: "Your Dime is uploading", buttonTitle: "Okay")
+        
+            var coverImage: UIImage = UIImage()
             
-            if error != nil {
-                print(error?.localizedDescription)
+           
+            if let photo = coverPhoto{
+                coverImage = photo
             }else{
-
+                coverImage = currentDime.media[0].mediaImage
             }
-        })
+        
+        let firImage = FIRImage(image: coverImage)
+            firImage.save("\(currentDime.uid)-\(currentDime.createdTime)-coverImage", completion: { error in
+                self.cache?.setObject(coverImage, forKey: "\(currentDime.uid)-\(currentDime.createdTime)-coverImage")
+            })
+            
+            currentDime.updateOrCreateDime(completion: { (error) in
+                
+            })
+    
+    
+        }else{
+            alert(title: "Edit Your Photos", message: "Hit the edit button in the top right corner. Once you've edited your photos you can post your Dime!", buttonTitle: "Okay")
+        }
     }
 
     @IBAction func changeCoverPhoto(_ sender: Any) {
@@ -82,6 +95,7 @@ class MediaCollectionViewController: UICollectionViewController
         self.navBar.delegate = self
         self.view.addSubview(navBar)
         
+        
         dime = self.store.currentDime
 
         let bgImage = UIImageView()
@@ -95,7 +109,51 @@ class MediaCollectionViewController: UICollectionViewController
         let layout = collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize = CGSize(width: itemWidth, height: itemWidth + Storyboard.titleHeightAdjustment)
         
+        let lpgr : UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPress))
+        lpgr.minimumPressDuration = 0.5
+        lpgr.delegate = self
+        lpgr.delaysTouchesBegan = true
+        self.collectionView?.addGestureRecognizer(lpgr)
+        
         installsStandardGestureForInteractiveMovement = true
+    }
+    
+    func getCoverPhoto(){
+        guard let currentDime = self.dime else { return }
+        let mediaImageKey = "\(currentDime.uid)-\(currentDime.createdTime)-coverImage"
+        
+        if let image = cache?.object(forKey: mediaImageKey) as? UIImage
+        {
+            self.coverPhoto = image
+        }else {
+            
+            currentDime.downloadCoverImage(coverPhoto: mediaImageKey, completion: {  [weak self] (image, error)in
+                self?.coverPhoto = image!
+                self?.cache?.setObject(image, forKey: mediaImageKey)
+            })
+        }
+        
+    }
+    
+    
+    
+    func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizerState.began {
+            return
+        }
+        
+        let point = gestureReconizer.location(in: self.collectionView)
+        let indexPath = self.collectionView?.indexPathForItem(at: point)
+        
+        if let index = indexPath {
+            var cell = self.collectionView?.cellForItem(at: index)
+            
+            print(index.row)
+            
+            deleteMediaAlert(mediaNumber: index.row)
+        } else {
+            print("Could not find index path")
+        }
     }
     
 
@@ -137,17 +195,17 @@ class MediaCollectionViewController: UICollectionViewController
         }
         
         
-        if indexPath.row == 0 {
-            cell.layer.borderColor =  UIColor.blue.cgColor
-            cell.layer.borderWidth = 1
-            cell.imageLabel.text = "Cover"
-            cell.visualEffectView.isHidden = false
-        }else{
+//        if indexPath.row == 0 {
+//            cell.layer.borderColor =  UIColor.blue.cgColor
+//            cell.layer.borderWidth = 1
+//            cell.imageLabel.text = "Cover"
+//            cell.visualEffectView.isHidden = false
+//        }else{
             cell.layer.borderColor = UIColor.white.cgColor
             cell.layer.borderWidth = 1
             cell.imageLabel.text = ""
             cell.visualEffectView.isHidden = true
-        }
+//        }
         
         return cell
     }
@@ -155,7 +213,6 @@ class MediaCollectionViewController: UICollectionViewController
 
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
         switch kind {
             
         case UICollectionElementKindSectionHeader:
@@ -169,7 +226,7 @@ class MediaCollectionViewController: UICollectionViewController
             let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionFooter", for: indexPath) as! SectionFooterCollectionReusableView
             
             
-  
+            footerView.coverPhotoImage.image = coverPhoto
             return footerView
             
         default:
@@ -187,7 +244,7 @@ class MediaCollectionViewController: UICollectionViewController
             if let dime = self.store.currentDime{
                 
                 if let videoURL = mediaObject as? URL {
-                    self.newMedia = Media(dimeUID: dime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path))
+                    self.newMedia = Media(dimeUID: dime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0)
                     
                     if let media = self.newMedia{
                         let videoData = NSData(contentsOf: videoURL as URL)
@@ -199,7 +256,7 @@ class MediaCollectionViewController: UICollectionViewController
                     }
                 } else if let snapshotImage = mediaObject as? UIImage {
                     
-                    self.newMedia = Media(dimeUID: dime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: snapshotImage)
+                    self.newMedia = Media(dimeUID: dime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: snapshotImage, likesCount: 0)
                     
                 }
                 
@@ -210,29 +267,11 @@ class MediaCollectionViewController: UICollectionViewController
                     collectionView.reloadData()
                     
                 }
-                
+                    self.newMedia = nil
             }
         })
     }
     
-
-    
-    override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-        
-        if indexPath.row == (collectionView.numberOfItems(inSection: 0) - 1) && (dime?.media.count)! < 9 && indexPath.section == 0{
-            return false
-        }
-        
-        return true
-        
-    }
-    
-    
-    override func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        collectionView.reloadData()
-
-    }
-
 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -245,6 +284,43 @@ class MediaCollectionViewController: UICollectionViewController
         }
     }
     
+    func deleteMediaAlert(mediaNumber: Int){
+        guard let currentDime = self.dime else {return }
+        let actionSheet = UIAlertController(title: "Delete", message: "All information for this image will be lost", preferredStyle: .actionSheet)
+        
+        let selectCover = UIAlertAction(title: "make cover photo", style: .default, handler: {
+            action in
+            
+                self.coverPhoto = currentDime.media[mediaNumber].mediaImage
+                self.collectionView?.reloadData()
+            
+        })
+        
+        
+        
+        
+        let delete = UIAlertAction(title: "delete", style: .default, handler: {
+            action in
+            
+             if (self.dime?.media.count)! >= mediaNumber + 1 { self.dime?.media.remove(at: mediaNumber) }
+            self.collectionView?.reloadData()
+            
+        })
+        
+        let cancel = UIAlertAction(title: "cancel", style: .cancel, handler: {
+            action in
+            print("Cancel pressed")
+        })
+        
+
+        actionSheet.addAction(selectCover)
+        actionSheet.addAction(delete)
+        actionSheet.addAction(cancel)
+        
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+
+
 }
 
 

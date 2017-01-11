@@ -26,8 +26,8 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
-        self.dimeCollectionView.emptyDataSetDelegate = self
-        self.dimeCollectionView.emptyDataSetSource = self
+        //self.dimeCollectionView.emptyDataSetDelegate = self
+        //self.dimeCollectionView.emptyDataSetSource = self
         
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
         backgroundImage.image = #imageLiteral(resourceName: "background_GREY")
@@ -100,6 +100,8 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
 
     // MARK: UICollectionViewDataSource
 
+    
+    
      func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -115,6 +117,7 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DimeCollectionViewCell
        
         cell.parentCollectionView = self
+        cell.collectionView = dimeCollectionView
         cell.currentUser = store.currentUser
         cell.dime = passedDimes[indexPath.row]
     
@@ -174,7 +177,7 @@ extension TopDimesCollectionViewController : NavBarViewDelegate {
     
 }
 
-extension TopDimesCollectionViewController : DZNEmptyDataSetSource {
+extension ProfileCollectionViewController : DZNEmptyDataSetSource {
     
     func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
         

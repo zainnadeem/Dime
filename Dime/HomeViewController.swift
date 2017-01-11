@@ -16,14 +16,31 @@ class HomeViewController: UIViewController {
     var store = DataStore.sharedInstance
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
+    @IBOutlet weak var topDimesButton: UIButton!
+    @IBOutlet weak var topFriendsButton: UIButton!
+    @IBOutlet weak var trendingButton: UIButton!
+    @IBOutlet weak var popularButton: UIButton!
+    var homeButtons: [UIButton] = [UIButton]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        homeButtons = [topDimesButton, topFriendsButton, trendingButton, popularButton]
+        makeButtonsBigger()
         self.navBar.delegate = self
         self.view.addSubview(navBar)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
+    
 
+    func makeButtonsBigger(){
+        for button in homeButtons{
+            button.contentEdgeInsets = UIEdgeInsetsMake(-44, -44, -44, -44)
+        }
+    }
+    
+
+
+    
     @IBAction func topDimesTapped(_ sender: Any) {
     }
     
@@ -121,4 +138,13 @@ extension HomeViewController : NavBarViewDelegate {
 
 
 
+}
+
+extension UIButton {
+    override open func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        var relativeFrame = self.bounds
+        var hitTestEdgeInsets = UIEdgeInsetsMake(-22, -22, -22, -22)
+        var hitFrame = UIEdgeInsetsInsetRect(relativeFrame, hitTestEdgeInsets)
+        return hitFrame.contains(point)
+    }
 }

@@ -1,6 +1,6 @@
 //
 //  Media.swift
-//  Moments
+//  Dime
 //
 //  Created by Zain Nadeem on 11/8/16.
 //  Copyright © 2016 Zain Nadeem. All rights reserved.
@@ -8,13 +8,6 @@
 
 import UIKit
 import Firebase
-
-
-enum MediaType {
-    case Video
-    case Image
-}
-
 
 
 class Media {
@@ -27,13 +20,14 @@ class Media {
     var createdTime: String
     var createdBy: User
     var likes: [User]
+    var likesCount: Int
     var usersTagged: [User]
     var comments: [Comment]
     var mediaURL: String
     var mediaImage: UIImage!
     
     
-    init(dimeUID: String, type: String, caption: String, createdBy: User, mediaURL: String, location: String, mediaImage:UIImage)
+    init(dimeUID: String, type: String, caption: String, createdBy: User, mediaURL: String, location: String, mediaImage:UIImage, likesCount: Int)
     {
         self.type = type
         self.caption = caption
@@ -42,6 +36,7 @@ class Media {
         self.location = location
         self.dimeUID = dimeUID
         self.mediaImage = mediaImage
+        self.likesCount = likesCount
         
         createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
         comments = []
@@ -59,6 +54,7 @@ class Media {
         createdTime = dictionary["createdTime"] as! String
         location = dictionary["location"] as! String
         mediaURL = dictionary["mediaURL"] as! String
+        likesCount = dictionary["likesCount"] as! Int
         
         let createdByDict = dictionary["createdBy"] as! [String : Any]
         createdBy = User(dictionary: createdByDict)
@@ -138,9 +134,43 @@ class Media {
             "createdTime" : createdTime,
             "createdBy" : createdBy.toDictionary(),
             "mediaURL"  : mediaURL,
+            "likesCount": likesCount,
             "location"  : location
         ]
     }
+    
+    func updateDictionary() -> [String: Any] {
+        return [
+            "uid" : uid,
+            "dimeUID" : dimeUID,
+            "type" : type,
+            "caption" : caption,
+            "createdTime" : createdTime,
+            "createdBy" : createdBy.toDictionary(),
+            "mediaURL"  : mediaURL,
+            "location"  : location
+        ]
+    }
+    
+    func updateLikes(_ direction : UpdateDirection) {
+        let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)/likesCount")
+        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(dimeUID)/media/\(uid)/likesCount")
+        
+        switch direction {
+        case .increment:
+            self.likesCount += 1
+            ref.setValue(likesCount)
+            userRef.setValue(likesCount)
+            
+        case .decrement:
+            self.likesCount -= 1
+            ref.setValue(likesCount)
+            userRef.setValue(likesCount)
+            
+        }
+    }
+
+
 }
 
 extension Media {
@@ -151,6 +181,7 @@ extension Media {
             completion(image, error)
         })
     }
+    
     
    
     func downloadVideo(completion: @escaping (URL, Error?) -> Void) {
