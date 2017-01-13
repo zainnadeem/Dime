@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import SAMCache
-
+import Firebase
 
 class DataStore {
     
@@ -18,6 +18,8 @@ class DataStore {
     var currentUser: User?
     
     var currentDime: Dime?
+    
+    var chats: [Chat]?
     
     var cache = SAMCache.shared()
     
@@ -75,6 +77,19 @@ class DataStore {
         }
     }
 
-    
+    func observeChats() {
+        let userChatIdsRef = DatabaseReference.users(uid: (currentUser?.uid)!).reference().child("chatIds")
+        
+        userChatIdsRef.observe(.childAdded) { (snapshot: FIRDataSnapshot) in
+            let chatId = snapshot.key
+            
+            // go download that chat
+            DatabaseReference.chats.reference().child(chatId).observeSingleEvent(of: .value, with: { (snapshot: FIRDataSnapshot) in
+                let chat = Chat(dictionary: snapshot.value as! [String : Any])
+                self.chats?.append(chat)
+                
+            })
+        }
+    }
 
 }

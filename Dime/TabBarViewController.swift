@@ -8,17 +8,20 @@
 
 import UIKit
 
-class TabBarViewController: UITabBarController {
+class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
     var tabBarIndex: Int = Int()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.delegate = self
         self.selectedIndex = tabBarIndex
 
         // Do any additional setup after loading the view.
     }
+    
+    
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -26,7 +29,12 @@ class TabBarViewController: UITabBarController {
     }
     
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-    
+        if item == self.tabBar.items?[2]{
+            self.dismiss(animated: false, completion: nil)
+        }
+        
     }
+
+    
 
 }

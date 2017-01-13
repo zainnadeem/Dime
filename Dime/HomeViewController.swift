@@ -55,6 +55,7 @@ class HomeViewController: UIViewController {
                         self.currentUser = User(dictionary: userDict)
                         self.store.currentUser = User(dictionary: userDict)
                         self.store.getCurrentDime()
+                        self.store.observeChats()
                         //self.enableButtons()
                     }
                 })
@@ -101,11 +102,11 @@ class HomeViewController: UIViewController {
             }
         } else if segue.identifier == "Trending" {
             if let nextViewController = segue.destination as? TabBarViewController{
-                nextViewController.tabBarIndex = 2
+                nextViewController.tabBarIndex = 3
             }
         }else if segue.identifier == "Popular" {
             if let nextViewController = segue.destination as? TabBarViewController{
-                nextViewController.tabBarIndex = 3
+                nextViewController.tabBarIndex = 4
             }
         }else if segue.identifier == "ShowNotifications"{
             

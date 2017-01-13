@@ -208,6 +208,7 @@ extension User {
         ref.setValue(notification.toDictionary())
         
     }
+
     
     func observeNewNotification(_ completion: @escaping (Notification) -> Void){
         //.childAdded: (1) download everything fo the first time
@@ -228,6 +229,10 @@ extension User {
             print("Couldn't get Consumer info from Firebase snapshot.")
             return nil
         }
+    }
+    
+    func save(new chat: Chat){
+        DatabaseReference.users(uid: self.uid).reference().child("chatIds/\(chat.uid)").setValue(true)
     }
 
 

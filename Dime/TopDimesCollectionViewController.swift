@@ -160,6 +160,9 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
 extension TopDimesCollectionViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {
+        let destinationVC = ChatsTableViewController()
+        destinationVC.currentUser = store.currentUser
+        self.navigationController?.pushViewController(destinationVC, animated: true)
         print("Not sure what the right bar button will do yet.")
     }
     
@@ -237,3 +240,4 @@ extension TopDimesCollectionViewController : DZNEmptyDataSetDelegate {
         return true
     }
 }
+

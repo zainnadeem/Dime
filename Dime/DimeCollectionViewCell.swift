@@ -19,6 +19,8 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     var usernameButton = UIButton()
     var likeButton = UIButton()
     var superLikeButton = UIButton()
+    var chatButton = UIButton()
+    var popularRankButton = UIButton()
     var background: UIImageView = UIImageView()
     
     lazy var friendDiamond   :  UIButton       = UIButton()
@@ -32,6 +34,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     lazy var isSuperLikedByUser       : Bool          = Bool()
     lazy var canSuperLike             : Bool          = Bool()
     
+    let store = DataStore.sharedInstance
     var currentUser: User!
     var dime: Dime! {
         didSet{
@@ -52,7 +55,11 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
         configureProfilePic()
         configureUsernameButton()
+    
         configureFriendDiamond()
+        configureChatButton()
+        configurePopularRankButton()
+        
         configureCaptionNameLabel()
         configureImageView()
         configureLikeButton()
@@ -116,7 +123,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
     }
     
-    
+ 
     
     func configureFriendButton(){
         if currentUser.topFriends.contains(dime.createdBy){
@@ -138,9 +145,6 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 self.currentUser.topFriendUser(user: self.dime.createdBy)
                 self.currentUser.friendUser(user: self.dime.createdBy)
                 self.configureFriendButton()
-                
-                
-                
                 
                 
             })
@@ -213,11 +217,45 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         friendDiamond.addTarget(self, action: #selector(filterFriendAlert), for: .touchUpInside)
         
         self.friendDiamond.translatesAutoresizingMaskIntoConstraints = false
-        self.friendDiamond.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10).isActive = true
+        self.friendDiamond.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -20).isActive = true
         self.friendDiamond.centerYAnchor.constraint(equalTo: self.circleProfileView.centerYAnchor).isActive = true
         
         self.friendDiamond.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07)
         self.friendDiamond.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.12)
+        
+    }
+
+    
+    func configureChatButton(){
+        contentView.addSubview(chatButton)
+        chatButton.titleLabel?.font = UIFont.dimeFont(16)
+        chatButton.setTitleColor(UIColor.black, for: .normal)
+        chatButton.setImage(#imageLiteral(resourceName: "icon-comment"), for: .normal)
+        chatButton.tintColor = UIColor.black
+        chatButton.addTarget(self, action: #selector(filterFriendAlert), for: .touchUpInside)
+        
+        self.chatButton.translatesAutoresizingMaskIntoConstraints = false
+        self.chatButton.trailingAnchor.constraint(equalTo: self.friendDiamond.leadingAnchor, constant: -20).isActive = true
+        self.chatButton.centerYAnchor.constraint(equalTo: self.circleProfileView.centerYAnchor).isActive = true
+        
+        self.chatButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07)
+        self.chatButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.12)
+        
+    }
+    func configurePopularRankButton(){
+        contentView.addSubview(popularRankButton)
+        popularRankButton.titleLabel?.font = UIFont.dimeFont(16)
+        popularRankButton.setTitleColor(UIColor.black, for: .normal)
+        popularRankButton.setBackgroundImage(#imageLiteral(resourceName: "icon-popular-1"), for: .normal)
+        popularRankButton.tintColor = UIColor.black
+        popularRankButton.addTarget(self, action: #selector(filterFriendAlert), for: .touchUpInside)
+        
+        self.popularRankButton.translatesAutoresizingMaskIntoConstraints = false
+        self.popularRankButton.trailingAnchor.constraint(equalTo: self.chatButton.leadingAnchor, constant: -20).isActive = true
+        self.popularRankButton.centerYAnchor.constraint(equalTo: self.circleProfileView.centerYAnchor).isActive = true
+        
+        self.popularRankButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07)
+        self.popularRankButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.12)
         
     }
     
@@ -365,6 +403,13 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             self.superLikeButton.removeTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
             self.superLikeButton.addTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
         }
+    }
+    
+    func startChat(){
+        guard let chats = self.store.chats else { return }
+        
+        print("go to chat with user")
+        
     }
     
 //    func calculateTotalLikes(){
