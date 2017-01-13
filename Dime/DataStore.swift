@@ -19,7 +19,9 @@ class DataStore {
     
     var currentDime: Dime?
     
-    var chats: [Chat]?
+    
+    var chatKeys = [String]()
+    var chats = [Chat]()
     
     var cache = SAMCache.shared()
     
@@ -77,19 +79,34 @@ class DataStore {
         }
     }
 
-    func observeChats() {
-        let userChatIdsRef = DatabaseReference.users(uid: (currentUser?.uid)!).reference().child("chatIds")
+    func observeChats(_ completion: @escaping ([String]) -> Void) {
+        guard let user = currentUser else { return }
         
-        userChatIdsRef.observe(.childAdded) { (snapshot: FIRDataSnapshot) in
-            let chatId = snapshot.key
+        DatabaseReference.users(uid: user.uid).reference().child("chatIds").observe(.childAdded, with: { snapshot in
             
-            // go download that chat
-            DatabaseReference.chats.reference().child(chatId).observeSingleEvent(of: .value, with: { (snapshot: FIRDataSnapshot) in
-                let chat = Chat(dictionary: snapshot.value as! [String : Any])
-                self.chats?.append(chat)
+            print(snapshot.key)
+            
+            DatabaseReference.chats.reference().child(snapshot.key).observeSingleEvent(of: .value, with: { (snap) in
                 
+                print(snap.value!)
+                let chat = Chat(dictionary: snap.value as! [String : Any])
+                self.chats.append(chat)
             })
-        }
+            
+            
+        })
+        
     }
+
+        func alreadyAdded(_ chat: Chat) -> Bool {
+            for c in self.chats {
+                if c.uid == chat.uid {
+                    return true
+                }
+            }
+            
+            return false
+        }
+        
 
 }

@@ -55,7 +55,10 @@ class HomeViewController: UIViewController {
                         self.currentUser = User(dictionary: userDict)
                         self.store.currentUser = User(dictionary: userDict)
                         self.store.getCurrentDime()
-                        self.store.observeChats()
+                        self.store.observeChats({ (chats) in
+                            
+                            
+                        })
                         //self.enableButtons()
                     }
                 })

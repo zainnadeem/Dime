@@ -5,8 +5,8 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     var blurEffectView: UIVisualEffectView!
     var backgroundLocationImage = UIImageView()
-    var imageView : UIImageView!
-    var circleProfileView = UIImageView()
+    var imageView = UIButton()
+    var circleProfileView = UIButton()
     
     var captionLabel = UILabel()
     var locationLabel = UILabel()
@@ -49,7 +49,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
+       // imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
         
         //configureBackgroundImage()
         
@@ -61,7 +61,9 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         configurePopularRankButton()
         
         configureCaptionNameLabel()
+        
         configureImageView()
+        
         configureLikeButton()
         configureLikeLabel()
         configureSuperLikeButton()
@@ -72,35 +74,49 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
 
     }
     
+    func hideButtonsForUser(){
+        if currentUser == dime.createdBy{
+        self.chatButton.isHidden = true
+        self.friendDiamond.isHidden = true
+        }else{
+            self.chatButton.isHidden = false
+            self.friendDiamond.isHidden = false
+            
+        }
+    }
     
     func updateUI() {
-        
-        self.imageView.image = nil
+ 
+        hideButtonsForUser()
+        self.imageView.setImage(nil, for: .normal)
+       
         
         let mediaImageKey = "\(self.dime.uid)-\(dime.createdTime)-coverImage"
         
         if let image = cache?.object(forKey: mediaImageKey) as? UIImage
         {
-            self.imageView.image = image
+            
+            self.imageView.setImage(image, for: .normal)
+
         }else {
             
             dime.downloadCoverImage(coverPhoto: mediaImageKey, completion: {  [weak self] (image, error)in
-                self?.imageView.image = image
+                self?.imageView.setImage(image, for: .normal)
+                
                 self?.cache?.setObject(image, forKey: mediaImageKey)
             })
         }
         
-        circleProfileView.image = #imageLiteral(resourceName: "icon-defaultAvatar")
+        self.circleProfileView.setImage(#imageLiteral(resourceName: "icon-defaultAvatar"), for: .normal)
         
         let profileImageKey = "\(self.dime.createdBy.uid)-profileImage"
         
         if let image = cache?.object(forKey: profileImageKey) as? UIImage {
-            self.circleProfileView.image = image.circle
+            self.circleProfileView.setImage(image.circle, for: .normal)
         }else{
-            
             dime.createdBy.downloadProfilePicture { [weak self] (image, error) in
                 if let image = image {
-                    self?.circleProfileView.image = image.circle
+                    self?.circleProfileView.setImage(image.circle, for: .normal)
                     self?.cache?.setObject(image, forKey: profileImageKey)
                 }else if error != nil {
                     print(error?.localizedDescription)
@@ -109,9 +125,16 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         }
         
         
+        self.imageView.imageView?.contentMode = .scaleAspectFill
+        self.circleProfileView.imageView?.contentMode = .scaleAspectFill
+        
         // updateLabels()
         usernameButton.setTitle(dime.createdBy.fullName, for: .normal)
         usernameButton.addTarget(self, action: #selector(usernameButtonPressed), for: .touchUpInside)
+        circleProfileView.addTarget(self, action: #selector(usernameButtonPressed), for: .touchUpInside)
+        imageView.addTarget(self, action: #selector(showMedia), for: .touchUpInside)
+        
+        chatButton.addTarget(self, action: #selector(nextDidTap), for: .touchUpInside)
         captionLabel.text = dime.caption
         likesLabel.text = dime.totalLikes.description
         createdTimeLabel.text = parseDate(dime.createdTime)
@@ -122,6 +145,15 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         reloadLabels()
         
     }
+    
+    func showMedia(){
+        
+        let destinationVC = ViewMediaCollectionViewController()
+        destinationVC.passedDime = dime
+        self.parentCollectionView?.navigationController?.pushViewController(destinationVC, animated: true)
+        
+    }
+    
     
  
     
@@ -232,7 +264,6 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         chatButton.setTitleColor(UIColor.black, for: .normal)
         chatButton.setImage(#imageLiteral(resourceName: "icon-comment"), for: .normal)
         chatButton.tintColor = UIColor.black
-        chatButton.addTarget(self, action: #selector(filterFriendAlert), for: .touchUpInside)
         
         self.chatButton.translatesAutoresizingMaskIntoConstraints = false
         self.chatButton.trailingAnchor.constraint(equalTo: self.friendDiamond.leadingAnchor, constant: -20).isActive = true
@@ -406,7 +437,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     }
     
     func startChat(){
-        guard let chats = self.store.chats else { return }
+        //guard let chats = self.store.chats else { return }
         
         print("go to chat with user")
         
@@ -514,6 +545,69 @@ extension DimeCollectionViewCell {
     }
 }
 
+//Handle Messaging
+extension DimeCollectionViewCell {
+    
+    func nextDidTap(){
+        var conversationMembers = [dime.createdBy]
+        conversationMembers.append(currentUser)
+        
+        var title = ""
+        
+        if let chat = findChat(among: conversationMembers){
+            openChatView(chat: chat)
+        }else{
+            
+            for acc in conversationMembers{
+                if title == "" {
+                    title += "\(acc.fullName)"
+                }else{
+                    title += "+ \(acc.fullName)"
+                }
+            }
+        
+        let newChat = Chat(users: conversationMembers, title: title, featuredImageUID: conversationMembers.first!.uid)
+        openChatView(chat: newChat)
+       
+        }
+    }
+    
+    func findChat(among chatAccounts: [User]) -> Chat?{
+        
+        //guard let chats = self.store.chats else { return nil }
+        
+        for chat in self.store.chats{
+            var results = [Bool]()
+            
+            for acc in chatAccounts{
+                let result = chat.users.contains(acc)
+                results.append(result)
+            }
+            
+            if !results.contains(false){
+                return chat
+            }
+        }
+        
+        return nil
+    }
+    
+    
+    func openChatView(chat: Chat){
+        let chatVC = ChatViewController()
+        
+        chatVC.senderId = currentUser.uid
+        chatVC.senderDisplayName = currentUser.fullName
+        
+        chatVC.currentUser = store.currentUser
+        chatVC.chat = chat
+        
+        chatVC.hidesBottomBarWhenPushed = true
+        
+        self.parentCollectionView?.navigationController?.pushViewController(chatVC, animated: true)
+        print("Not sure what the right bar button will do yet.")
+    }
+}
 
 
 

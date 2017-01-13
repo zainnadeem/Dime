@@ -149,9 +149,9 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //show mediaCollection
         
-        let destinationVC = ViewMediaCollectionViewController()
-        destinationVC.passedDime = passedDimes[indexPath.row]
-        self.navigationController?.pushViewController(destinationVC, animated: true)
+//        let destinationVC = ViewMediaCollectionViewController()
+//        destinationVC.passedDime = passedDimes[indexPath.row]
+//        self.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
     
@@ -159,12 +159,19 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
 
 extension TopDimesCollectionViewController : NavBarViewDelegate {
     
+//    func rightBarButtonTapped(_ sender: AnyObject) {
+//        let destinationVC = ChatsTableViewController()
+//        destinationVC.currentUser = store.currentUser
+//        self.navigationController?.pushViewController(destinationVC, animated: true)
+//        print("Not sure what the right bar button will do yet.")
+//    }
+    
     func rightBarButtonTapped(_ sender: AnyObject) {
-        let destinationVC = ChatsTableViewController()
-        destinationVC.currentUser = store.currentUser
-        self.navigationController?.pushViewController(destinationVC, animated: true)
-        print("Not sure what the right bar button will do yet.")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "NotificationsViewController") as! NotificationTableViewController
+        self.navigationController?.pushViewController(controller, animated: true)
     }
+    
     
     func leftBarButtonTapped(_ sender: AnyObject) {
 

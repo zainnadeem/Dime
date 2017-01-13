@@ -276,13 +276,13 @@
 		BF6FCDF71DDE42BF00AC5A71 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */,
 				BF2A9B4D1DEB74D0001A7704 /* TabBarViewController.swift */,
 				BF5564EF1DF7335F0086290D /* TopDimesCollectionViewController.swift */,
-				BFA3F6101DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift */,
-				BF5564F11DF88D0C0086290D /* TrendingCollectionViewController.swift */,
 				BF5564F31DF8A2100086290D /* FriendsCollectionViewController.swift */,
+				BF5564F11DF88D0C0086290D /* TrendingCollectionViewController.swift */,
+				BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */,
 				BF1BBC151DFDED230031A5FE /* ProfileCollectionViewController.swift */,
+				BFA3F6101DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift */,
 				BFF5A5161E1C186C00F81B62 /* NotificationsTableViewController.swift */,
 				BF35B8C81DFB39CB006D87D1 /* CommentsViewController.swift */,
 			);

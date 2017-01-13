@@ -23,7 +23,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage:#imageLiteral(resourceName: "icon-settings-filled"), leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
     var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -44,6 +44,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         configureTitleLabel()
         configureTitleIcon()
         fetchDimes()
+        
         
     }
     
@@ -115,11 +116,17 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         
         cell.parentCollectionView = self
         cell.collectionView = dimeCollectionView
+        
         cell.currentUser = store.currentUser
         cell.dime = passedDimes[indexPath.row]
         
+        cell.usernameButton.isUserInteractionEnabled = false
+        cell.circleProfileView.isUserInteractionEnabled = false
+        
         return cell
     }
+    
+    
     
     func setUpCollectionView(){
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -146,9 +153,9 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //show mediaCollection
         
-        let destinationVC = ViewMediaCollectionViewController()
-        destinationVC.passedDime = passedDimes[indexPath.row]
-        self.navigationController?.pushViewController(destinationVC, animated: true)
+//        let destinationVC = ViewMediaCollectionViewController()
+//        destinationVC.passedDime = passedDimes[indexPath.row]
+//        self.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
     
@@ -167,9 +174,22 @@ extension ProfileCollectionViewController : NavBarViewDelegate {
     }
     
     func middleBarButtonTapped(_ Sender: AnyObject) {
-        let destinationVC = ProfileCollectionViewController()
-        destinationVC.user = store.currentUser
-        self.navigationController?.pushViewController(destinationVC, animated: true)
+        
+        var visibleCurrentCell: IndexPath? {
+            for cell in self.dimeCollectionView.visibleCells {
+                let indexPath = self.dimeCollectionView.indexPath(for: cell)
+                return indexPath
+            }
+            
+            return nil
+        }
+        guard let currentUserCell = visibleCurrentCell else { return }
+        let dime = passedDimes[currentUserCell.row]
+        if dime.createdBy != store.currentUser{
+            let destinationVC = ProfileCollectionViewController()
+            destinationVC.user = store.currentUser
+            self.navigationController?.pushViewController(destinationVC, animated: true)
+        }
     }
     
 }

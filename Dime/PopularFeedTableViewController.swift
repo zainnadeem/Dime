@@ -151,7 +151,9 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
 extension PopularFeedTableViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {
-        print("Not sure what the right bar button will do yet.")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "NotificationsViewController") as! NotificationTableViewController
+        self.navigationController?.pushViewController(controller, animated: true)
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {

@@ -54,7 +54,7 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
         viewControllerTitle.textAlignment = NSTextAlignment.left
         viewControllerTitle.textColor = UIColor.white
         viewControllerTitle.font = UIFont.dimeFont(15)
-        viewControllerTitle.text = "        FRIENDS"
+        viewControllerTitle.text = "        Dimes"
         
     }
     
@@ -149,9 +149,9 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //show mediaCollection
         
-        let destinationVC = ViewMediaCollectionViewController()
-        destinationVC.passedDime = passedDimes[indexPath.row]
-        self.navigationController?.pushViewController(destinationVC, animated: true)
+//        let destinationVC = ViewMediaCollectionViewController()
+//        destinationVC.passedDime = passedDimes[indexPath.row]
+//        self.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
     
@@ -160,7 +160,9 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
 extension FriendsCollectionViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {
-        print("Not sure what the right bar button will do yet.")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "NotificationsViewController") as! NotificationTableViewController
+        self.navigationController?.pushViewController(controller, animated: true)
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
