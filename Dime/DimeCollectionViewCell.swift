@@ -88,7 +88,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     func updateUI() {
  
         hideButtonsForUser()
-        self.imageView.setImage(nil, for: .normal)
+        //self.imageView.setImage(nil, for: .normal)
        
         
         let mediaImageKey = "\(self.dime.uid)-\(dime.createdTime)-coverImage"
@@ -139,10 +139,8 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         likesLabel.text = dime.totalLikes.description
         createdTimeLabel.text = parseDate(dime.createdTime)
         
-        isDimeSuperLiked()
-        configureSuperLikeFunctionality()
+
         configureFriendButton()
-        reloadLabels()
         
     }
     
@@ -229,7 +227,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     func configureUsernameButton() {
         contentView.addSubview(usernameButton)
         
-        usernameButton.titleLabel?.font = UIFont.dimeFont(16)
+        usernameButton.titleLabel?.font = UIFont.dimeFontBold(16)
         usernameButton.setTitleColor(UIColor.black, for: .normal)
         usernameButton.tintColor = UIColor.black
         
@@ -327,15 +325,15 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func configureLikeButton(){
         contentView.addSubview(likeButton)
-        likeButton.titleLabel?.font = UIFont.dimeFont(16)
-        likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamond"), for: .normal)
+        likeButton.titleLabel?.font = UIFont.dimeFont(13)
+        likeButton.setImage(#imageLiteral(resourceName: "friendsHome"), for: .normal)
         
         self.likeButton.translatesAutoresizingMaskIntoConstraints = false
-        self.likeButton.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor, constant: 5).isActive = true
-        self.likeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 5).isActive = true
+        self.likeButton.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor, constant: 10).isActive = true
+        self.likeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 20).isActive = true
         
-        self.likeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07).isActive = true
-        self.likeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.09).isActive = true
+        self.likeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.06).isActive = true
+        self.likeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.11).isActive = true
     }
     
     func configureLikeLabel(){
@@ -345,7 +343,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         likesLabel.textAlignment = NSTextAlignment.center
         likesLabel.textColor = UIColor.black
         
-        likesLabel.font = UIFont.dimeFont(9)
+        likesLabel.font = UIFont.dimeFontBold(13)
         
         
         self.likesLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -357,14 +355,15 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func configureSuperLikeButton(){
         contentView.addSubview(superLikeButton)
-        superLikeButton.titleLabel?.font = UIFont.dimeFont(16)
+        superLikeButton.titleLabel?.font = UIFont.dimeFont(13)
+        superLikeButton.setImage(#imageLiteral(resourceName: "topDimesHome"), for: .normal)
         
         self.superLikeButton.translatesAutoresizingMaskIntoConstraints = false
-        self.superLikeButton.leadingAnchor.constraint(equalTo: self.likesLabel.trailingAnchor, constant: 5).isActive = true
-        self.superLikeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 5).isActive = true
+        self.superLikeButton.leadingAnchor.constraint(equalTo: self.likesLabel.trailingAnchor, constant: 10).isActive = true
+        self.superLikeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 20).isActive = true
         
-        self.superLikeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07).isActive = true
-        self.superLikeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.09).isActive = true
+        self.superLikeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.06).isActive = true
+        self.superLikeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.11).isActive = true
     }
     
     func configureSuperLikeLabel(){
@@ -372,8 +371,8 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         superLikeLabel.backgroundColor = UIColor.clear
         superLikeLabel.textAlignment = NSTextAlignment.center
         superLikeLabel.textColor = UIColor.black
-        superLikeLabel.font = UIFont.dimeFont(9)
-        superLikeLabel.text = "0"
+        superLikeLabel.font = UIFont.dimeFontBold(13)
+//        superLikeLabel.text = "0"
         
         self.superLikeLabel.translatesAutoresizingMaskIntoConstraints = false
         self.superLikeLabel.leadingAnchor.constraint(equalTo: self.superLikeButton.trailingAnchor, constant:2).isActive = true
@@ -411,30 +410,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.circleProfileView.clipsToBounds = true
     }
     
-    
-    func isDimeSuperLiked(){
-        
-        if dime.superLikes.contains(currentUser){
-            self.isSuperLikedByUser = true
-            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
-        }else{
-            self.isSuperLikedByUser = false
-            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamondUnfilled"), for: .normal)
-        }
-        
-    }
-    
-    func configureSuperLikeFunctionality(){
-        if self.didSuperLikeWithinOneDay(superLikeDate: self.currentUser!.lastSuperLikeTime) || isSuperLikedByUser == true{
-            canSuperLike = false
-            self.superLikeButton.removeTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
-            self.superLikeButton.addTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
-        }else{
-            canSuperLike = true
-            self.superLikeButton.removeTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
-            self.superLikeButton.addTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
-        }
-    }
+
     
     func startChat(){
         //guard let chats = self.store.chats else { return }
@@ -443,109 +419,15 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
     }
     
-//    func calculateTotalLikes(){
-//        var totalLikes = 0
-//        for media in dime.media{
-//            totalLikes += media.likes.count
-//        }
-//        likesLabel.text = totalLikes.description
-//    }
-    
     func usernameButtonPressed() {
         let destinationVC = ProfileCollectionViewController()
         destinationVC.user = dime.createdBy
         self.parentCollectionView?.navigationController?.pushViewController(destinationVC, animated: true)
     }
-    
-    
-    
+
 }
 
-// button
-extension DimeCollectionViewCell {
-    
-    func superLikeUnLikeButtonTapped() {
-        if isSuperLikedByUser{
-            dime.unSuperLikedBy(user: currentUser)
-            let dimeRef = DatabaseReference.users(uid: dime.createdBy.uid).reference().child("dimes/\(dime.uid)/superLikes/\(currentUser.uid)")
-            dimeRef.setValue(nil)
-            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamondUnfilled"), for: .normal)
-            isSuperLikedByUser = false
-        }else{
-            dime.superLikedBy(user: currentUser)
-            let dimeRef = DatabaseReference.users(uid: dime.createdBy.uid).reference().child("dimes/\(dime.uid)/superLikes/\(currentUser.uid)")
-            dimeRef.setValue(currentUser.toDictionary())
-            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
-            isSuperLikedByUser = true
-        }
-        reloadLabels()
-    }
-    
-    
-    func reloadLabels(){
-        if dime.superLikes != [] {
-            superLikeLabel.text = dime.superLikes.count.description
-        }else{
-            superLikeLabel.text = "0"
-        }
-    }
-    
-    func didSuperLikeWithinOneDay(superLikeDate date : String) -> Bool {
-        if let creationDate = Constants.dateFormatter().date(from: date) {
-            
-            let yesterday = Constants.dateFormatter().date(from: Constants.oneDayAgo())!
-            
-            if creationDate.compare(yesterday) == .orderedDescending { return true }
-            else if creationDate.compare(yesterday) == .orderedSame  { return true }
-            else { return false }
-            
-        } else {
-            print("Couldn't get NSDate object from string date arguement")
-            return false
-        }
-    }
-    
-    func superLikeAlert() {
-        let alertVC = UIAlertController(title: "SuperLiked!", message: "You can only super like one dime every 24 hours, you cannot undo this action, is this your superlike today?", preferredStyle: .alert)
-        
-        let yesAction = UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
-            self.currentUser.superLikeDime()
-            self.superLikeUnLikeButtonTapped()
-            self.canSuperLike = false
-            self.updateUI()
-        })
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        
-        
-        alertVC.addAction(yesAction)
-        alertVC.addAction(cancelAction)
-        self.parentCollectionView?.present(alertVC, animated: true, completion: nil)
-    }
-    
-    func cantSuperLikeAlert() {
-        var message = ""
-        if isSuperLikedByUser { message = "You've already superliked this one!"}else{ message = "You've already superliked today!"
-        }
-        
-        let alertVC = UIAlertController(title: "Sorry", message: message, preferredStyle: .alert)
-        
-        let cancelAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
-        
-        alertVC.addAction(cancelAction)
-        self.parentCollectionView?.present(alertVC, animated: true, completion: nil)
-    }
-    
-    fileprivate func parseDate(_ date : String) -> String {
-        
-        if let timeAgo = (Constants.dateFormatter().date(from: date) as NSDate?)?.timeAgo() {
-            return timeAgo
-        }
-        else { return "" }
-    }
-}
-
-//Handle Messaging
+//Hande messaging
 extension DimeCollectionViewCell {
     
     func nextDidTap(){
@@ -562,13 +444,13 @@ extension DimeCollectionViewCell {
                 if title == "" {
                     title += "\(acc.fullName)"
                 }else{
-                    title += "+ \(acc.fullName)"
+                    title += " + \(acc.fullName)"
                 }
             }
-        
-        let newChat = Chat(users: conversationMembers, title: title, featuredImageUID: conversationMembers.first!.uid)
-        openChatView(chat: newChat)
-       
+            
+            let newChat = Chat(users: conversationMembers, title: title, featuredImageUID: conversationMembers.first!.uid)
+            openChatView(chat: newChat)
+            
         }
     }
     
@@ -608,6 +490,114 @@ extension DimeCollectionViewCell {
         print("Not sure what the right bar button will do yet.")
     }
 }
+
+    fileprivate func parseDate(_ date : String) -> String {
+
+        if let timeAgo = (Constants.dateFormatter().date(from: date) as NSDate?)?.timeAgo() {
+            return timeAgo
+        }
+        else { return "" }
+    }
+
+
+
+// button
+//extension DimeCollectionViewCell {
+
+//func configureSuperLikeFunctionality(){
+//    if self.didSuperLikeWithinOneDay(superLikeDate: self.currentUser!.lastSuperLikeTime) || isSuperLikedByUser == true{
+//        canSuperLike = false
+//        self.superLikeButton.removeTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
+//        self.superLikeButton.addTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
+//    }else{
+//        canSuperLike = true
+//        self.superLikeButton.removeTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
+//        self.superLikeButton.addTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
+//    }
+//}
+//
+//    func superLikeUnLikeButtonTapped() {
+//        if isSuperLikedByUser{
+//            dime.unSuperLikedBy(user: currentUser)
+//            let dimeRef = DatabaseReference.users(uid: dime.createdBy.uid).reference().child("dimes/\(dime.uid)/superLikes/\(currentUser.uid)")
+//            dimeRef.setValue(nil)
+//            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamondUnfilled"), for: .normal)
+//            isSuperLikedByUser = false
+//        }else{
+//            dime.superLikedBy(user: currentUser)
+//            let dimeRef = DatabaseReference.users(uid: dime.createdBy.uid).reference().child("dimes/\(dime.uid)/superLikes/\(currentUser.uid)")
+//            dimeRef.setValue(currentUser.toDictionary())
+//            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
+//            isSuperLikedByUser = true
+//        }
+//        reloadLabels()
+//    }
+//    
+//    
+//    func reloadLabels(){
+//        if dime.superLikes != [] {
+//            superLikeLabel.text = dime.superLikes.count.description
+//        }else{
+//            superLikeLabel.text = "0"
+//        }
+//    }
+//    
+//    func didSuperLikeWithinOneDay(superLikeDate date : String) -> Bool {
+//        if let creationDate = Constants.dateFormatter().date(from: date) {
+//            
+//            let yesterday = Constants.dateFormatter().date(from: Constants.oneDayAgo())!
+//            
+//            if creationDate.compare(yesterday) == .orderedDescending { return true }
+//            else if creationDate.compare(yesterday) == .orderedSame  { return true }
+//            else { return false }
+//            
+//        } else {
+//            print("Couldn't get NSDate object from string date arguement")
+//            return false
+//        }
+//    }
+//    
+//    func superLikeAlert() {
+//        let alertVC = UIAlertController(title: "SuperLiked!", message: "You can only super like one dime every 24 hours, you cannot undo this action, is this your superlike today?", preferredStyle: .alert)
+//        
+//        let yesAction = UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
+//            self.currentUser.superLiked()
+//            self.superLikeUnLikeButtonTapped()
+//            self.canSuperLike = false
+//            self.updateUI()
+//        })
+//        
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+//        
+//        
+//        alertVC.addAction(yesAction)
+//        alertVC.addAction(cancelAction)
+//        self.parentCollectionView?.present(alertVC, animated: true, completion: nil)
+//    }
+//    
+//    func cantSuperLikeAlert() {
+//        var message = ""
+//        if isSuperLikedByUser { message = "You've already superliked this one!"}else{ message = "You've already superliked today!"
+//        }
+//        
+//        let alertVC = UIAlertController(title: "Sorry", message: message, preferredStyle: .alert)
+//        
+//        let cancelAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
+//        
+//        alertVC.addAction(cancelAction)
+//        self.parentCollectionView?.present(alertVC, animated: true, completion: nil)
+//    }
+//    
+//    fileprivate func parseDate(_ date : String) -> String {
+//        
+//        if let timeAgo = (Constants.dateFormatter().date(from: date) as NSDate?)?.timeAgo() {
+//            return timeAgo
+//        }
+//        else { return "" }
+//    }
+//}
+
+//Handle Messaging
 
 
 

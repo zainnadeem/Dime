@@ -30,10 +30,14 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     var playButton = UIButton()
     
   
+    weak var parentCollectionView       =       UIViewController()
+   
+    lazy var likeButton               :  UIButton       = UIButton(type: .custom)
     
-    lazy var likeButton      :  UIButton       = UIButton(type: .custom)
+    lazy var isLikedByUser            :  Bool           = Bool()
     
-    lazy var isLikedByUser   :  Bool           = Bool()
+    lazy var isSuperLikedByUser       : Bool            = Bool()
+    lazy var canSuperLike             : Bool            = Bool()
     
     var currentUser: User!
     var dime: Dime!
@@ -91,6 +95,8 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
         
         setUpLikeButton()
+        setUpSuperLikeButton()
+        configureSuperLikeFunctionality()
 
         
         
@@ -116,7 +122,29 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
     }
     
- 
+    func setUpSuperLikeButton(){
+        if media.superLikes.contains(currentUser){
+            self.isSuperLikedByUser = true
+            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
+        }else{
+            self.isSuperLikedByUser = false
+            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamondUnfilled"), for: .normal)
+        }
+        
+    }
+    
+    func configureSuperLikeFunctionality(){
+        if self.didSuperLikeWithinOneDay(superLikeDate: self.currentUser!.lastSuperLikeTime) || isSuperLikedByUser == true{
+            canSuperLike = false
+            self.superLikeButton.removeTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
+            self.superLikeButton.addTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
+        }else{
+            canSuperLike = true
+            self.superLikeButton.removeTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
+            self.superLikeButton.addTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
+        }
+    }
+    
     
     func configurePlayButton(){
         contentView.addSubview(playButton)
@@ -218,16 +246,13 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             
             dime.updateLikes(.decrement)
             media.updateLikes(.decrement)
+            media.createdBy.updateTotalLikesCount(.decrement)
             
             //find place for updating user
 
             mediaRef.setValue(nil)
             dimeRef.setValue(nil)
-           
-            
-        
-            
-            
+
             likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
             isLikedByUser = false
         
@@ -238,6 +263,8 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             
             dime.updateLikes(.increment)
             media.updateLikes(.increment)
+            
+            media.createdBy.updateTotalLikesCount(.increment)
             
             createLikeNotification()
 
@@ -348,3 +375,75 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     
 }
+
+
+//ViewMediaCollection Super Like Button
+extension ViewMediaCollectionViewCell {
+    
+    func superLikeMedia() {
+//        if isSuperLikedByUser{
+//            media.unSuperLikedBy(user: currentUser)
+//            let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("media/\(media.uid)/superLikes/\(currentUser.uid)")
+//            mediaRef.setValue(nil)
+//            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamondUnfilled"), for: .normal)
+//            isSuperLikedByUser = false
+//        }else{
+        
+            media.superLikedBy(user: currentUser)
+            let mediaRef = DatabaseReference.users(uid: dime.createdBy.uid).reference().child("media/\(media.uid)/superLikes/\(currentUser.uid)")
+            mediaRef.setValue(currentUser.toDictionary())
+            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
+            isSuperLikedByUser = true
+
+    }
+    
+    
+    func didSuperLikeWithinOneDay(superLikeDate date : String) -> Bool {
+        if let creationDate = Constants.dateFormatter().date(from: date) {
+            
+            let yesterday = Constants.dateFormatter().date(from: Constants.oneDayAgo())!
+            
+            if creationDate.compare(yesterday) == .orderedDescending { return true }
+            else if creationDate.compare(yesterday) == .orderedSame  { return true }
+            else { return false }
+            
+        } else {
+            print("Couldn't get NSDate object from string date arguement")
+            return false
+        }
+    }
+    
+    func superLikeAlert() {
+        let alertVC = UIAlertController(title: "SuperLiked!", message: "You can only super like one dime every 24 hours, you cannot undo this action, is this your superlike today?", preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
+            self.currentUser.superLiked()
+            self.superLikeMedia()
+            self.canSuperLike = false
+            self.updateUI()
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        
+        alertVC.addAction(yesAction)
+        alertVC.addAction(cancelAction)
+        self.parentCollectionView?.present(alertVC, animated: true, completion: nil)
+    }
+    
+    func cantSuperLikeAlert() {
+        var message = ""
+        if isSuperLikedByUser { message = "You've already superliked this one!"}else{ message = "You've already superliked today!"
+        }
+        
+        let alertVC = UIAlertController(title: "Sorry", message: message, preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
+        
+        alertVC.addAction(cancelAction)
+        self.parentCollectionView?.present(alertVC, animated: true, completion: nil)
+    }
+    
+}
+
+

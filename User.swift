@@ -17,17 +17,22 @@ class User {
     var bio                       : String
     var website                   : String
     var lastSuperLikeTime         : String
+    
     var profileImage              : UIImage?
     var friends                   : [User]
     var topFriends                : [User]
     var dimes                     : [Dime]
     var notifications             : [Notification]
-    var averageLikes              : Int?
+    
+    var totalLikes                : Int
+    var averageLikesCount         : Int
+    var mediaCount                : Int
+    var popularRank               : Int
     
     
     // Mark: - Initialize   rs
     
-    init(uid: String, username: String, fullName: String, bio: String, website: String, friends: [User], topFriends: [User], profileImage: UIImage?, dimes: [Dime], notifications: [Notification])
+    init(uid: String, username: String, fullName: String, bio: String, website: String, friends: [User], topFriends: [User], profileImage: UIImage?, dimes: [Dime], notifications: [Notification], totalLikes: Int, averageLikesCount: Int, mediaCount: Int, popularRank: Int)
         
     {
         self.uid = uid
@@ -40,6 +45,10 @@ class User {
         self.profileImage = profileImage
         self.dimes = dimes
         self.notifications = notifications
+        self.totalLikes = totalLikes
+        self.averageLikesCount = averageLikesCount
+        self.mediaCount = mediaCount
+        self.popularRank = popularRank
         self.lastSuperLikeTime = Constants.oneDayAgo()
         
         
@@ -55,6 +64,10 @@ class User {
         website = dictionary["website"] as! String
         lastSuperLikeTime = dictionary["lastSuperLikeTime"] as! String
         
+        totalLikes = dictionary["totalLikes"] as! Int
+        mediaCount = dictionary["mediaCount"] as! Int
+        averageLikesCount = dictionary["averageLikesCount"] as! Int
+        popularRank = dictionary["popularRank"] as! Int
         
         //follows
         self.friends = []
@@ -99,10 +112,7 @@ class User {
                 }
             }
         }
-        
-        
-
-        
+  
     }
     
     func save(completion: @escaping (Error?) -> Void){
@@ -126,8 +136,6 @@ class User {
             })
         }
         
-        
-        
     }
     
     func toDictionary() -> [String : Any] {
@@ -137,15 +145,16 @@ class User {
             "fullName" : fullName,
             "bio" : bio,
             "lastSuperLikeTime" : lastSuperLikeTime,
+            "totalLikes" : totalLikes,
+            "averageLikesCount" : averageLikesCount,
+            "mediaCount" : mediaCount,
+            "popularRank": popularRank,
             "website" : website
             
         ]
         
     }
     
-
-
-
 }
 
 extension User {
@@ -169,7 +178,7 @@ extension User {
         })
     }
     
-    func superLikeDime(){
+    func superLiked(){
         let currentTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
         self.lastSuperLikeTime = currentTime
         let ref = DatabaseReference.users(uid: uid).reference().child("lastSuperLikeTime")
@@ -240,29 +249,77 @@ extension User {
 
 }
 
+//update media count, Average & popular rank
+extension User {
+    
+    func updateMediaCount(_ direction : UpdateDirection, amount: Int) {
+        let ref = DatabaseReference.users(uid: uid).reference().child("mediaCount")
+        
+        switch direction {
+        case .increment:
+            self.mediaCount += 1
+            ref.setValue(mediaCount)
+        case .decrement:
+            self.mediaCount -= 1
+            ref.setValue(mediaCount)
+        }
+        updateAverageLikes()
+        
+    }
+    
+    
+    func updateTotalLikesCount(_ direction : UpdateDirection) {
+        let ref = DatabaseReference.users(uid: uid).reference().child("totalLikes")
+        
+        switch direction {
+        case .increment:
+            self.totalLikes += 1
+            ref.setValue(totalLikes)
+        case .decrement:
+            self.totalLikes -= 1
+            ref.setValue(totalLikes)
+        }
+        updateAverageLikes()
+        
+    }
+    
+    func updateAverageLikes() {
+        let ref = DatabaseReference.users(uid: uid).reference().child("averageLikesCount")
+        
+        if totalLikes > 0 {
+        
+        let average = self.totalLikes / self.mediaCount
+        self.averageLikesCount = average
+        ref.setValue(self.averageLikesCount)
+        
+        updatePopularRank()
+        }
+    }
+    
+    func updatePopularRank(){
+        if self.friends.count > 1{
+        let ref = DatabaseReference.users(uid: uid).reference().child("popularRank")
+        let popularRankedFriends = sortByAverageLikes(self.friends)
+        ref.setValue(popularRankedFriends.index(of: self))
+        
+        }
+    }
+
+}
+
+
 extension User: Equatable { }
 //teach swift to compare to instances of a class
 func == (lhs: User, rhs: User) -> Bool {
     return lhs.uid == rhs.uid
 }
 
-func sortByPopular(_ arrayOfUsers: [User]) -> [User] {
+func sortByAverageLikes(_ arrayOfUsers: [User]) -> [User] {
     var users = arrayOfUsers
-    for user in users {
-        var totalLikes = 0
-        user.averageLikes = 0
-        var numberOfMedia = 0
-        for dime in user.dimes{
-            for media in dime.media{
-                numberOfMedia += 1
-                totalLikes += media.likes.count
-            }
-        }
-        user.averageLikes! = totalLikes / numberOfMedia
-    }
-    users.sort(by: {$0.averageLikes! > $1.averageLikes!})
+    users.sort(by: {$0.averageLikesCount > $1.averageLikesCount})
     return users
 }
+
 
 
 

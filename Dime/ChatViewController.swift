@@ -24,6 +24,9 @@ class ChatViewController: JSQMessagesViewController {
     var outgoingBubbleImageView: JSQMessagesBubbleImage!
     var incomingBubbleImageView: JSQMessagesBubbleImage!
     
+    var outgoingAvatarImageView: JSQMessagesAvatarImage!
+    var incomingAvatarImageView: JSQMessagesAvatarImage!
+    
     let cache = SAMCache.shared()
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
@@ -39,6 +42,7 @@ class ChatViewController: JSQMessagesViewController {
         self.navigationItem.leftBarButtonItem = backButton
         
         self.observeMessages()
+        downloadProfileImages()
     }
     
     func back(_ sender: UIBarButtonItem){
@@ -60,15 +64,22 @@ class ChatViewController: JSQMessagesViewController {
 
         let profileImageViewKey = "\(chatMember.uid)-profileImage"
         
-        if let image = cache?.object(forKey: profileImageViewKey) as? UIImage
-        
-        {
+        if let image = cache?.object(forKey: profileImageViewKey) as? UIImage  {
+            
+           let jsqImage = JSQMessagesAvatarImageFactory.avatarImage(with: image, diameter: 30)
+            if chatMember == self.currentUser{ self.outgoingAvatarImageView = jsqImage }else{
+                self.incomingAvatarImageView = jsqImage
+            }
+      
             //self.profileImageView.image = image
        
         }else{
             
             chatMember.downloadProfilePicture { (image, error) in
-                //self.profileImageView.image = image
+                let jsqImage = JSQMessagesAvatarImageFactory.avatarImage(with: image, diameter: 30)
+                if chatMember == self.currentUser{ self.outgoingAvatarImageView = jsqImage }else{
+                    self.incomingAvatarImageView = jsqImage
+                }
                 self.cache?.setObject(image, forKey: profileImageViewKey)
   
             }
@@ -89,8 +100,9 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     func setUpAvatarImages(){
-        collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSize.zero
-        collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSize.zero
+//        collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSize.zero
+//        collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSize.zero
+    
     }
     
     
@@ -121,6 +133,7 @@ extension ChatViewController{
         
         if jsqMessage.senderId == self.senderId {
             cell.textView?.textColor = UIColor.white
+            
         }else{
             cell.textView?.textColor = UIColor.black
         }
@@ -139,7 +152,17 @@ extension ChatViewController{
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
-        return nil
+
+        
+        let jsqMessage = jsqMessages[indexPath.item]
+        
+        if jsqMessage.senderId == self.senderId {
+            return outgoingAvatarImageView
+            
+        }else{
+            return incomingAvatarImageView
+        }
+
     }
     
     

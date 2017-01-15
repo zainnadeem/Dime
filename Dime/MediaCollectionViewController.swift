@@ -244,7 +244,9 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
             if let dime = self.store.currentDime{
                 
                 if let videoURL = mediaObject as? URL {
-                    self.newMedia = Media(dimeUID: dime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0)
+                    self.newMedia = Media(dimeUID: dime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0, superLikesCount: 0)
+                    
+                    self.store.currentUser?.updateMediaCount(.increment, amount: 1)
                     
                     if let media = self.newMedia{
                         let videoData = NSData(contentsOf: videoURL as URL)
@@ -256,7 +258,8 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
                     }
                 } else if let snapshotImage = mediaObject as? UIImage {
                     
-                    self.newMedia = Media(dimeUID: dime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: snapshotImage, likesCount: 0)
+                    self.newMedia = Media(dimeUID: dime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: snapshotImage, likesCount: 0, superLikesCount: 0)
+                    self.store.currentUser?.updateMediaCount(.increment, amount: 1)
                     
                 }
                 
@@ -303,6 +306,7 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
             action in
             
              if (self.dime?.media.count)! >= mediaNumber + 1 { self.dime?.media.remove(at: mediaNumber) }
+            self.store.currentUser?.updateMediaCount(.decrement, amount: 1)
             self.collectionView?.reloadData()
             
         })

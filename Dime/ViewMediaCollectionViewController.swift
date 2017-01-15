@@ -94,6 +94,7 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
         cell.dime = passedDime
         cell.currentUser = store.currentUser
         cell.media = passedDime.media[indexPath.row]
+        cell.parentCollectionView = self
         
         return cell
     }

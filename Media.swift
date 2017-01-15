@@ -19,15 +19,20 @@ class Media {
     var location: String
     var createdTime: String
     var createdBy: User
+    
     var likes: [User]
     var likesCount: Int
+    
+    var superLikes: [User]
+    var superLikesCount: Int
+    
     var usersTagged: [User]
     var comments: [Comment]
     var mediaURL: String
     var mediaImage: UIImage!
     
     
-    init(dimeUID: String, type: String, caption: String, createdBy: User, mediaURL: String, location: String, mediaImage:UIImage, likesCount: Int)
+    init(dimeUID: String, type: String, caption: String, createdBy: User, mediaURL: String, location: String, mediaImage:UIImage, likesCount: Int, superLikesCount: Int)
     {
         self.type = type
         self.caption = caption
@@ -36,11 +41,14 @@ class Media {
         self.location = location
         self.dimeUID = dimeUID
         self.mediaImage = mediaImage
+        
         self.likesCount = likesCount
+        self.superLikesCount = superLikesCount
         
         createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
         comments = []
         likes = []
+        superLikes = []
         usersTagged = []
         uid = DatabaseReference.media.reference().childByAutoId().key
     }
@@ -55,6 +63,7 @@ class Media {
         location = dictionary["location"] as! String
         mediaURL = dictionary["mediaURL"] as! String
         likesCount = dictionary["likesCount"] as! Int
+        superLikesCount = dictionary["superLikesCount"] as! Int
         
         let createdByDict = dictionary["createdBy"] as! [String : Any]
         createdBy = User(dictionary: createdByDict)
@@ -64,6 +73,15 @@ class Media {
             for (_, userDict) in likesDict {
                 if let userDict = userDict as? [String: Any] {
                     likes.append(User(dictionary: userDict))
+                }
+            }
+        }
+        
+        superLikes = []
+        if let superLikesDict = dictionary["superLikes"] as? [String : Any] {
+            for (_, userDict) in superLikesDict {
+                if let userDict = userDict as? [String: Any] {
+                    superLikes.append(User(dictionary: userDict))
                 }
             }
         }
@@ -97,6 +115,11 @@ class Media {
         //save likes
         for like in likes {
             ref.child("likes/\(like.uid)").setValue(like.toDictionary())
+        }
+        
+        //save superLikes
+        for superLike in superLikes {
+            ref.child("superLikes/\(superLike.uid)").setValue(superLike.toDictionary())
         }
         
         //save comments
@@ -135,6 +158,7 @@ class Media {
             "createdBy" : createdBy.toDictionary(),
             "mediaURL"  : mediaURL,
             "likesCount": likesCount,
+            "superLikesCount": superLikesCount,
             "location"  : location
         ]
     }
@@ -166,6 +190,24 @@ class Media {
             self.likesCount -= 1
             ref.setValue(likesCount)
             userRef.setValue(likesCount)
+            
+        }
+    }
+    
+    func updateSuperLikes(_ direction : UpdateDirection) {
+        let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)/superLikesCount")
+        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(dimeUID)/media/\(uid)/superLikesCount")
+        
+        switch direction {
+        case .increment:
+            self.superLikesCount += 1
+            ref.setValue(superLikesCount)
+            userRef.setValue(superLikesCount)
+            
+        case .decrement:
+            self.superLikesCount -= 1
+            ref.setValue(superLikesCount)
+            userRef.setValue(superLikesCount)
             
         }
     }
@@ -228,6 +270,20 @@ class func observeNewMedia(_ completion: @escaping (Media) -> Void) {
         if let index = likes.index(of: user){
             likes.remove(at: index)
             let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)/likes/\(user.uid)")
+            ref.setValue(nil)
+        }
+    }
+    
+    func superLikedBy(user: User) {
+        self.superLikes.append(user)
+        let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)/superLikes/\(user.uid)")
+        ref.setValue(user.toDictionary())
+    }
+    
+    func unSuperLikedBy(user: User){
+        if let index = superLikes.index(of: user){
+            superLikes.remove(at: index)
+            let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)/superLikes/\(user.uid)")
             ref.setValue(nil)
         }
     }

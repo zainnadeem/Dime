@@ -79,13 +79,13 @@ class CreateDimeViewController: UIViewController {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
             
-            let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalLikes: 0)
+            let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalLikes: 0, averageLikesCount: 0, totalSuperLikes: 0)
             
             self.store.currentDime = newDime
             
             if let videoURL = mediaObject as? URL {
                 
-                let newMedia = Media(dimeUID: newDime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0)
+                let newMedia = Media(dimeUID: newDime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0, superLikesCount: 0)
                 let videoData = NSData(contentsOf: videoURL as URL)
                 
                 let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
@@ -100,7 +100,7 @@ class CreateDimeViewController: UIViewController {
             } else if let snapshotImage = mediaObject as? UIImage {
                 
                 self.image = snapshotImage
-                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image!, likesCount: 0)
+                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image!, likesCount: 0, superLikesCount: 0)
                 self.store.currentDime?.media.append(newMedia)
                 controller.finishedEditing = false
                 self.present(controller, animated: true, completion: nil)

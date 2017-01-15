@@ -66,7 +66,7 @@ class SignUpTableViewController: UITableViewController {
                     self.alert(title: "Oops", message: (error?.localizedDescription)!, buttonTitle: "Okay")
                 
                 } else if let firUser = firUser {
-                    let newUser = User(uid: firUser.uid, username: username, fullName: fullName, bio: "", website: "", friends: [], topFriends: [], profileImage: self.profileImage, dimes: [], notifications: [])
+                    let newUser = User(uid: firUser.uid, username: username, fullName: fullName, bio: "", website: "", friends: [], topFriends: [], profileImage: self.profileImage, dimes: [], notifications: [], totalLikes: 0, averageLikesCount: 0, mediaCount: 0, popularRank: 0)
                     
                     newUser.save(completion: { (error) in
                         FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (firUser, error) in
