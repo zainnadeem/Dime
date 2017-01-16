@@ -246,10 +246,9 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             
             dime.updateLikes(.decrement)
             media.updateLikes(.decrement)
-            media.createdBy.updateTotalLikesCount(.decrement)
             
             //find place for updating user
-
+           
             mediaRef.setValue(nil)
             dimeRef.setValue(nil)
 
@@ -263,10 +262,9 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             
             dime.updateLikes(.increment)
             media.updateLikes(.increment)
-            
-            media.createdBy.updateTotalLikesCount(.increment)
-            
+
             createLikeNotification()
+            
 
             dimeRef.setValue(currentUser.toDictionary())
             mediaRef.setValue(currentUser.toDictionary())

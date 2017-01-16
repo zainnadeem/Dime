@@ -136,7 +136,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
         chatButton.addTarget(self, action: #selector(nextDidTap), for: .touchUpInside)
         captionLabel.text = dime.caption
-        likesLabel.text = dime.totalLikes.description
+        likesLabel.text = dime.totalDimeLikes.description
         createdTimeLabel.text = parseDate(dime.createdTime)
         
 

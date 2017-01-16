@@ -66,6 +66,7 @@ class SignUpTableViewController: UITableViewController {
                     self.alert(title: "Oops", message: (error?.localizedDescription)!, buttonTitle: "Okay")
                 
                 } else if let firUser = firUser {
+                   
                     let newUser = User(uid: firUser.uid, username: username, fullName: fullName, bio: "", website: "", friends: [], topFriends: [], profileImage: self.profileImage, dimes: [], notifications: [], totalLikes: 0, averageLikesCount: 0, mediaCount: 0, popularRank: 0)
                     
                     newUser.save(completion: { (error) in
@@ -101,12 +102,14 @@ class SignUpTableViewController: UITableViewController {
         
         mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (image) in
             
+            if image != nil{
             let profilePicture = image!
             self.profileImageView.image = (profilePicture as! UIImage).rounded
             self.profileImageView.image = (profilePicture as! UIImage).circle
             
             self.profileImage = (profilePicture as! UIImage).rounded
             self.profileImage = (profilePicture as! UIImage).circle
+            }
         })
     }
     

@@ -79,7 +79,7 @@ class CreateDimeViewController: UIViewController {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
             
-            let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalLikes: 0, averageLikesCount: 0, totalSuperLikes: 0)
+            let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
             
             self.store.currentDime = newDime
             
@@ -95,6 +95,7 @@ class CreateDimeViewController: UIViewController {
                 newMedia.mediaURL = dataPath
                 
                 self.store.currentDime?.media.append(newMedia)
+                self.store.currentUser?.updateMediaCount(.increment, amount: 1)
                 self.present(controller, animated: true, completion: nil)
                 
             } else if let snapshotImage = mediaObject as? UIImage {
@@ -102,6 +103,7 @@ class CreateDimeViewController: UIViewController {
                 self.image = snapshotImage
                 let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image!, likesCount: 0, superLikesCount: 0)
                 self.store.currentDime?.media.append(newMedia)
+                self.store.currentUser?.updateMediaCount(.increment, amount: 1)
                 controller.finishedEditing = false
                 self.present(controller, animated: true, completion: nil)
                 

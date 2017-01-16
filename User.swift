@@ -271,15 +271,24 @@ extension User {
     func updateTotalLikesCount(_ direction : UpdateDirection) {
         let ref = DatabaseReference.users(uid: uid).reference().child("totalLikes")
         
-        switch direction {
-        case .increment:
-            self.totalLikes += 1
-            ref.setValue(totalLikes)
-        case .decrement:
-            self.totalLikes -= 1
-            ref.setValue(totalLikes)
-        }
-        updateAverageLikes()
+        ref.observeSingleEvent(of: .value, with: { total in
+            
+            self.totalLikes = total.value as! Int
+            
+            switch direction {
+            case .increment:
+                self.totalLikes += 1
+                ref.setValue(self.totalLikes)
+                
+            case .decrement:
+                self.totalLikes -= 1
+                ref.setValue(self.totalLikes)
+            }
+            
+            self.updateAverageLikes()
+
+        })
+
         
     }
     
@@ -288,15 +297,17 @@ extension User {
         
         if totalLikes > 0 {
         
-        let average = self.totalLikes / self.mediaCount
+        let average = (self.totalLikes / self.mediaCount) as Int
         self.averageLikesCount = average
         ref.setValue(self.averageLikesCount)
         
-        updatePopularRank()
         }
+        
+        updatePopularRank()
     }
     
     func updatePopularRank(){
+        if !self.friends.contains(self){self.friends.append(self)}
         if self.friends.count > 1{
         let ref = DatabaseReference.users(uid: uid).reference().child("popularRank")
         let popularRankedFriends = sortByAverageLikes(self.friends)

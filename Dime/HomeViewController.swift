@@ -56,9 +56,10 @@ class HomeViewController: UIViewController {
                         self.store.currentUser = User(dictionary: userDict)
                         self.store.getCurrentDime()
                         self.store.observeChats({ (chats) in
-                            
-                            
+  
                         })
+                        
+                        self.store.currentUser?.updatePopularRank()
                         //self.enableButtons()
                     }
                 })

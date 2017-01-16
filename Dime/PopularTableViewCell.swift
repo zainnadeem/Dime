@@ -91,14 +91,13 @@ class PopularTableViewCell: UITableViewCell {
         fullName.textColor = UIColor.darkGray
         fullName.font = UIFont.dimeFontBold(12)
         
-        notificationLabel.text = "Last SuperLike: \(parseDate(user.lastSuperLikeTime))"
+        notificationLabel.text = "Average Likes: \(user.averageLikesCount)"
         notificationLabel.textColor = UIColor.black
         notificationLabel.font = UIFont.dimeFontBold(12)
         notificationLabel.numberOfLines = 10
         getPopularDimesNumber(user: user)
-       
-        //parseDate(business.latestVideo["dateCreated"] as! String)
-        //timeAgoLabel.text = parse   comment.createdTime.description
+        
+        timeAgoLabel.text = "Popular Rank: \(user.popularRank)"
         timeAgoLabel.textColor = UIColor.black
         timeAgoLabel.font = UIFont.dimeFont(10)
     }
@@ -107,7 +106,7 @@ class PopularTableViewCell: UITableViewCell {
         var totalLikes = Int()
         var numberOfMedia = Int()
         for dime in user.dimes{
-            totalLikes += dime.totalLikes
+            totalLikes += dime.totalDimeLikes
         }
         timeAgoLabel.text = totalLikes.description
     }

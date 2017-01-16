@@ -23,12 +23,12 @@ class Dime {
     var superLikes              : [User]
     var comments                : [Comment]
 
-    var totalSuperLikes         : Int
-    var totalLikes              : Int
+    var totalDimeSuperLikes         : Int
+    var totalDimeLikes              : Int
 
     
     
-    init(caption: String, createdBy: User, media: [Media], totalLikes: Int, averageLikesCount: Int, totalSuperLikes: Int)
+    init(caption: String, createdBy: User, media: [Media], totalDimeLikes: Int, averageLikesCount: Int, totalDimeSuperLikes: Int)
     {
         
         self.caption = caption
@@ -37,8 +37,8 @@ class Dime {
         
         createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
         
-        self.totalLikes = totalLikes
-        self.totalSuperLikes = totalSuperLikes
+        self.totalDimeLikes = totalDimeLikes
+        self.totalDimeSuperLikes = totalDimeSuperLikes
            
         comments = []
         likes = []
@@ -53,8 +53,8 @@ class Dime {
         caption = dictionary["caption"] as! String
         createdTime = dictionary["createdTime"] as! String
         
-        totalLikes = dictionary["totalLikes"] as! Int
-        totalSuperLikes = dictionary["totalSuperLikes"] as! Int
+        totalDimeLikes = dictionary["totalDimeLikes"] as! Int
+        totalDimeSuperLikes = dictionary["totalDimeSuperLikes"] as! Int
         
         let createdByDict = dictionary["createdBy"] as! [String : Any]
         createdBy = User(dictionary: createdByDict)
@@ -260,8 +260,8 @@ class Dime {
             "uid" : uid,
             "caption" : caption,
             "createdTime" : createdTime,
-            "totalLikes" : totalLikes,
-            "totalSuperLikes" : totalSuperLikes,
+            "totalDimeLikes" : totalDimeLikes,
+            "totalDimeSuperLikes" : totalDimeSuperLikes,
             "createdBy" : createdBy.toDictionary()
             
             
@@ -269,39 +269,44 @@ class Dime {
     }
     
     func updateLikes(_ direction : UpdateDirection) {
-        let ref = DatabaseReference.dimes.reference().child("\(uid)/totalLikes")
-        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(uid)/totalLikes")
+        let ref = DatabaseReference.dimes.reference().child("\(uid)/totalDimeLikes")
+        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(uid)/totalDimeLikes")
         
         
         switch direction {
         case .increment:
-            self.totalLikes += 1
-            ref.setValue(totalLikes)
-            userRef.setValue(totalLikes)
+            self.totalDimeLikes += 1
+            ref.setValue(totalDimeLikes)
+            userRef.setValue(totalDimeLikes)
+            createdBy.updateTotalLikesCount(.increment)
+            
+            
             
         case .decrement:
-            self.totalLikes -= 1
-            ref.setValue(totalLikes)
-            userRef.setValue(totalLikes)
+            self.totalDimeLikes -= 1
+            ref.setValue(totalDimeLikes)
+            userRef.setValue(totalDimeLikes)
+            createdBy.updateTotalLikesCount(.decrement)
+            
             
         }
     }
     
     func updateSuperLikes(_ direction : UpdateDirection) {
-        let ref = DatabaseReference.dimes.reference().child("\(uid)/totalSuperLikes")
-        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(uid)/totalSuperLikes")
+        let ref = DatabaseReference.dimes.reference().child("\(uid)/totalDimeSuperLikes")
+        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(uid)/totalDimeSuperLikes")
         
         
         switch direction {
         case .increment:
-            self.totalSuperLikes += 1
-            ref.setValue(totalSuperLikes)
-            userRef.setValue(totalSuperLikes)
+            self.totalDimeSuperLikes += 1
+            ref.setValue(totalDimeSuperLikes)
+            userRef.setValue(totalDimeSuperLikes)
             
         case .decrement:
-            self.totalSuperLikes -= 1
-            ref.setValue(totalSuperLikes)
-            userRef.setValue(totalSuperLikes)
+            self.totalDimeSuperLikes -= 1
+            ref.setValue(totalDimeSuperLikes)
+            userRef.setValue(totalDimeSuperLikes)
             
         }
     }
@@ -457,7 +462,7 @@ func sortByMostRecentlyCreated(_ arrayOfDimes : [Dime]) -> [Dime] {
 
 func sortByTrending(_ arrayOfDimes: [Dime]) -> [Dime] {
     var dimes = arrayOfDimes
-    dimes.sort(by: {$0.totalLikes > $1.totalLikes})
+    dimes.sort(by: {$0.totalDimeLikes > $1.totalDimeLikes})
     return dimes
 }
 
