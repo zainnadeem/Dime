@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'B5A86746DE534913E01182F127225493'
-               BlueprintName = 'VENTokenField'
+               BlueprintIdentifier = '5F05FAC18B302236D9341A42AAA3C9D3'
+               BlueprintName = 'QuickTableViewController'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'VENTokenField.framework'>
+               BuildableName = 'QuickTableViewController.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

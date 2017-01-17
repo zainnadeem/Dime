@@ -139,7 +139,16 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         likesLabel.text = dime.totalDimeLikes.description
         createdTimeLabel.text = parseDate(dime.createdTime)
         
-
+        if currentUser.friends.contains(dime.createdBy){
+        let friendIndex = currentUser.friends.index(of: dime.createdBy)
+        self.popularRankButton.setTitle(currentUser.friends[friendIndex!].popularRank.description, for: .normal)
+        self.popularRankButton.titleLabel?.textColor = UIColor.black
+        self.popularRankButton.titleLabel?.textAlignment = .center
+        popularRankButton.setBackgroundImage(#imageLiteral(resourceName: "popularHome"), for: .normal)
+        }else{
+            popularRankButton.setTitle("", for: .normal)
+            popularRankButton.setBackgroundImage(nil, for: .normal)
+        }
         configureFriendButton()
         
     }
@@ -150,6 +159,11 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         destinationVC.passedDime = dime
         self.parentCollectionView?.navigationController?.pushViewController(destinationVC, animated: true)
         
+    }
+    
+    func showPopularPage() {
+        self.parentCollectionView?.navigationController?.tabBarController?.selectedIndex = 4
+   
     }
     
     
@@ -174,6 +188,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 
                 self.currentUser.topFriendUser(user: self.dime.createdBy)
                 self.currentUser.friendUser(user: self.dime.createdBy)
+                self.dime.createdBy.getTotalLikes()
                 self.configureFriendButton()
                 
                 
@@ -184,13 +199,14 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 
                 self.currentUser.friendUser(user: self.dime.createdBy)
                 self.currentUser.unTopFriendUser(user: self.dime.createdBy)
+                self.dime.createdBy.getTotalLikes()
                 self.configureFriendButton()
                 
                 
             })
             
         
-            let unfriend = UIAlertAction(title: "unfriend", style: .default, handler: {
+            let unfriend = UIAlertAction(title: "Unfriend", style: .default, handler: {
                 action in
                 
                 self.currentUser.unTopFriendUser(user: self.dime.createdBy)
@@ -199,6 +215,11 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 
                 
             })
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: {
+            action in
+            print("Canceled")
+        })
             
             
             actionSheet.addAction(topFriends)
@@ -206,6 +227,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         if currentUser.topFriends.contains(dime.createdBy) || currentUser.friends.contains(dime.createdBy){
             actionSheet.addAction(unfriend)
         }
+            actionSheet.addAction(cancel)
             self.parentCollectionView?.present(actionSheet, animated: true, completion: nil)
         }
     
@@ -275,16 +297,18 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         contentView.addSubview(popularRankButton)
         popularRankButton.titleLabel?.font = UIFont.dimeFont(16)
         popularRankButton.setTitleColor(UIColor.black, for: .normal)
-        popularRankButton.setBackgroundImage(#imageLiteral(resourceName: "icon-popular-1"), for: .normal)
+       
         popularRankButton.tintColor = UIColor.black
-        popularRankButton.addTarget(self, action: #selector(filterFriendAlert), for: .touchUpInside)
+        popularRankButton.addTarget(self, action: #selector(showPopularPage), for: .touchUpInside)
         
         self.popularRankButton.translatesAutoresizingMaskIntoConstraints = false
         self.popularRankButton.trailingAnchor.constraint(equalTo: self.chatButton.leadingAnchor, constant: -20).isActive = true
         self.popularRankButton.centerYAnchor.constraint(equalTo: self.circleProfileView.centerYAnchor).isActive = true
         
-        self.popularRankButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07)
-        self.popularRankButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.12)
+        self.popularRankButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.06).isActive = true
+        self.popularRankButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.12).isActive = true
+        
+        self.popularRankButton.titleLabel?.textAlignment = .center
         
     }
     

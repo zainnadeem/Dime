@@ -78,7 +78,10 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         self.viewControllerIcon.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
     }
     
-    
+    func reloadDataToFirstCell(){
+        self.dimeCollectionView.reloadData()
+        self.dimeCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
+    }
     
     func fetchDimes() {
         self.dimeCollectionView.reloadData()

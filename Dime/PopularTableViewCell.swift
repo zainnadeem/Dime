@@ -13,6 +13,8 @@ class PopularTableViewCell: UITableViewCell {
     lazy var timeAgoLabel           : UILabel       = UILabel()
     lazy var averageLikesLabel      : UILabel       = UILabel()
     
+    lazy var starImageView          : UIImageView   = UIImageView()
+    lazy var poularRank             : UILabel       = UILabel()
     weak var parentTableView = UIViewController()
     
     lazy var borderWidth                  : CGFloat =       3.0
@@ -32,6 +34,8 @@ class PopularTableViewCell: UITableViewCell {
         self.notificationLabel.translatesAutoresizingMaskIntoConstraints = false
         self.timeAgoLabel.translatesAutoresizingMaskIntoConstraints = false
         self.averageLikesLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.starImageView.translatesAutoresizingMaskIntoConstraints = false
+        self.poularRank.translatesAutoresizingMaskIntoConstraints = false
         
         self.contentView.addSubview(self.profileImage)
         self.profileImage.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
@@ -44,6 +48,20 @@ class PopularTableViewCell: UITableViewCell {
         self.averageLikesLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -11.5).isActive = true
         self.averageLikesLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: profileImageHeightMultiplier).isActive = true
         self.averageLikesLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.25*0.75).isActive = true
+        
+        self.contentView.addSubview(self.starImageView)
+        self.starImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+        self.starImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -11.5).isActive = true
+        self.starImageView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: profileImageHeightMultiplier).isActive = true
+        self.starImageView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.25*0.75).isActive = true
+        self.starImageView.image = #imageLiteral(resourceName: "popularHome")
+        
+        self.contentView.addSubview(self.poularRank)
+        self.poularRank.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+        self.poularRank.centerXAnchor.constraint(equalTo: self.starImageView.centerXAnchor).isActive = true
+        self.poularRank.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.2).isActive = true
+        self.poularRank.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.2).isActive = true
+        
         
         
         // Main center labels stack
@@ -87,29 +105,22 @@ class PopularTableViewCell: UITableViewCell {
         profileImage.layer.cornerRadius = profileImage.bounds.width / 2.0
         profileImage.layer.masksToBounds = true
         setImageViewCircular()
+        
+        poularRank.text = user.averageLikesCount.description
+        poularRank.textAlignment = .center
         fullName.text = user.fullName
-        fullName.textColor = UIColor.darkGray
+        fullName.textColor = UIColor.black
         fullName.font = UIFont.dimeFontBold(12)
         
-        notificationLabel.text = "Average Likes: \(user.averageLikesCount)"
         notificationLabel.textColor = UIColor.black
         notificationLabel.font = UIFont.dimeFontBold(12)
         notificationLabel.numberOfLines = 10
-        getPopularDimesNumber(user: user)
         
-        timeAgoLabel.text = "Popular Rank: \(user.popularRank)"
+
         timeAgoLabel.textColor = UIColor.black
         timeAgoLabel.font = UIFont.dimeFont(10)
     }
     
-    func getPopularDimesNumber(user: User){
-        var totalLikes = Int()
-        var numberOfMedia = Int()
-        for dime in user.dimes{
-            totalLikes += dime.totalDimeLikes
-        }
-        timeAgoLabel.text = totalLikes.description
-    }
 
     
     func setImageViewCircular() {

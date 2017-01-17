@@ -11,6 +11,7 @@ import Firebase
 
 class User {
     
+    
     let uid                       : String
     var username                  : String
     var fullName                  : String
@@ -28,6 +29,8 @@ class User {
     var averageLikesCount         : Int
     var mediaCount                : Int
     var popularRank               : Int
+    
+    let store = DataStore.sharedInstance
     
     
     // Mark: - Initialize   rs
@@ -190,6 +193,7 @@ extension User {
         let ref = DatabaseReference.users(uid: uid).reference().child("friends/\(user.uid)")
         ref.setValue(user.toDictionary())
         
+        
     }
     
     func unFriendUser(user: User){
@@ -203,6 +207,7 @@ extension User {
         self.topFriends.append(user)
         let ref = DatabaseReference.users(uid: uid).reference().child("topFriends/\(user.uid)")
         ref.setValue(user.toDictionary())
+        
     }
     func unTopFriendUser(user: User){
         self.topFriends = self.topFriends.filter() {$0 !== user}
@@ -269,7 +274,10 @@ extension User {
     
     
     func updateTotalLikesCount(_ direction : UpdateDirection) {
+        guard let currentUser = self.store.currentUser else { return }
+        
         let ref = DatabaseReference.users(uid: uid).reference().child("totalLikes")
+        let userFriendRef = DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(uid)/totalLikes")
         
         ref.observeSingleEvent(of: .value, with: { total in
             
@@ -279,10 +287,12 @@ extension User {
             case .increment:
                 self.totalLikes += 1
                 ref.setValue(self.totalLikes)
+                userFriendRef.setValue(self.totalLikes)
                 
             case .decrement:
                 self.totalLikes -= 1
                 ref.setValue(self.totalLikes)
+                userFriendRef.setValue(self.totalLikes)
             }
             
             self.updateAverageLikes()
@@ -292,26 +302,71 @@ extension User {
         
     }
     
+    func getTotalLikes(){
+        guard let currentUser = self.store.currentUser else { return }
+        
+        let ref = DatabaseReference.users(uid: uid).reference().child("totalLikes")
+        let userFriendRef = DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(uid)/totalLikes")
+        
+        ref.observeSingleEvent(of: .value, with: { total in
+            
+            self.totalLikes = total.value as! Int
+            
+                userFriendRef.setValue(self.totalLikes)
+                self.updateAverageLikes()
+        })
+        
+    }
+    
     func updateAverageLikes() {
+        guard let currentUser = self.store.currentUser else { return }
+        
         let ref = DatabaseReference.users(uid: uid).reference().child("averageLikesCount")
+        
+        let userFriendRef = DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(uid)/averageLikesCount")
         
         if totalLikes > 0 {
         
         let average = (self.totalLikes / self.mediaCount) as Int
         self.averageLikesCount = average
-        ref.setValue(self.averageLikesCount)
         
+        ref.setValue(self.averageLikesCount)
+        userFriendRef.setValue(self.averageLikesCount)
+
         }
         
         updatePopularRank()
     }
     
     func updatePopularRank(){
-        if !self.friends.contains(self){self.friends.append(self)}
-        if self.friends.count > 1{
-        let ref = DatabaseReference.users(uid: uid).reference().child("popularRank")
-        let popularRankedFriends = sortByAverageLikes(self.friends)
-        ref.setValue(popularRankedFriends.index(of: self))
+        guard let currentUser = self.store.currentUser else { return }
+        
+        let ref = DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(uid)")
+        
+        
+        if !currentUser.friends.contains(currentUser){
+            currentUser.friends.append(currentUser)
+            DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(uid)").setValue(currentUser.toDictionary())
+        }
+        
+        
+        if currentUser.friends.count > 1{
+        
+        let popularRankedFriends = sortByAverageLikes(currentUser.friends)
+        
+        //ref.child("popularRank").setValue(popularRankedFriends.index(of: self))
+            
+            for user in currentUser.friends {
+                //if user == currentUser {ref.setValue(currentUser.toDictionary())}
+                user.popularRank = popularRankedFriends.index(of: user)! + 1
+                DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(user.uid)/popularRank").setValue(user.popularRank)
+                
+            }
+        
+            if currentUser == self {
+                    let currentUserRef = DatabaseReference.users(uid: uid).reference().child("popularRank")
+                    currentUserRef.setValue(popularRankedFriends.index(of: currentUser)! + 1)
+            }
         
         }
     }

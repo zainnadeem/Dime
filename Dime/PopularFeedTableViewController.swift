@@ -49,7 +49,7 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
             for friend in friends{
                     if !self.usersFriends.contains(friend) {
                         self.usersFriends.insert(friend, at: 0)
-                        //self.usersFriends = sortByPopular(self.usersFriends)
+                        self.usersFriends = sortByAverageLikes(self.usersFriends)
                         self.tableView.reloadData()
                         
                     }

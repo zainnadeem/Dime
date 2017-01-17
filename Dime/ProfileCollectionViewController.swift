@@ -23,7 +23,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage:#imageLiteral(resourceName: "icon-settings-filled"), leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage:nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
     var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -43,9 +43,23 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.view.addSubview(navBar)
         configureTitleLabel()
         configureTitleIcon()
+    
+        showSettingsButton()
         fetchDimes()
         
         
+        
+        
+    }
+    
+    func showSettingsButton(){
+        
+        guard let profileUser = self.user else { return }
+        if profileUser == self.store.currentUser {
+          navBar.rightButton.image = #imageLiteral(resourceName: "icon-settings-filled")
+        }else{
+             navBar.rightButton.image = nil 
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -164,6 +178,11 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
 extension ProfileCollectionViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {
+        let destinationVC = SettingsViewController()
+        destinationVC.user = store.currentUser
+        self.navigationController?.pushViewController(destinationVC, animated: true)
+        
+        
         print("Not sure what the right bar button will do yet.")
     }
     

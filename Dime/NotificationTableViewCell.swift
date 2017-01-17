@@ -130,9 +130,33 @@ class NotificationsTableViewCell: UITableViewCell {
     
     func mediaButtonTapped(){
         print("Segue to media")
-        let destinationVC = ProfileCollectionViewController()
-        destinationVC.user = store.currentUser
-        self.parentTableView?.navigationController?.pushViewController(destinationVC, animated: true)
+        
+        DatabaseReference.dimes.reference().child("\(notification.dimeUID)").observeSingleEvent(of: .value, with: { (snapshot) in
+           
+            let dime = Dime(dictionary: snapshot.value as! [String : AnyObject])
+            
+            let destinationVC = ViewMediaCollectionViewController()
+            destinationVC.passedDime = dime
+            
+            var selectedMedia: Media?
+            
+            for media in destinationVC.passedDime.media{
+                if media.uid == self.notification.mediaUID{
+                    selectedMedia = media
+                }
+            }
+            
+            let indexOfMedia = destinationVC.passedDime.media.index(of: selectedMedia!)
+            
+           
+            
+            self.parentTableView?.navigationController?.pushViewController(viewController: destinationVC, animated: true){
+                destinationVC.mediaCollectionView.scrollToItem(at: IndexPath(row: indexOfMedia!, section: 0), at: .right, animated: true)
+            }
+        
+        })
+
+        
         
     }
     

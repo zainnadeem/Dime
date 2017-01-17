@@ -29,9 +29,45 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     }
     
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        
+        let navController = self.viewControllers?[selectedIndex] as! UINavigationController
+        
         if item == self.tabBar.items?[2]{
             self.dismiss(animated: false, completion: nil)
         }
+        
+        switch selectedIndex {
+        case 0:
+            let destinationVC = navController.topViewController as! TopDimesCollectionViewController
+            if destinationVC.dimeCollectionView.numberOfItems(inSection: 0) > 1 {
+                destinationVC.dimeCollectionView.reloadData()
+                destinationVC.dimeCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
+            }
+        case 1:
+            let destinationVC = navController.topViewController as! FriendsCollectionViewController
+            if destinationVC.dimeCollectionView.numberOfItems(inSection: 0) > 1 {
+            destinationVC.dimeCollectionView.reloadData()
+            destinationVC.dimeCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
+            }
+        case 2:
+            let destinationVC = navController.topViewController as! DismissViewController
+            destinationVC.dismiss(animated: true, completion: nil)
+        case 3:
+            let destinationVC = navController.topViewController as! TrendingCollectionViewController
+            if destinationVC.dimeCollectionView.numberOfItems(inSection: 0) > 1 {
+                destinationVC.dimeCollectionView.reloadData()
+                destinationVC.dimeCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
+            }
+        case 4:
+            let destinationVC = navController.topViewController as! PopularFeedTableViewController
+            if destinationVC.tableView.numberOfRows(inSection: 0) > 1 {
+                destinationVC.tableView.reloadData()
+                destinationVC.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            }
+        default:
+            print("No tab bar selected-- this would be odd to say the least")
+        }
+
         
     }
 

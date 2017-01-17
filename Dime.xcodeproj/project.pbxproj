@@ -49,6 +49,7 @@
 		BF5A00851DDA39CF00F825DD /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A00811DDA39CF00F825DD /* Media.swift */; };
 		BF5A00891DDA3BA200F825DD /* MediaPickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A00881DDA3BA200F825DD /* MediaPickerHelper.swift */; };
 		BF5A008E1DDA40E500F825DD /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A008D1DDA40E500F825DD /* HomeViewController.swift */; };
+		BF6BA5581E2DD2FC00EE8266 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6BA5571E2DD2FC00EE8266 /* SettingsViewController.swift */; };
 		BF6FCDF51DDE427900AC5A71 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDF41DDE427900AC5A71 /* Comment.swift */; };
 		BF6FCDFB1DDE42CB00AC5A71 /* NewsFeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDF81DDE42CB00AC5A71 /* NewsFeedTableViewController.swift */; };
 		BF6FCDFC1DDE42CB00AC5A71 /* MediaDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDF91DDE42CB00AC5A71 /* MediaDetailTableViewController.swift */; };
@@ -128,6 +129,7 @@
 		BF5A00811DDA39CF00F825DD /* Media.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		BF5A00881DDA3BA200F825DD /* MediaPickerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPickerHelper.swift; sourceTree = "<group>"; };
 		BF5A008D1DDA40E500F825DD /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		BF6BA5571E2DD2FC00EE8266 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		BF6FCDF41DDE427900AC5A71 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		BF6FCDF81DDE42CB00AC5A71 /* NewsFeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsFeedTableViewController.swift; sourceTree = "<group>"; };
 		BF6FCDF91DDE42CB00AC5A71 /* MediaDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 				BFA3F6101DF9DD2800EE0A0A /* ViewMediaCollectionViewController.swift */,
 				BFF5A5161E1C186C00F81B62 /* NotificationsTableViewController.swift */,
 				BF35B8C81DFB39CB006D87D1 /* CommentsViewController.swift */,
+				BF6BA5571E2DD2FC00EE8266 /* SettingsViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -532,6 +535,7 @@
 				BFA3F60F1DF9DC3700EE0A0A /* ViewMediaCollectionViewCell.swift in Sources */,
 				BF5564F01DF7335F0086290D /* TopDimesCollectionViewController.swift in Sources */,
 				BF5564F41DF8A2100086290D /* FriendsCollectionViewController.swift in Sources */,
+				BF6BA5581E2DD2FC00EE8266 /* SettingsViewController.swift in Sources */,
 				BF5564EC1DF37D880086290D /* NavBarView.swift in Sources */,
 				BF51A5051E26A0A700C28523 /* ChatsTableViewController.swift in Sources */,
 				BF5A007D1DDA392100F825DD /* LoginTableViewController.swift in Sources */,

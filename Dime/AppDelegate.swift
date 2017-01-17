@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let initialViewController = storyboard.instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
                  var rootViewController = self.window!.rootViewController as! UINavigationController
-                rootViewController.pushViewController(initialViewController, animated: true)
+                 rootViewController.pushViewController(initialViewController, animated: true)
             
             print("User Logged In")
             
