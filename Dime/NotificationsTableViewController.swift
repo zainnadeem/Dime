@@ -11,6 +11,7 @@ import UIKit
 import Firebase
 
 private let reuseIdentifier = "NotificationTableViewCell"
+private let friendRequestreuseIdentifier = "FriendRequestTableViewCell"
 
 class NotificationTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate {
     
@@ -45,6 +46,7 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
         setUpTableView()
 
         self.tableView.register(NotificationsTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        self.tableView.register(FriendRequestTableViewCell.self, forCellReuseIdentifier: friendRequestreuseIdentifier)
     }
 
 
@@ -75,14 +77,31 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        if self.notifications[indexPath.row].notificationType == "friend request" {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: friendRequestreuseIdentifier, for: indexPath) as! FriendRequestTableViewCell
+            
+            cell.parentTableView = self
+            cell.selectionStyle = .none
+            cell.setViewConstraints()
+            cell.notification = self.notifications[indexPath.row]
+            cell.backgroundColor = UIColor.clear
+            
+            return cell
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! NotificationsTableViewCell
-        cell.parentTableView = self
-        cell.selectionStyle = .none
-        cell.setViewConstraints()
-        cell.notification = self.notifications[indexPath.row]
-        cell.backgroundColor = UIColor.clear
-        return cell
+        }else{
+        
+            let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! NotificationsTableViewCell
+            
+            cell.parentTableView = self
+            cell.selectionStyle = .none
+            cell.setViewConstraints()
+            cell.notification = self.notifications[indexPath.row]
+            cell.backgroundColor = UIColor.clear
+
+             return cell
+        }
         
     }
     

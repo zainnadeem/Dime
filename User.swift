@@ -30,6 +30,8 @@ class User {
     var mediaCount                : Int
     var popularRank               : Int
     
+    var deviceTokens            : [String]
+    
     let store = DataStore.sharedInstance
     
     
@@ -53,6 +55,8 @@ class User {
         self.mediaCount = mediaCount
         self.popularRank = popularRank
         self.lastSuperLikeTime = Constants.oneDayAgo()
+        self.deviceTokens = [""]
+        
         
         
     }
@@ -71,6 +75,20 @@ class User {
         mediaCount = dictionary["mediaCount"] as! Int
         averageLikesCount = dictionary["averageLikesCount"] as! Int
         popularRank = dictionary["popularRank"] as! Int
+        //deviceTokens = dictionary["device tokens"] as! [String]
+        
+        
+        self.deviceTokens = []
+        
+        if let deviceTokDict = dictionary["deviceTokens"] as? [String]
+        {
+            for device in deviceTokDict{
+                
+                    self.deviceTokens.append(device)
+                
+            }
+        }
+        
         
         //follows
         self.friends = []
@@ -152,6 +170,7 @@ class User {
             "averageLikesCount" : averageLikesCount,
             "mediaCount" : mediaCount,
             "popularRank": popularRank,
+            "deviceTokens" : deviceTokens as AnyObject,
             "website" : website
             
         ]

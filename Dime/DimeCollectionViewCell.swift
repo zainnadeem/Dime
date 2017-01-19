@@ -1,5 +1,6 @@
 import UIKit
 import SAMCache
+import OneSignal
 
 class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
@@ -132,23 +133,18 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         usernameButton.setTitle(dime.createdBy.fullName, for: .normal)
         usernameButton.addTarget(self, action: #selector(usernameButtonPressed), for: .touchUpInside)
         circleProfileView.addTarget(self, action: #selector(usernameButtonPressed), for: .touchUpInside)
+        
         imageView.addTarget(self, action: #selector(showMedia), for: .touchUpInside)
         
         chatButton.addTarget(self, action: #selector(nextDidTap), for: .touchUpInside)
         captionLabel.text = dime.caption
+        
         likesLabel.text = dime.totalDimeLikes.description
+        superLikeLabel.text = dime.totalDimeSuperLikes.description
+        
         createdTimeLabel.text = parseDate(dime.createdTime)
         
-        if currentUser.friends.contains(dime.createdBy){
-        let friendIndex = currentUser.friends.index(of: dime.createdBy)
-        self.popularRankButton.setTitle(currentUser.friends[friendIndex!].popularRank.description, for: .normal)
-        self.popularRankButton.titleLabel?.textColor = UIColor.black
-        self.popularRankButton.titleLabel?.textAlignment = .center
-        popularRankButton.setBackgroundImage(#imageLiteral(resourceName: "popularHome"), for: .normal)
-        }else{
-            popularRankButton.setTitle("", for: .normal)
-            popularRankButton.setBackgroundImage(nil, for: .normal)
-        }
+        setUpPopularRank()
         configureFriendButton()
         
     }
@@ -158,6 +154,21 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         let destinationVC = ViewMediaCollectionViewController()
         destinationVC.passedDime = dime
         self.parentCollectionView?.navigationController?.pushViewController(destinationVC, animated: true)
+        
+    }
+    
+    func setUpPopularRank(){
+        
+        if currentUser.friends.contains(dime.createdBy){
+            let friendIndex = currentUser.friends.index(of: dime.createdBy)
+            self.popularRankButton.setTitle(currentUser.friends[friendIndex!].popularRank.description, for: .normal)
+            self.popularRankButton.titleLabel?.textColor = UIColor.black
+            self.popularRankButton.titleLabel?.textAlignment = .center
+            popularRankButton.setBackgroundImage(#imageLiteral(resourceName: "popularHome"), for: .normal)
+        }else{
+            popularRankButton.setTitle("", for: .normal)
+            popularRankButton.setBackgroundImage(nil, for: .normal)
+        }
         
     }
     
@@ -180,7 +191,8 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     }
     
     func filterFriendAlert(){
-            let actionSheet = UIAlertController(title: "\(dime.createdBy.username)", message: "Where would you like to put \(dime.createdBy.username)", preferredStyle: .actionSheet)
+        
+            let actionSheet = UIAlertController(title: "\(dime.createdBy.username)", message: "", preferredStyle: .actionSheet)
             
             let topFriends = UIAlertAction(title: "Top Dimes", style: .default, handler: {
                 action in
@@ -194,13 +206,25 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 
             })
 
-            let friend = UIAlertAction(title: "Friends", style: .default, handler: {
+            let friend = UIAlertAction(title: "Send Friend Request", style: .default, handler: {
                 action in
                 
-                self.currentUser.friendUser(user: self.dime.createdBy)
-                self.currentUser.unTopFriendUser(user: self.dime.createdBy)
-                self.dime.createdBy.getTotalLikes()
-                self.configureFriendButton()
+                
+                let notification = Notification(dimeUID: self.dime.uid, mediaUID: self.dime.uid, toUser: self.dime.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) wants to be your friend!", notificationType: "friend request")
+                
+                notification.save()
+                
+                
+                for id in self.dime.createdBy.deviceTokens{
+                    OneSignal.postNotification(["contents" : ["en" : "\(self.currentUser.username) wants to be your friend!"], "include_player_ids" : [id]])
+                }
+                
+                
+                
+                //self.currentUser.friendUser(user: self.dime.createdBy)
+                //self.currentUser.unTopFriendUser(user: self.dime.createdBy)
+                //self.dime.createdBy.getTotalLikes()
+                //self.configureFriendButton()
                 
                 
             })
@@ -222,11 +246,16 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         })
             
             
+        
+        if !currentUser.friends.contains(dime.createdBy) {
+        actionSheet.addAction(friend)
+        }
+        
+        if currentUser.friends.contains(dime.createdBy){
             actionSheet.addAction(topFriends)
-            actionSheet.addAction(friend)
-        if currentUser.topFriends.contains(dime.createdBy) || currentUser.friends.contains(dime.createdBy){
             actionSheet.addAction(unfriend)
         }
+        
             actionSheet.addAction(cancel)
             self.parentCollectionView?.present(actionSheet, animated: true, completion: nil)
         }
@@ -525,103 +554,11 @@ extension DimeCollectionViewCell {
 
 
 
-// button
-//extension DimeCollectionViewCell {
 
-//func configureSuperLikeFunctionality(){
-//    if self.didSuperLikeWithinOneDay(superLikeDate: self.currentUser!.lastSuperLikeTime) || isSuperLikedByUser == true{
-//        canSuperLike = false
-//        self.superLikeButton.removeTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
-//        self.superLikeButton.addTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
-//    }else{
-//        canSuperLike = true
-//        self.superLikeButton.removeTarget(self, action: #selector(cantSuperLikeAlert), for: .touchUpInside)
-//        self.superLikeButton.addTarget(self, action: #selector(superLikeAlert), for: .touchUpInside)
-//    }
-//}
-//
-//    func superLikeUnLikeButtonTapped() {
-//        if isSuperLikedByUser{
-//            dime.unSuperLikedBy(user: currentUser)
-//            let dimeRef = DatabaseReference.users(uid: dime.createdBy.uid).reference().child("dimes/\(dime.uid)/superLikes/\(currentUser.uid)")
-//            dimeRef.setValue(nil)
-//            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamondUnfilled"), for: .normal)
-//            isSuperLikedByUser = false
-//        }else{
-//            dime.superLikedBy(user: currentUser)
-//            let dimeRef = DatabaseReference.users(uid: dime.createdBy.uid).reference().child("dimes/\(dime.uid)/superLikes/\(currentUser.uid)")
-//            dimeRef.setValue(currentUser.toDictionary())
-//            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
-//            isSuperLikedByUser = true
-//        }
-//        reloadLabels()
-//    }
-//    
-//    
-//    func reloadLabels(){
-//        if dime.superLikes != [] {
-//            superLikeLabel.text = dime.superLikes.count.description
-//        }else{
-//            superLikeLabel.text = "0"
-//        }
-//    }
-//    
-//    func didSuperLikeWithinOneDay(superLikeDate date : String) -> Bool {
-//        if let creationDate = Constants.dateFormatter().date(from: date) {
-//            
-//            let yesterday = Constants.dateFormatter().date(from: Constants.oneDayAgo())!
-//            
-//            if creationDate.compare(yesterday) == .orderedDescending { return true }
-//            else if creationDate.compare(yesterday) == .orderedSame  { return true }
-//            else { return false }
-//            
-//        } else {
-//            print("Couldn't get NSDate object from string date arguement")
-//            return false
-//        }
-//    }
-//    
-//    func superLikeAlert() {
-//        let alertVC = UIAlertController(title: "SuperLiked!", message: "You can only super like one dime every 24 hours, you cannot undo this action, is this your superlike today?", preferredStyle: .alert)
-//        
-//        let yesAction = UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
-//            self.currentUser.superLiked()
-//            self.superLikeUnLikeButtonTapped()
-//            self.canSuperLike = false
-//            self.updateUI()
-//        })
-//        
-//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-//        
-//        
-//        alertVC.addAction(yesAction)
-//        alertVC.addAction(cancelAction)
-//        self.parentCollectionView?.present(alertVC, animated: true, completion: nil)
-//    }
-//    
-//    func cantSuperLikeAlert() {
-//        var message = ""
-//        if isSuperLikedByUser { message = "You've already superliked this one!"}else{ message = "You've already superliked today!"
-//        }
-//        
-//        let alertVC = UIAlertController(title: "Sorry", message: message, preferredStyle: .alert)
-//        
-//        let cancelAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
-//        
-//        alertVC.addAction(cancelAction)
-//        self.parentCollectionView?.present(alertVC, animated: true, completion: nil)
-//    }
-//    
-//    fileprivate func parseDate(_ date : String) -> String {
-//        
-//        if let timeAgo = (Constants.dateFormatter().date(from: date) as NSDate?)?.timeAgo() {
-//            return timeAgo
-//        }
-//        else { return "" }
-//    }
-//}
+//Notification Handling
+extension ViewMediaCollectionViewCell {
 
-//Handle Messaging
+}
 
 
 

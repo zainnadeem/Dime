@@ -10,6 +10,7 @@ import UIKit
 import JSQMessagesViewController
 import Firebase
 import SAMCache
+import OneSignal
 
 class ChatViewController: JSQMessagesViewController {
     
@@ -187,7 +188,19 @@ extension ChatViewController {
         chat.send(message: newMessage)
         JSQSystemSoundPlayer.jsq_playMessageSentAlert()
         finishSendingMessage()
+    
+    
+
+    let recipientUsers = chat.users.filter() { $0 != self.currentUser }
+    
+        for recipient in recipientUsers {
+    
+    for id in recipient.deviceTokens{
+    OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username): \(newMessage.text)"], "include_player_ids" : [id]])
+            }
+        }
     }
+    
 }
 
 extension ChatViewController

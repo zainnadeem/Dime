@@ -10,6 +10,7 @@ import UIKit
 import SAMCache
 import AVKit
 import AVFoundation
+import OneSignal
 
 class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
@@ -102,11 +103,14 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
         if media.type == "video" {
             configurePlayButton()
+            playButton.isEnabled = true
         }else{
             playButton.setImage(nil, for: .normal)
+            playButton.isEnabled = false
         }
         
         likesLabel.text = media.likesCount.description
+        superLikeLabel.text = media.superLikesCount.description
         
        
     }
@@ -114,10 +118,10 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     func setUpLikeButton(){
         if media.likes.contains(currentUser){
             self.isLikedByUser = true
-            likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamond"), for: .normal)
+            likeButton.setImage(#imageLiteral(resourceName: "friendsHome"), for: .normal)
         }else{
             self.isLikedByUser = false
-            likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
+            likeButton.setImage(#imageLiteral(resourceName: "friendsHomeUnfilled"), for: .normal)
         }
         
     }
@@ -125,10 +129,11 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     func setUpSuperLikeButton(){
         if media.superLikes.contains(currentUser){
             self.isSuperLikedByUser = true
-            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
+            superLikeButton.setImage(#imageLiteral(resourceName: "topDimesHome"), for: .normal)
+            
         }else{
             self.isSuperLikedByUser = false
-            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamondUnfilled"), for: .normal)
+            superLikeButton.setImage(#imageLiteral(resourceName: "topDimesHomeUnfilled"), for: .normal)
         }
         
     }
@@ -216,83 +221,27 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.imageView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor).isActive = true
     }
     
-    
-    
+
     
     func configureLikeButton(){
         contentView.addSubview(likeButton)
         likeButton.titleLabel?.font = UIFont.dimeFont(20)
         
+        
         self.likeButton.addTarget(self, action: #selector(likeUnLikeButtonTapped), for: .touchUpInside)
         self.likeButton.translatesAutoresizingMaskIntoConstraints = false
-        self.likeButton.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor, constant: 5).isActive = true
-        self.likeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 5).isActive = true
+        self.likeButton.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor, constant: 10).isActive = true
+        self.likeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 20).isActive = true
         
-        self.likeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
-        self.likeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.05).isActive = true
+        self.likeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.06).isActive = true
+        self.likeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.11).isActive = true
+      
+        self.likeButton.layer.shadowColor = UIColor.white.cgColor
+        self.likeButton.layer.shadowOffset = CGSize(width: 0, height: 3)
+        self.likeButton.layer.shadowOpacity = 1.0
+        self.likeButton.layer.shadowRadius = 2.0
+        self.likeButton.layer.masksToBounds = false
         
-    }
-    
-    func likeUnLikeButtonTapped() {
-
-        let dimeRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/likes/\(currentUser.uid)")
-        
-        let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/likes/\(currentUser.uid)")
-        
-        if isLikedByUser{
-            
-            media.unlikedBy(user: currentUser)
-            dime.unlikedBy(user: currentUser)
-            
-            dime.updateLikes(.decrement)
-            media.updateLikes(.decrement)
-            
-            //find place for updating user
-           
-            mediaRef.setValue(nil)
-            dimeRef.setValue(nil)
-
-            likeButton.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
-            isLikedByUser = false
-        
-        }else{
-            
-            media.likedBy(user: currentUser)
-            dime.likedBy(user: currentUser)
-            
-            dime.updateLikes(.increment)
-            media.updateLikes(.increment)
-
-            createLikeNotification()
-            
-
-            dimeRef.setValue(currentUser.toDictionary())
-            mediaRef.setValue(currentUser.toDictionary())
-            
-            likeButton.setImage(#imageLiteral(resourceName: "icon-diamond-blue"), for: .normal)
-            
-            
-            isLikedByUser = true
-            
-        }
-        
-        likesLabel.text = media.likesCount.description
-
-    }
-    
-    func createLikeNotification(){
-        let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) liked your \(self.media.type)!", notificationType: "like")
-            notification.save()
-    }
-
-    
-    func reloadLabels(){
-        if media.likes != [] {
-            likesLabel.text = media.likesCount.description
-        }else{
-            likesLabel.text = "0"
-        }
-
     }
     
     func configureLikeLabel(){
@@ -300,7 +249,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         likesLabel.backgroundColor = UIColor.clear
         likesLabel.textAlignment = NSTextAlignment.center
         likesLabel.textColor = UIColor.white
-        likesLabel.font = UIFont.dimeFont(9)
+        likesLabel.font = UIFont.dimeFontBold(14)
         
     
         
@@ -313,15 +262,19 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func configureSuperLikeButton(){
         contentView.addSubview(superLikeButton)
-        superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
-        superLikeButton.setTitle("10", for: .normal)
         superLikeButton.titleLabel?.font = UIFont.dimeFont(20)
        
         self.superLikeButton.translatesAutoresizingMaskIntoConstraints = false
-        self.superLikeButton.leadingAnchor.constraint(equalTo: self.likesLabel.trailingAnchor, constant: 5).isActive = true
-        self.superLikeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 5).isActive = true
-        self.superLikeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
-        self.superLikeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.05).isActive = true
+        self.superLikeButton.leadingAnchor.constraint(equalTo: self.likesLabel.trailingAnchor, constant: 10).isActive = true
+        self.superLikeButton.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 20).isActive = true
+        self.superLikeButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.06).isActive = true
+        self.superLikeButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.11).isActive = true
+        
+        self.superLikeButton.layer.shadowColor = UIColor.white.cgColor
+        self.superLikeButton.layer.shadowOffset = CGSize(width: 0, height: 3)
+        self.superLikeButton.layer.shadowOpacity = 1.0
+        self.superLikeButton.layer.shadowRadius = 2.0
+        self.superLikeButton.layer.masksToBounds = false
     }
     
     func configureSuperLikeLabel(){
@@ -329,7 +282,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         superLikeLabel.backgroundColor = UIColor.clear
         superLikeLabel.textAlignment = NSTextAlignment.center
         superLikeLabel.textColor = UIColor.white
-        superLikeLabel.font = UIFont.dimeFont(9)
+        superLikeLabel.font = UIFont.dimeFontBold(14)
         
  
         self.superLikeLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -374,25 +327,100 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
 }
 
+extension ViewMediaCollectionViewCell{
+    
+    
+    
+    
+    
+    func likeUnLikeButtonTapped() {
+        
+        let dimeRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/likes/\(currentUser.uid)")
+        
+        let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/likes/\(currentUser.uid)")
+        
+        if isLikedByUser{
+            
+            media.unlikedBy(user: currentUser)
+            dime.unlikedBy(user: currentUser)
+            
+            dime.updateLikes(.decrement)
+            media.updateLikes(.decrement)
+            
+            //find place for updating user
+            
+            mediaRef.setValue(nil)
+            dimeRef.setValue(nil)
+            
+            likeButton.setImage(#imageLiteral(resourceName: "friendsHomeUnfilled"), for: .normal)
+            isLikedByUser = false
+            
+        }else{
+            
+            media.likedBy(user: currentUser)
+            dime.likedBy(user: currentUser)
+            
+            dime.updateLikes(.increment)
+            media.updateLikes(.increment)
+            
+            createNotification(type: "liked")
+            
+            
+            dimeRef.setValue(currentUser.toDictionary())
+            mediaRef.setValue(currentUser.toDictionary())
+            
+            likeButton.setImage(#imageLiteral(resourceName: "friendsHome"), for: .normal)
+            
+            
+            isLikedByUser = true
+            
+        }
+        
+        likesLabel.text = media.likesCount.description
+        
+    }
+    
+    func createNotification(type: String){
+        
+        let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) \(type) your \(self.media.type)!", notificationType: type)
+            notification.save()
+    
+    
+        for id in self.media.createdBy.deviceTokens{
+            OneSignal.postNotification(["contents" : ["en" : "\(self.currentUser.username) \(type) your post!"], "include_player_ids" : [id]])
+        }
+    }
+    
+    
+    func reloadLabels(){
+        if media.likes != [] {
+            likesLabel.text = media.likesCount.description
+        }else{
+            likesLabel.text = "0"
+        }
+        
+    }
+    
+}
+
 
 //ViewMediaCollection Super Like Button
 extension ViewMediaCollectionViewCell {
     
     func superLikeMedia() {
-//        if isSuperLikedByUser{
-//            media.unSuperLikedBy(user: currentUser)
-//            let mediaRef = DatabaseReference.users(uid: media.createdBy.uid).reference().child("media/\(media.uid)/superLikes/\(currentUser.uid)")
-//            mediaRef.setValue(nil)
-//            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamondUnfilled"), for: .normal)
-//            isSuperLikedByUser = false
-//        }else{
         
             media.superLikedBy(user: currentUser)
-            let mediaRef = DatabaseReference.users(uid: dime.createdBy.uid).reference().child("media/\(media.uid)/superLikes/\(currentUser.uid)")
+            let mediaRef = DatabaseReference.users(uid: dime.createdBy.uid).reference().child("dimes/\(media.dimeUID)/media/\(media.uid)/superLikes/\(currentUser.uid)")
             mediaRef.setValue(currentUser.toDictionary())
-            superLikeButton.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
+        
+            media.updateSuperLikes(.increment)
+            dime.updateSuperLikes(.increment)
+        
+        
+            superLikeButton.setImage(#imageLiteral(resourceName: "topDimesHome"), for: .normal)
             isSuperLikedByUser = true
-
+        
+            createNotification(type: "superliked")
     }
     
     

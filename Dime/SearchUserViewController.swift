@@ -28,6 +28,7 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
         view.backgroundColor = UIColor.clear
         view.isOpaque = false
         searchBar.becomeFirstResponder()
+        
         if let friends = userForView?.friends {
             UsersToSearch = friends
     }
@@ -91,7 +92,6 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
             filteredUsers = self.UsersToSearch.filter { $0.fullName.localizedCaseInsensitiveContains(searchText) }
-        
             tableView.reloadData()
     }
 

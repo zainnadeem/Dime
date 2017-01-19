@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import SAMCache
 import Firebase
+import OneSignal
 
 class DataStore {
     
@@ -28,13 +29,16 @@ class DataStore {
 
     func getCurrentDime(){
         
-        if let dimes = currentUser?.dimes{
+        if var dimes = currentUser?.dimes{
             if dimes.count > 0{
-            currentUser?.dimes = sortByMostRecentlyCreated(dimes)
+            dimes = sortByMostRecentlyCreated(dimes)
             let lastDimeCreatedTime = dimes.first?.createdTime
             if self.isDimeWithinOneDay(videoDate: lastDimeCreatedTime!){
+                
                 self.currentDime = dimes.first
-                self.getImages({ 
+                self.currentDime?.media = sortByMostRecentlyCreated((self.currentDime?.media)!)
+                
+                self.getImages({
                     
                 })
                 }
@@ -107,6 +111,20 @@ class DataStore {
             
             return false
         }
+    
+    func registerOneSignalToken(user: User){
+        
+        OneSignal.idsAvailable({ (userID, pushToken) in
+            if userID != nil {
+                if !(user.deviceTokens.contains(userID!)){
+                    user.deviceTokens.append(userID!)
+                    DatabaseReference.users(uid: user.uid).reference().child("deviceTokens").setValue(user.deviceTokens)
+                    
+                }
+                
+            }
+        })
+    }
         
 
 }

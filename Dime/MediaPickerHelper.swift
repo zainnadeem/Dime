@@ -59,9 +59,9 @@ class MediaPickerHelper: NSObject {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = sourceType
-        imagePicker.allowsEditing = false
+        imagePicker.allowsEditing = true
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: imagePicker.sourceType)!
-        imagePicker.videoMaximumDuration = 10
+        imagePicker.videoMaximumDuration = 30
         
         viewController.present(imagePicker, animated: true, completion: nil)
     }

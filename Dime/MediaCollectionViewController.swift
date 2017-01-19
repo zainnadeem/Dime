@@ -97,6 +97,7 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         
         
         dime = self.store.currentDime
+        dime?.media = sortByMostRecentlyCreated((dime?.media)!)
 
         let bgImage = UIImageView()
         bgImage.image = #imageLiteral(resourceName: "background_GREY")
@@ -289,6 +290,7 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
     
     func deleteMediaAlert(mediaNumber: Int){
         guard let currentDime = self.dime else {return }
+        
         let actionSheet = UIAlertController(title: "Delete", message: "All information for this image will be lost", preferredStyle: .actionSheet)
         
         let selectCover = UIAlertAction(title: "make cover photo", style: .default, handler: {
@@ -305,8 +307,18 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         let delete = UIAlertAction(title: "delete", style: .default, handler: {
             action in
             
-             if (self.dime?.media.count)! >= mediaNumber + 1 { self.dime?.media.remove(at: mediaNumber) }
+            currentDime.media[mediaNumber].deleteMediaFromFireBase()
+            if (currentDime.media.count) >= mediaNumber + 1 { currentDime.media.remove(at: mediaNumber) }
             self.store.currentUser?.updateMediaCount(.decrement, amount: 1)
+            
+            if currentDime.media.count == 0{
+                    currentDime.deleteDimeFromFireBase()
+                    self.store.currentDime = nil
+                 self.dismiss(animated: true, completion: {
+                        self.store.getCurrentDime()
+                    })
+            }
+            
             self.collectionView?.reloadData()
             
         })

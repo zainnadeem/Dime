@@ -9,6 +9,7 @@
 
 import UIKit
 import Firebase
+import OneSignal
 
 private let reuseIdentifier = "CommentTableViewCell"
 
@@ -21,6 +22,8 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     var currentUser: User!
     var comments = [Comment]()
     
+    weak var parentCollectionView       =       UIViewController()
+    
     var captionTextView: UITextField = UITextField()
     var postButton: UIButton = UIButton()
     
@@ -32,13 +35,13 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         fetchComments()
         view.backgroundColor = UIColor.clear
-
+        currentUser = self.store.currentUser
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.navBar.delegate = self
         self.captionTextView.delegate = self
-        
+        self.parentCollectionView?.navigationController?.tabBarController?.tabBar.isHidden = true
         self.view.addSubview(navBar)
         
         setUpTextView()
@@ -157,15 +160,21 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         //add to user
         let ref = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/comments/\(comment.uid)")
         ref.setValue(comment.toDictionary())
-        createLikeNotification()
+        createNotification(type: "commented on")
         self.captionTextView.text = ""
         self.dismissKeyboard()
         self.tableView.reloadData()
     }
 
-    func createLikeNotification(){
-//        let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) commented on your picture!", notificationType: "comment")
-//        notification.save()
+    func createNotification(type: String){
+        
+        let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) \(type) your \(self.media.type)!", notificationType: type)
+        notification.save()
+        
+        
+        for id in self.media.createdBy.deviceTokens{
+            OneSignal.postNotification(["contents" : ["en" : "\(self.currentUser.username) \(type) your post!"], "include_player_ids" : [id]])
+        }
     }
 
 }
@@ -178,7 +187,10 @@ extension CommentsViewController : NavBarViewDelegate {
         }
         
         func leftBarButtonTapped(_ sender: AnyObject) {
-            self.dismiss(animated: true, completion: nil)
+            self.parentCollectionView?.navigationController?.tabBarController?.tabBar.isHidden = false
+            self.dismiss(animated: true) {
+
+            }
 
         }
         
@@ -193,6 +205,7 @@ extension CommentsViewController: UITextFieldDelegate {
     
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        
         view.endEditing(true)
     }
     

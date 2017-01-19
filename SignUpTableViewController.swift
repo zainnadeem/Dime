@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import NVActivityIndicatorView
 import UIKit
+import OneSignal
 
 class SignUpTableViewController: UITableViewController {
     
@@ -76,8 +77,8 @@ class SignUpTableViewController: UITableViewController {
                                 NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
                                 self.alert(title: "Oops", message: (error.localizedDescription), buttonTitle: "Okay")
                             } else {
+                                self.registerOneSignalToken(user: newUser)
                                 self.dismissKeyboard()
-                                
                                 self.dismiss(animated: true, completion: {
                                     NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
                                 })
@@ -143,6 +144,20 @@ extension SignUpTableViewController : UITextFieldDelegate {
         let action = UIAlertAction(title: buttonTitle, style: .default, handler: nil)
         alertVC.addAction(action)
         present(alertVC, animated: true, completion: nil)
+    }
+    
+    func registerOneSignalToken(user: User){
+        
+        OneSignal.idsAvailable({ (userID, pushToken) in
+            if userID != nil {
+                if !(user.deviceTokens.contains(userID!)){
+                    user.deviceTokens.append(userID!)
+                    DatabaseReference.users(uid: user.uid).reference().child("deviceTokens").setValue(user.deviceTokens)
+                    
+                }
+                
+            }
+        })
     }
     
 }

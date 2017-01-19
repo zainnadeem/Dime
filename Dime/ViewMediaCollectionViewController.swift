@@ -25,7 +25,7 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
-       
+        passedDime.media = sortByMostRecentlyCreated(passedDime.media)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.navigationItem.title = passedDime.createdBy.fullName
         
@@ -131,6 +131,7 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
         destinationVC.modalPresentationStyle = .overCurrentContext
         destinationVC.media = passedDime.media[indexPath.row]
         destinationVC.dime = passedDime
+        destinationVC.parentCollectionView = self
         self.present(destinationVC, animated: true, completion: nil)
     }
     

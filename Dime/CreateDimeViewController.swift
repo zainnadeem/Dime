@@ -33,10 +33,15 @@ class CreateDimeViewController: UIViewController {
         self.navBar.delegate = self
         self.view.addSubview(navBar)
         dimeCoverPhoto.isEnabled = false
+        
         updateDimeInfo()
         self.store.getImages { 
             
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
     }
     
     @IBAction func dimeCoverPhotoTapped(_ sender: Any) {
@@ -119,6 +124,7 @@ class CreateDimeViewController: UIViewController {
             let dateCurrentDimeWasCreated = self.store.currentDime?.createdTime
             let date = Constants.dateFormatter().date(from: dateCurrentDimeWasCreated!)
             self.timeLeftToPostLabel.text = Constants.timeRemainingForDime(date!)
+            
             if self.timeLeftToPostLabel.text == "Expired"{
                 self.dimeCoverPhoto.isEnabled = false
             }else{
@@ -133,6 +139,7 @@ class CreateDimeViewController: UIViewController {
             if let image = cache?.object(forKey: mediaImageKey) as? UIImage
             {
                 dimeCoverPhoto.setImage(image, for: .normal)
+            
             }else {
                 
                 self.store.currentDime?.downloadCoverImage(coverPhoto: mediaImageKey, completion: {  [weak self] (image, error)in

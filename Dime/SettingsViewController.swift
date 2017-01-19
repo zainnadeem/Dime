@@ -76,7 +76,12 @@ class SettingsViewController: QuickTableViewController {
                 print("error \(error)")
             }
             
-            self.navigationController?.popToViewController(HomeViewController(), animated: true)
+            
+            self.view.window!.rootViewController?.dismiss(animated: false, completion: { 
+
+    
+            })
+
 
             
             

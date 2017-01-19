@@ -21,6 +21,7 @@ target 'Dime' do
   pod 'IQKeyboardManagerSwift'
   pod 'NVActivityIndicatorView'
   pod 'DZNEmptyDataSet'
+  pod 'OneSignal'
   pod 'QuickTableViewController', '~> 0.5.0'
 
   

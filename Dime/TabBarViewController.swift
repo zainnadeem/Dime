@@ -38,28 +38,29 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         
         switch selectedIndex {
         case 0:
-            let destinationVC = navController.topViewController as! TopDimesCollectionViewController
+            let destinationVC = navController.viewControllers[0] as! TopDimesCollectionViewController
             if destinationVC.dimeCollectionView.numberOfItems(inSection: 0) > 1 {
                 destinationVC.dimeCollectionView.reloadData()
                 destinationVC.dimeCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
             }
         case 1:
-            let destinationVC = navController.topViewController as! FriendsCollectionViewController
+            let destinationVC = navController.viewControllers[0] as! FriendsCollectionViewController
             if destinationVC.dimeCollectionView.numberOfItems(inSection: 0) > 1 {
             destinationVC.dimeCollectionView.reloadData()
             destinationVC.dimeCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
             }
         case 2:
-            let destinationVC = navController.topViewController as! DismissViewController
+            let destinationVC = navController.viewControllers[0] as! DismissViewController
             destinationVC.dismiss(animated: true, completion: nil)
         case 3:
-            let destinationVC = navController.topViewController as! TrendingCollectionViewController
+            let destinationVC = navController.viewControllers[0] as! TrendingCollectionViewController
             if destinationVC.dimeCollectionView.numberOfItems(inSection: 0) > 1 {
                 destinationVC.dimeCollectionView.reloadData()
                 destinationVC.dimeCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
             }
         case 4:
-            let destinationVC = navController.topViewController as! PopularFeedTableViewController
+            let destinationVC = navController.viewControllers[0]
+                as! PopularFeedTableViewController
             if destinationVC.tableView.numberOfRows(inSection: 0) > 1 {
                 destinationVC.tableView.reloadData()
                 destinationVC.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)

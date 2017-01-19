@@ -50,6 +50,7 @@
 		BF5A00891DDA3BA200F825DD /* MediaPickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A00881DDA3BA200F825DD /* MediaPickerHelper.swift */; };
 		BF5A008E1DDA40E500F825DD /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A008D1DDA40E500F825DD /* HomeViewController.swift */; };
 		BF6BA5581E2DD2FC00EE8266 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6BA5571E2DD2FC00EE8266 /* SettingsViewController.swift */; };
+		BF6BA55A1E2EE6F500EE8266 /* SearchDimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6BA5591E2EE6F500EE8266 /* SearchDimeViewController.swift */; };
 		BF6FCDF51DDE427900AC5A71 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDF41DDE427900AC5A71 /* Comment.swift */; };
 		BF6FCDFB1DDE42CB00AC5A71 /* NewsFeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDF81DDE42CB00AC5A71 /* NewsFeedTableViewController.swift */; };
 		BF6FCDFC1DDE42CB00AC5A71 /* MediaDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6FCDF91DDE42CB00AC5A71 /* MediaDetailTableViewController.swift */; };
@@ -74,6 +75,7 @@
 		BFAA92D51DF0BFDA0063F660 /* SearchUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAA92D41DF0BFDA0063F660 /* SearchUserViewController.swift */; };
 		BFAA92D71DF1EEA60063F660 /* SearchUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */; };
 		BFAA92D91DF203650063F660 /* TaggingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAA92D81DF203650063F660 /* TaggingViewController.swift */; };
+		BFC0512B1E30823500E4FD15 /* FriendRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC0512A1E30823500E4FD15 /* FriendRequestTableViewCell.swift */; };
 		BFE3878A1DCCE902000FA9EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE387891DCCE902000FA9EA /* AppDelegate.swift */; };
 		BFE387921DCCE902000FA9EA /* Dime.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BFE387901DCCE902000FA9EA /* Dime.xcdatamodeld */; };
 		BFE387941DCCE902000FA9EA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFE387931DCCE902000FA9EA /* Assets.xcassets */; };
@@ -130,6 +132,8 @@
 		BF5A00881DDA3BA200F825DD /* MediaPickerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPickerHelper.swift; sourceTree = "<group>"; };
 		BF5A008D1DDA40E500F825DD /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		BF6BA5571E2DD2FC00EE8266 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		BF6BA5591E2EE6F500EE8266 /* SearchDimeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchDimeViewController.swift; sourceTree = "<group>"; };
+		BF6BA55B1E300C5200EE8266 /* Dime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dime.entitlements; sourceTree = "<group>"; };
 		BF6FCDF41DDE427900AC5A71 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		BF6FCDF81DDE42CB00AC5A71 /* NewsFeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsFeedTableViewController.swift; sourceTree = "<group>"; };
 		BF6FCDF91DDE42CB00AC5A71 /* MediaDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -155,6 +159,7 @@
 		BFAA92D41DF0BFDA0063F660 /* SearchUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserViewController.swift; sourceTree = "<group>"; };
 		BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUserTableViewCell.swift; sourceTree = "<group>"; };
 		BFAA92D81DF203650063F660 /* TaggingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaggingViewController.swift; sourceTree = "<group>"; };
+		BFC0512A1E30823500E4FD15 /* FriendRequestTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendRequestTableViewCell.swift; sourceTree = "<group>"; };
 		BFE387861DCCE902000FA9EA /* Dime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFE387891DCCE902000FA9EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFE387911DCCE902000FA9EA /* Dime.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Dime.xcdatamodel; sourceTree = "<group>"; };
@@ -288,6 +293,7 @@
 				BFF5A5161E1C186C00F81B62 /* NotificationsTableViewController.swift */,
 				BF35B8C81DFB39CB006D87D1 /* CommentsViewController.swift */,
 				BF6BA5571E2DD2FC00EE8266 /* SettingsViewController.swift */,
+				BF6BA5591E2EE6F500EE8266 /* SearchDimeViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -303,6 +309,7 @@
 				BF90FA041DFF291F004E14A0 /* ProfileCollectionViewCell.swift */,
 				BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */,
 				BF5564F51DF8AA0C0086290D /* PopularTableViewCell.swift */,
+				BFC0512A1E30823500E4FD15 /* FriendRequestTableViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -364,6 +371,7 @@
 		BFE387881DCCE902000FA9EA /* Dime */ = {
 			isa = PBXGroup;
 			children = (
+				BF6BA55B1E300C5200EE8266 /* Dime.entitlements */,
 				BF51A4F91E26793800C28523 /* Messenger */,
 				BF2F2CA91DEE004400014BB0 /* Not In Use */,
 				BFE387891DCCE902000FA9EA /* AppDelegate.swift */,
@@ -422,8 +430,16 @@
 				TargetAttributes = {
 					BFE387851DCCE902000FA9EA = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = VC999G43T3;
+						DevelopmentTeam = 4Z2937Q2YC;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -526,6 +542,7 @@
 				BF86AC451E0790BE00431E32 /* GeneralHelper.swift in Sources */,
 				BF6FCE051DDE451900AC5A71 /* DummyPostComposerViewController.swift in Sources */,
 				BF2A9B421DE3652A001A7704 /* Dime.swift in Sources */,
+				BF6BA55A1E2EE6F500EE8266 /* SearchDimeViewController.swift in Sources */,
 				BF90FA051DFF291F004E14A0 /* ProfileCollectionViewCell.swift in Sources */,
 				BF5A00841DDA39CF00F825DD /* FIRImage.swift in Sources */,
 				BFAA92D91DF203650063F660 /* TaggingViewController.swift in Sources */,
@@ -565,6 +582,7 @@
 				BF9342A31DCE744E006BE70C /* DimeDisplayViewController.swift in Sources */,
 				BF2A9B4C1DEB6C7C001A7704 /* PopularTableViewController.swift in Sources */,
 				BFAA92D11DEF38800063F660 /* EditingViewController.swift in Sources */,
+				BFC0512B1E30823500E4FD15 /* FriendRequestTableViewCell.swift in Sources */,
 				BF51A4FD1E267FF200C28523 /* Message.swift in Sources */,
 				BF2A9B441DE36B7B001A7704 /* DimeCollectionViewCell.swift in Sources */,
 				BF9342BE1DCFCC9A006BE70C /* SectionHeaderCollectionReusableView.swift in Sources */,
@@ -695,10 +713,11 @@
 			baseConfigurationReference = 67DA19E38EAB55B578D203F9 /* Pods-Dime.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = VC999G43T3;
+				CODE_SIGN_ENTITLEMENTS = Dime/Dime.entitlements;
+				DEVELOPMENT_TEAM = 4Z2937Q2YC;
 				INFOPLIST_FILE = Dime/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = Zain.Developer.Dime;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alku.dime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -710,10 +729,11 @@
 			baseConfigurationReference = 35FC2D94581D3F3D58B00A26 /* Pods-Dime.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = VC999G43T3;
+				CODE_SIGN_ENTITLEMENTS = Dime/Dime.entitlements;
+				DEVELOPMENT_TEAM = 4Z2937Q2YC;
 				INFOPLIST_FILE = Dime/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = Zain.Developer.Dime;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alku.dime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;

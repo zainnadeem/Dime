@@ -443,6 +443,16 @@ extension Dime {
             ref.setValue(nil)
         }
     }
+
+    func deleteDimeFromFireBase(){
+        let dimeRef = DatabaseReference.dimes.reference().child("\(uid)")
+        dimeRef.setValue(nil)
+        
+        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(uid)")
+        userRef.setValue(nil)
+    }
+
+
 }
 
 
@@ -462,7 +472,7 @@ func sortByMostRecentlyCreated(_ arrayOfDimes : [Dime]) -> [Dime] {
 
 func sortByTrending(_ arrayOfDimes: [Dime]) -> [Dime] {
     var dimes = arrayOfDimes
-    dimes.sort(by: {$0.totalDimeLikes > $1.totalDimeLikes})
+    dimes.sort(by: { return $0.totalDimeLikes > $1.totalDimeLikes})
     return dimes
 }
 

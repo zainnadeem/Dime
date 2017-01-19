@@ -195,7 +195,9 @@ class Media {
     }
     
     func updateSuperLikes(_ direction : UpdateDirection) {
+        
         let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)/superLikesCount")
+        
         let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(dimeUID)/media/\(uid)/superLikesCount")
         
         switch direction {
@@ -286,6 +288,14 @@ class func observeNewMedia(_ completion: @escaping (Media) -> Void) {
             let ref = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)/superLikes/\(user.uid)")
             ref.setValue(nil)
         }
+    }
+    
+    func deleteMediaFromFireBase(){
+        let dimeRef = DatabaseReference.dimes.reference().child("\(dimeUID)/media/\(uid)")
+        dimeRef.setValue(nil)
+        
+        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(dimeUID)/media/\(uid)")
+        userRef.setValue(nil)
     }
 }
 

@@ -51,9 +51,12 @@ class HomeViewController: UIViewController {
                 // get current user
                 DatabaseReference.users(uid: user.uid).reference().observeSingleEvent(of: .value, with: { (snapshot) in
                     if let userDict = snapshot.value as? [String : Any] {
+                        
                         self.store.currentDime = nil
                         self.currentUser = User(dictionary: userDict)
                         self.store.currentUser = User(dictionary: userDict)
+                        
+                        self.store.registerOneSignalToken(user: self.currentUser!)
                         self.store.getCurrentDime()
                         self.store.observeChats({ (chats) in
   
@@ -130,8 +133,10 @@ extension HomeViewController : NavBarViewDelegate {
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
-        try! FIRAuth.auth()?.signOut()
-        self.dismiss(animated: true, completion: nil)
+        let destinationVC = SearchDimeViewController()
+        destinationVC.user = store.currentUser
+        self.navigationController?.pushViewController(destinationVC, animated: true)
+  
         print("Not sure what the left bar button will do yet.")
     }
     
