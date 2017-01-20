@@ -216,7 +216,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 
                 
                 for id in self.dime.createdBy.deviceTokens{
-                    OneSignal.postNotification(["contents" : ["en" : "\(self.currentUser.username) wants to be your friend!"], "include_player_ids" : [id]])
+                    OneSignal.postNotification(["contents" : ["en" : "\(self.currentUser.username) wants to be your friend!"], "subtitle" : ["en" : "Friend Request"], "include_player_ids" : [id]])
                 }
                 
                 

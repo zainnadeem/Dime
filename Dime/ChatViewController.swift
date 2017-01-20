@@ -196,7 +196,7 @@ extension ChatViewController {
         for recipient in recipientUsers {
     
     for id in recipient.deviceTokens{
-    OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username): \(newMessage.text)"], "include_player_ids" : [id]])
+        OneSignal.postNotification(["contents" : ["en" : newMessage.text], "subtitle" : ["en" : currentUser.username], "include_player_ids" : [id]])
             }
         }
     }

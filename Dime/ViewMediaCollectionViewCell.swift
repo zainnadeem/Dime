@@ -27,6 +27,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     var dismiss = UIButton()
     var usernameButton = UIButton()
     var superLikeButton = UIButton()
+    var viewCommentsButton = UIButton()
     var background: UIImageView = UIImageView()
     var playButton = UIButton()
     
@@ -64,6 +65,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         configureSuperLikeButton()
         configureSuperLikeLabel()
         configureCreatedTimeLabel()
+        configureViewCommentsButton()
         self.backgroundColor = UIColor.clear
         
     }
@@ -107,6 +109,15 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         }else{
             playButton.setImage(nil, for: .normal)
             playButton.isEnabled = false
+        }
+        
+        
+        if media.comments.count == 0{
+            viewCommentsButton.setTitle("Be the first to comment!", for: .normal)
+        }else if media.comments.count == 1 {
+            viewCommentsButton.setTitle("\(media.comments.count) comment", for: .normal)
+        }else{
+            viewCommentsButton.setTitle("\(media.comments.count) comments", for: .normal)
         }
         
         likesLabel.text = media.likesCount.description
@@ -186,6 +197,12 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             
         }
 
+    func showComments(){
+        let destinationVC = CommentsViewController()
+        destinationVC.modalPresentationStyle = .overCurrentContext
+        destinationVC.media = self.media
+        self.parentCollectionView?.present(destinationVC, animated: true, completion: nil)
+    }
     
     func configureCaptionNameLabel() {
         contentView.addSubview(captionLabel)
@@ -306,6 +323,25 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.createdTimeLabel.trailingAnchor.constraint(equalTo: self.imageView.trailingAnchor, constant: -3).isActive = true
     }
     
+    func configureViewCommentsButton(){
+        contentView.addSubview(viewCommentsButton)
+        viewCommentsButton.backgroundColor = UIColor.clear
+        createdTimeLabel.textAlignment = NSTextAlignment.right
+        createdTimeLabel.textColor = UIColor.black
+        createdTimeLabel.font = UIFont.dimeFont(9)
+        
+        self.viewCommentsButton.translatesAutoresizingMaskIntoConstraints = false
+        self.viewCommentsButton.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
+        self.viewCommentsButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
+        self.viewCommentsButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8).isActive = true
+        self.viewCommentsButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -55).isActive = true
+        
+        viewCommentsButton.titleLabel?.textAlignment = .center
+        viewCommentsButton.titleLabel?.textColor = UIColor.white
+        viewCommentsButton.titleLabel?.font = UIFont.dimeFontBold(12)
+        viewCommentsButton.addTarget(self, action: #selector(showComments), for: .touchUpInside)
+    }
+    
     
 
     
@@ -383,11 +419,12 @@ extension ViewMediaCollectionViewCell{
     func createNotification(type: String){
         
         let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) \(type) your \(self.media.type)!", notificationType: type)
-            notification.save()
+        
+        notification.save()
     
     
         for id in self.media.createdBy.deviceTokens{
-            OneSignal.postNotification(["contents" : ["en" : "\(self.currentUser.username) \(type) your post!"], "include_player_ids" : [id]])
+            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) \(type) your post!"], "subtitle" : ["en" : currentUser.username], "include_player_ids" : [id]])
         }
     }
     

@@ -20,6 +20,8 @@ class NotificationsTableViewCell: UITableViewCell {
     
     lazy var borderWidth                  : CGFloat =       3.0
     lazy var profileImageHeightMultiplier : CGFloat =      (0.75)
+    lazy var mediaImageHeightMultiplier   : CGFloat =      (0.45)
+    lazy var mediaImageWidthMultiplier   : CGFloat =       (0.1875)
     
     var cache = SAMCache.shared()
     let store = DataStore.sharedInstance
@@ -51,8 +53,8 @@ class NotificationsTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.mediaButton)
         self.mediaButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
         self.mediaButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -11.5).isActive = true
-        self.mediaButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: profileImageHeightMultiplier).isActive = true
-        self.mediaButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.25*0.75).isActive = true
+        self.mediaButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: mediaImageHeightMultiplier).isActive = true
+        self.mediaButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: mediaImageWidthMultiplier).isActive = true
         
         mediaButton.addTarget(self, action: #selector(mediaButtonTapped), for: .touchUpInside)
         profileImage.addTarget(self, action: #selector(ProfileImageButtonTapped), for: .touchUpInside)
@@ -93,21 +95,22 @@ class NotificationsTableViewCell: UITableViewCell {
             }
         }
         
+        
         self.mediaButton.setImage(nil, for: .normal)
         
-        let mediaImageKey = "\(notification.mediaUID)-mediaImage"
-        
-        if let image = cache?.object(forKey: mediaImageKey) as? UIImage
-        {
-            self.mediaButton.setImage(image, for: .normal)
-           
-        }else {
-            FIRImage.downloadImage(uid: notification.mediaUID, completion: { (image, error) in
-                self.mediaButton.setImage(image, for: .normal)
-                self.cache?.setObject(image, forKey: mediaImageKey)
-            })
+        switch self.notification.notificationType {
+        case "liked":
+            self.mediaButton.setImage(#imageLiteral(resourceName: "friendsHome"), for: .normal)
+        case "superliked":
+            self.mediaButton.setImage(#imageLiteral(resourceName: "topDimesHome"), for: .normal)
+        case "commented on":
+            self.mediaButton.setImage(#imageLiteral(resourceName: "commentNotification"), for: .normal)
+        default:
+            print("unable to determine media")
         }
-    
+        
+        
+        
         self.mediaButton.imageView?.contentMode = .scaleAspectFit
         profileImage.layer.cornerRadius = profileImage.bounds.width / 2.0
         profileImage.layer.masksToBounds = true
@@ -128,6 +131,22 @@ class NotificationsTableViewCell: UITableViewCell {
         timeAgoLabel.font = UIFont.dimeFont(10)
     }
     
+    func downloadMediaImage(){
+        let mediaImageKey = "\(notification.mediaUID)-mediaImage"
+        
+        if let image = cache?.object(forKey: mediaImageKey) as? UIImage
+        {
+            self.mediaButton.setImage(image, for: .normal)
+            
+        }else {
+            FIRImage.downloadImage(uid: notification.mediaUID, completion: { (image, error) in
+                self.mediaButton.setImage(image, for: .normal)
+                self.cache?.setObject(image, forKey: mediaImageKey)
+            })
+        }
+    }
+    
+    
     func mediaButtonTapped(){
         print("Segue to media")
         
@@ -136,7 +155,10 @@ class NotificationsTableViewCell: UITableViewCell {
             let dime = Dime(dictionary: snapshot.value as! [String : AnyObject])
             
             let destinationVC = ViewMediaCollectionViewController()
+            
             destinationVC.passedDime = dime
+            
+            destinationVC.passedDime.media = sortByMostRecentlyCreated(dime.media)
             
             var selectedMedia: Media?
             
@@ -146,12 +168,20 @@ class NotificationsTableViewCell: UITableViewCell {
                 }
             }
             
-            let indexOfMedia = destinationVC.passedDime.media.index(of: selectedMedia!)
+            guard let media = selectedMedia else { return }
             
-           
-            
+            guard let indexOfMedia = destinationVC.passedDime.media.index(of: media) else { return }
+
             self.parentTableView?.navigationController?.pushViewController(viewController: destinationVC, animated: true){
-                destinationVC.mediaCollectionView.scrollToItem(at: IndexPath(row: indexOfMedia!, section: 0), at: .right, animated: true)
+                
+                
+                destinationVC.mediaCollectionView.scrollToItem(at: IndexPath(row: indexOfMedia, section: 0), at: .right, animated: false)
+                
+                if self.notification.notificationType == "commented on" {
+                    let cell = destinationVC.mediaCollectionView.cellForItem(at: IndexPath(row: indexOfMedia, section: 0)) as?ViewMediaCollectionViewCell
+                    cell?.showComments()
+                
+                }
             }
         
         })

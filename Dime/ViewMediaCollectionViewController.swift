@@ -37,6 +37,7 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
         
     }
     
+  
     func configureTitleLabel(){
         self.view.addSubview(viewControllerTitle)
         
@@ -127,12 +128,12 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let destinationVC = CommentsViewController()
-        destinationVC.modalPresentationStyle = .overCurrentContext
-        destinationVC.media = passedDime.media[indexPath.row]
-        destinationVC.dime = passedDime
-        destinationVC.parentCollectionView = self
-        self.present(destinationVC, animated: true, completion: nil)
+//        let destinationVC = CommentsViewController()
+//        destinationVC.modalPresentationStyle = .overCurrentContext
+//        destinationVC.media = passedDime.media[indexPath.row]
+//        destinationVC.dime = passedDime
+//        destinationVC.parentCollectionView = self
+//        self.present(destinationVC, animated: true, completion: nil)
     }
     
 }

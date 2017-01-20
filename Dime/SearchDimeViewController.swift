@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-private let reuseIdentifier = "CommentTableViewCell"
+private let reuseIdentifier = "SearchDimeTableViewCell"
 
 class SearchDimeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate {
 
@@ -22,16 +22,19 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     
     lazy var tableView: UITableView = UITableView()
     
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "icon-back"), middleButtonImage: nil)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        self.view.addSubview(navBar)
         setViewConstraints()
         addSearchProperties()
         
         searchBar.becomeFirstResponder()
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+    
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -39,7 +42,11 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         self.searchBar.delegate = self
         
         
-        self.tableView.register(CommentTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        self.navBar.delegate = self
+        
+        
+        
+        self.tableView.register(SearchUserTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         
         // Do any additional setup after loading the view.
     }
@@ -51,7 +58,7 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         tableView.translatesAutoresizingMaskIntoConstraints = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         
-        self.searchBar.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        self.searchBar.topAnchor.constraint(equalTo: self.navBar.bottomAnchor).isActive = true
         self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         self.searchBar.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.1).isActive = true
@@ -75,24 +82,18 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if searchBar.text != ""{
-//            return self.filteredUsers.count
-//        }else{
-            return self.UsersToSearch.count
-//        }
+
+            return self.filteredUsers.count
+
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = tableView.dequeueReusableCell(withIdentifier: Storyboard.searchUserCell, for: indexPath) as! SearchUserTableViewCell
         
         var user: User
-        
-//        if searchBar.text != ""{
-//            user = self.filteredUsers[indexPath.row]
-//        }else{
-            user = self.UsersToSearch[indexPath.row]
-//        }
-        
+
+        user = self.filteredUsers[indexPath.row]
+
         cell.updateUI(user: user)
         
         return cell
@@ -102,16 +103,7 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-//        var user: User
-//        
-//        if searchBar.text != ""{
-//            user = self.filteredUsers[indexPath.row]
-//        }else{
-//            user = self.UsersToSearch[indexPath.row]
-//        }
-//        
-//
-//        self.dismiss(animated: true, completion: nil)
+
     }
     
     //Mark: Search
@@ -126,11 +118,46 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 //        filteredUsers = self.UsersToSearch.filter { $0.fullName.localizedCaseInsensitiveContains(searchText) }
 //        tableView.reloadData()
+                findUsers(text: searchText)
+                tableView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         self.dismiss(animated: true, completion: nil)
     }
-    
 
+   func findUsers(text: String)->Void{
+    
+    let ref = DatabaseReference.allUsers.reference()
+    ref.queryOrdered(byChild: "username").queryStarting(atValue: searchBar.text, childKey: "username").observeSingleEvent(of: .value, with: { snapshot in
+        
+        let userDictionary = snapshot.value as! [String : AnyObject]
+        if let username = userDictionary["username"] as? String {
+            print("UID: \(snapshot.key) Username: \(username)")
+        }
+
+            
+        })
+
+    }
+
+}
+
+
+extension SearchDimeViewController : NavBarViewDelegate {
+    
+    func rightBarButtonTapped(_ sender: AnyObject) {
+        print("Not sure what the right bar button will do yet.")
+    }
+    
+    func leftBarButtonTapped(_ sender: AnyObject) {
+        _ = navigationController?.popViewController(animated: true)
+        
+    }
+    
+    func middleBarButtonTapped(_ Sender: AnyObject) {
+        print("Not sure what the middle bar button will do yet.")
+    }
+    
+    
 }

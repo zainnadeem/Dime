@@ -15,6 +15,7 @@ enum DatabaseReference {
     
     case root
     case users(uid: String)
+    case allUsers
     case media     // posts 
     case dimes
     case chats
@@ -37,6 +38,8 @@ enum DatabaseReference {
             return ""
         case .users(let uid):
             return "users/\(uid)"
+        case .allUsers:
+            return "users"
         case .media:
             return "media"
         case .chats:

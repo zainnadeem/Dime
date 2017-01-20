@@ -8,6 +8,7 @@
 
 import Foundation
 import Firebase
+import OneSignal
 
 class User {
     
@@ -266,6 +267,22 @@ extension User {
     
     func save(new chat: Chat){
         DatabaseReference.users(uid: self.uid).reference().child("chatIds/\(chat.uid)").setValue(true)
+    }
+    
+    func unregisterToken(){
+        OneSignal.idsAvailable { (userID, pushToken) in
+            if userID != nil{
+            
+            self.deviceTokens = self.deviceTokens.filter() { $0 != userID! }
+               
+                let ref = DatabaseReference.users(uid: self.uid).reference().child("deviceTokens")
+                ref.setValue(self.deviceTokens)
+           
+            }
+        }
+        
+        
+        
     }
 
 

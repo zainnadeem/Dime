@@ -71,7 +71,10 @@ class SettingsViewController: QuickTableViewController {
             print("Logout tapped")
             
             do {
+                
                 try FIRAuth.auth()?.signOut()
+                self.store.currentUser?.unregisterToken()
+            
             }catch{
                 print("error \(error)")
             }

@@ -26,6 +26,8 @@ class FriendRequestTableViewCell: UITableViewCell {
     
     lazy var borderWidth                  : CGFloat =       3.0
     lazy var profileImageHeightMultiplier : CGFloat =      (0.75)
+    lazy var mediaImageHeightMultiplier   : CGFloat =      (0.45)
+    lazy var mediaImageWidthMultiplier   : CGFloat =       (0.12)
     
     var cache = SAMCache.shared()
     let store = DataStore.sharedInstance
@@ -57,15 +59,16 @@ class FriendRequestTableViewCell: UITableViewCell {
         
         self.contentView.addSubview(self.ignoreFriendButton)
         self.ignoreFriendButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
-        self.ignoreFriendButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -7.5).isActive = true
-        self.ignoreFriendButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: profileImageHeightMultiplier).isActive = true
-        self.ignoreFriendButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.25*0.75).isActive = true
+        self.ignoreFriendButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -11.5).isActive = true
+        self.ignoreFriendButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: mediaImageHeightMultiplier).isActive = true
+        self.ignoreFriendButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: mediaImageWidthMultiplier).isActive = true
         
         self.contentView.addSubview(self.confirmFriendButton)
         self.confirmFriendButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
         self.confirmFriendButton.trailingAnchor.constraint(equalTo: self.ignoreFriendButton.leadingAnchor, constant: -7.5).isActive = true
-        self.confirmFriendButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: profileImageHeightMultiplier).isActive = true
-        self.confirmFriendButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.25*0.75).isActive = true
+        
+        self.confirmFriendButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: mediaImageHeightMultiplier).isActive = true
+        self.confirmFriendButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: mediaImageWidthMultiplier).isActive = true
         
         
         
@@ -111,7 +114,7 @@ class FriendRequestTableViewCell: UITableViewCell {
         confirmFriendButton.setImage(#imageLiteral(resourceName: "friendsHome"), for: .normal)
         
         for id in self.notification.from.deviceTokens{
-            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) accepted your friend request!"], "include_player_ids" : [id]])
+            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) accepted your friend request!"], "subtitle" : ["en" : "New Friend!"], "include_player_ids" : [id]])
         }
  
     }

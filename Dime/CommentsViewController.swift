@@ -125,7 +125,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.captionTextView.layer.borderWidth = 1.0
         self.captionTextView.layer.borderColor = UIColor.white.cgColor
         self.captionTextView.attributedPlaceholder = NSAttributedString(string: "add comment here")
-    
+        self.captionTextView.backgroundColor = UIColor.black
         self.captionTextView.textColor = UIColor.white
         self.captionTextView.textAlignment = .center
 
@@ -158,7 +158,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         media.comments.append(comment)
         
         //add to user
-        let ref = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(dime.uid)/media/\(media.uid)/comments/\(comment.uid)")
+        let ref = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(media.dimeUID)/media/\(media.uid)/comments/\(comment.uid)")
         ref.setValue(comment.toDictionary())
         createNotification(type: "commented on")
         self.captionTextView.text = ""
@@ -173,7 +173,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         
         for id in self.media.createdBy.deviceTokens{
-            OneSignal.postNotification(["contents" : ["en" : "\(self.currentUser.username) \(type) your post!"], "include_player_ids" : [id]])
+            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) \(type) your post!"], "subtitle" : ["en" : self.currentUser.username], "include_player_ids" : [id]])
         }
     }
 
@@ -188,6 +188,7 @@ extension CommentsViewController : NavBarViewDelegate {
         
         func leftBarButtonTapped(_ sender: AnyObject) {
             self.parentCollectionView?.navigationController?.tabBarController?.tabBar.isHidden = false
+            self.parentCollectionView?.reloadInputViews()
             self.dismiss(animated: true) {
 
             }
