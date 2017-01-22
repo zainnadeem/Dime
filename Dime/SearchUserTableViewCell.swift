@@ -27,7 +27,9 @@ class SearchUserTableViewCell: UITableViewCell {
     var cache = SAMCache.shared()
     
     func updateUI(user: User){
-       self.profileImage.image = #imageLiteral(resourceName: "icon-defaultAvatar")
+        
+        self.profileImage.image = nil
+        self.profileImage.image = #imageLiteral(resourceName: "icon-defaultAvatar")
         
         if let image = cache?.object(forKey: "\(user.uid)-headerImage") as? UIImage {
             self.profileImage.image = image

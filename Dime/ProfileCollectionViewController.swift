@@ -22,6 +22,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     var passedDimes: [Dime] = [Dime]()
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
+    var viewAllMessagesButton: UIButton = UIButton()
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage:nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
@@ -30,8 +31,9 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
-        //self.dimeCollectionView.emptyDataSetDelegate = self
-        //self.dimeCollectionView.emptyDataSetSource = self
+        
+        self.dimeCollectionView.emptyDataSetDelegate = self
+        self.dimeCollectionView.emptyDataSetSource = self
         
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
         backgroundImage.image = #imageLiteral(resourceName: "background_GREY")
@@ -43,8 +45,8 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.view.addSubview(navBar)
         configureTitleLabel()
         configureTitleIcon()
-    
-        showSettingsButton()
+        configureMessagesIcon()
+        showUserSpecificButtons()
         fetchDimes()
         
         
@@ -52,13 +54,21 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         
     }
     
-    func showSettingsButton(){
+    func showUserSpecificButtons(){
         
         guard let profileUser = self.user else { return }
         if profileUser == self.store.currentUser {
           navBar.rightButton.image = #imageLiteral(resourceName: "icon-settings-filled")
+          viewAllMessagesButton.setImage(#imageLiteral(resourceName: "icon-comment"), for: .normal)
+         viewAllMessagesButton.imageView?.tintColor = UIColor.white
+          navBar.rightButton.isEnabled = true
+          viewAllMessagesButton.isEnabled = true
+            
         }else{
-             navBar.rightButton.image = nil 
+            navBar.rightButton.image = nil
+            viewAllMessagesButton.setImage(nil, for: .normal)
+            navBar.rightButton.isEnabled = false
+            viewAllMessagesButton.isEnabled = false
         }
     }
     
@@ -96,6 +106,18 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.viewControllerIcon.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
         self.viewControllerIcon.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.03).isActive = true
         self.viewControllerIcon.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
+    }
+    
+    func configureMessagesIcon() {
+        self.view.addSubview(viewAllMessagesButton)
+
+        
+        self.viewAllMessagesButton.addTarget(self, action: #selector(showChats), for: .touchUpInside)
+        self.viewAllMessagesButton.translatesAutoresizingMaskIntoConstraints = false
+        self.viewAllMessagesButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15).isActive = true
+        self.viewAllMessagesButton.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
+        self.viewAllMessagesButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.03).isActive = true
+        self.viewAllMessagesButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
     }
     
     
@@ -171,6 +193,12 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
 //        destinationVC.passedDime = passedDimes[indexPath.row]
 //        self.navigationController?.pushViewController(destinationVC, animated: true)
     }
+   
+    
+    func showChats(){
+        let destinationVC = ChatsTableViewController()
+        self.navigationController?.pushViewController(destinationVC, animated: true)
+    }
     
     
 }
@@ -213,63 +241,75 @@ extension ProfileCollectionViewController : NavBarViewDelegate {
     
 }
 
-//extension ProfileCollectionViewController : DZNEmptyDataSetSource {
-//    
-//    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
-//        
-//        let image = #imageLiteral(resourceName: "icon-logo")
-//        
-//        let size = image.size.applying(CGAffineTransform(scaleX: 0.2, y: 0.2))
-//        let hasAlpha = true
-//        let scale : CGFloat = 0.0
-//        
-//        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
-//        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
-//        
-//        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
-//        UIGraphicsEndImageContext()
-//        
-//        return scaledImage
-//    }
-//}
-//
-//func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-//    let text = "You have No Top Friends"
-//    
-//    let attributes = [NSFontAttributeName : UIFont.dimeFont(24.0),
-//                      NSForegroundColorAttributeName : UIColor.darkGray]
-//    
-//    
-//    return NSAttributedString(string: text, attributes: attributes)
-//    
-//    
-//}
-//
-//func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-//    
-//    var text = ""
-//    
-//    let paragraph = NSMutableParagraphStyle()
-//    paragraph.lineBreakMode = .byWordWrapping
-//    paragraph.alignment = .center
-//    
-//    let attributes = [NSFontAttributeName : UIFont.dimeFont(14.0),
-//                      NSForegroundColorAttributeName : UIColor.lightGray,
-//                      NSParagraphStyleAttributeName : paragraph]
-//    
-//    text = ""
-//    return NSAttributedString(string: text, attributes: attributes)
-//    
-//}
-//
-//func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
-//    return UIColor.white
-//}
-//
-//
-////extension ProfileCollectionViewController : DZNEmptyDataSetDelegate {
-////    
-////    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
-////        return true
-////    }
-////}
+extension ProfileCollectionViewController : DZNEmptyDataSetSource {
+    
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        
+        let image = #imageLiteral(resourceName: "topDimesHomeUnfilled")
+        
+        let size = image.size.applying(CGAffineTransform(scaleX: 0.2, y: 0.2))
+        let hasAlpha = true
+        let scale : CGFloat = 0.0
+        
+        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
+        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return scaledImage
+    }
+    
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        let text = "No Dimes😪"
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFont(24.0),
+                          NSForegroundColorAttributeName : UIColor.darkGray]
+        
+        
+        return NSAttributedString(string: text, attributes: attributes)
+        
+        
+    }
+    
+    func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineBreakMode = .byWordWrapping
+        paragraph.alignment = .center
+        
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFont(14.0),
+                          NSForegroundColorAttributeName : UIColor.lightGray,
+                          NSParagraphStyleAttributeName : paragraph]
+        
+        
+        guard let profileUser = self.user else { return NSAttributedString(string: "No photos or videos", attributes: attributes) }
+        
+        var text = "\(profileUser.username) has not added any photos or videos."
+        
+        return NSAttributedString(string: text, attributes: attributes)
+        
+    }
+    
+    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControlState) -> NSAttributedString! {
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFontBold(18.0),
+                          NSForegroundColorAttributeName : UIColor.black]
+        
+        return NSAttributedString(string: "Check back later!", attributes: attributes)
+    }
+    
+    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
+        return UIColor.white
+    }
+}
+
+
+extension ProfileCollectionViewController : DZNEmptyDataSetDelegate {
+    
+    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
+        return true
+    }
+}

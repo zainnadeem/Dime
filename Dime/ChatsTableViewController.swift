@@ -22,16 +22,13 @@ class ChatsTableViewController: UIViewController {
     
     var selectedAccounts = [User]()
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "searchIcon"), leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
     lazy var contactsPickerField: VENTokenField = VENTokenField()
     lazy var tableView : UITableView = UITableView()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navBar.rightButton.title = "Next"
-        
-        
         
         self.currentUser = self.store.currentUser
         self.tableView.delegate = self
@@ -148,22 +145,20 @@ extension ChatsTableViewController : UITableViewDelegate, UITableViewDataSource{
     extension ChatsTableViewController : NavBarViewDelegate {
         
         func rightBarButtonTapped(_ sender: AnyObject) {
-            let destinationVC = ContactsPickerViewController()
-            destinationVC.currentUser = store.currentUser
-            self.navigationController?.pushViewController(destinationVC, animated: true)
+//            let destinationVC = ContactsPickerViewController()
+//            destinationVC.currentUser = store.currentUser
+//            self.navigationController?.pushViewController(destinationVC, animated: true)
             print("Not sure what the right bar button will do yet.")
         }
         
         func leftBarButtonTapped(_ sender: AnyObject) {
             
-            self.dismiss(animated: true, completion: nil)
+           self.navigationController?.popViewController(animated: true)
             print("Not sure what the left bar button will do yet.")
         }
         
         func middleBarButtonTapped(_ Sender: AnyObject) {
-            let destinationVC = ProfileCollectionViewController()
-            destinationVC.user = store.currentUser
-            self.navigationController?.pushViewController(destinationVC, animated: true)
+          
         }
         
     }

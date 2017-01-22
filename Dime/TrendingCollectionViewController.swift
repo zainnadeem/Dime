@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import DZNEmptyDataSet
 
 private let reuseIdentifier = "dimeCollectionViewCell"
 
@@ -18,7 +19,7 @@ class TrendingCollectionViewController: UIViewController, UICollectionViewDelega
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
     
-      lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+      lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
     var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -30,6 +31,9 @@ class TrendingCollectionViewController: UIViewController, UICollectionViewDelega
         self.view.insertSubview(backgroundImage, at: 0)
         
         setUpCollectionView()
+        self.dimeCollectionView.emptyDataSetDelegate = self
+        self.dimeCollectionView.emptyDataSetSource = self
+        
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.navBar.delegate = self
         self.view.addSubview(navBar)
@@ -78,7 +82,10 @@ class TrendingCollectionViewController: UIViewController, UICollectionViewDelega
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
         Dime.observeNewDime { (dime) in
-            if !self.passedDimes.contains(dime) {
+            
+            //Only Dime that have atlease 9 likes will end up on the trending feed
+            
+            if !self.passedDimes.contains(dime) && Constants.isDimeWithinTwoDays(videoDate: dime.createdTime) && dime.totalDimeLikes > 9 {
                 self.passedDimes.insert(dime, at: 0)
                 self.passedDimes = sortByTrending(self.passedDimes)
                 self.dimeCollectionView.reloadData()
@@ -159,7 +166,15 @@ extension TrendingCollectionViewController : NavBarViewDelegate {
     
     func leftBarButtonTapped(_ sender: AnyObject) {
         
-        self.dismiss(animated: true, completion: nil)
+        let destinationVC = SearchDimeViewController()
+        destinationVC.user = store.currentUser
+        
+        if let user = store.currentUser{
+            destinationVC.user = user
+        }
+        
+        
+        self.navigationController?.pushViewController(destinationVC, animated: true)
         print("Not sure what the left bar button will do yet.")
     }
     
@@ -168,5 +183,74 @@ extension TrendingCollectionViewController : NavBarViewDelegate {
         destinationVC.user = store.currentUser
         self.navigationController?.pushViewController(destinationVC, animated: true)
     
+    }
+}
+
+extension TrendingCollectionViewController : DZNEmptyDataSetSource {
+    
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        
+        let image = #imageLiteral(resourceName: "trendingHome")
+        
+        let size = image.size.applying(CGAffineTransform(scaleX: 0.2, y: 0.2))
+        let hasAlpha = true
+        let scale : CGFloat = 0.0
+        
+        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
+        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return scaledImage
+    }
+    
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        let text = "Trending..."
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFont(24.0),
+                          NSForegroundColorAttributeName : UIColor.darkGray]
+        
+        
+        return NSAttributedString(string: text, attributes: attributes)
+        
+        
+    }
+    
+    func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        
+        var text = "Find out what's happening. The trending page shows you trending stories in your area."
+        
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineBreakMode = .byWordWrapping
+        paragraph.alignment = .center
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFont(14.0),
+                          NSForegroundColorAttributeName : UIColor.lightGray,
+                          NSParagraphStyleAttributeName : paragraph]
+        
+        return NSAttributedString(string: text, attributes: attributes)
+        
+    }
+    
+    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControlState) -> NSAttributedString! {
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFontBold(18.0),
+                          NSForegroundColorAttributeName : UIColor.black]
+        
+        return NSAttributedString(string: "Check back in a few!🚀", attributes: attributes)
+    }
+    
+    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
+        return UIColor.white
+    }
+}
+
+
+extension TrendingCollectionViewController : DZNEmptyDataSetDelegate {
+    
+    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
+        return true
     }
 }

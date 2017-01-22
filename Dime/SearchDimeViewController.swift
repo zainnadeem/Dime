@@ -18,6 +18,7 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     var filteredUsers = [User]()
     var selectedUser: User?
     
+    
     lazy var searchBar: UISearchBar = UISearchBar()
     
     lazy var tableView: UITableView = UITableView()
@@ -31,7 +32,7 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         setViewConstraints()
         addSearchProperties()
         
-        searchBar.becomeFirstResponder()
+        //searchBar.becomeFirstResponder()
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     
@@ -43,12 +44,19 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         
         
         self.navBar.delegate = self
-        
-        
-        
-        self.tableView.register(SearchUserTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
-        
+        self.tableView.register(SearchDimeTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        fetchUsers()
         // Do any additional setup after loading the view.
+    }
+    
+    func fetchUsers() {
+        self.tableView.reloadData()
+        User.observeNewUser { (user) in
+            if !self.UsersToSearch.contains(user) {
+                self.UsersToSearch.insert(user, at: 0)
+                self.tableView.reloadData()
+            }
+        }
     }
     
     func setViewConstraints(){
@@ -71,6 +79,7 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         
     }
     
+    
     func addSearchProperties(){
         self.searchBar.showsSearchResultsButton = true
         self.searchBar.barStyle = .default
@@ -82,65 +91,74 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
+        if searchBar.text != ""{
             return self.filteredUsers.count
-
+        }else{
+            return self.UsersToSearch.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell  = tableView.dequeueReusableCell(withIdentifier: Storyboard.searchUserCell, for: indexPath) as! SearchUserTableViewCell
+        let cell  = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SearchDimeTableViewCell
+        
+        cell.setViewConstraints()
         
         var user: User
-
-        user = self.filteredUsers[indexPath.row]
-
-        cell.updateUI(user: user)
         
+        
+        if searchBar.text != ""{
+            cell.user = self.filteredUsers[indexPath.row]
+        }else{
+            cell.user = self.UsersToSearch[indexPath.row]
+        }
+
+        cell.backgroundColor = UIColor.white
+
         return cell
     }
     
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return  self.view.bounds.width / 4
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+       
+        let destinationVC = ProfileCollectionViewController()
+        var user: User
         
+        if searchBar.text != ""{
+            user = self.filteredUsers[indexPath.row]
+        }else{
+            
+
+            user = self.UsersToSearch[indexPath.row]
+        }
+        
+        destinationVC.user = user
+       
+        self.navigationController?.pushViewController(destinationVC, animated: true)
 
     }
     
     //Mark: Search
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        FIRDatabase.database().reference().child("users").queryOrdered(byChild: "username").queryStarting(atValue: searchBar.text!).queryEnding(atValue: searchBar.text).observeSingleEvent(of: .childAdded, with: { (snapshot) in
-            
-            print(snapshot.value as! [String : Any])
-        })
+        
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        filteredUsers = self.UsersToSearch.filter { $0.fullName.localizedCaseInsensitiveContains(searchText) }
-//        tableView.reloadData()
-                findUsers(text: searchText)
-                tableView.reloadData()
+        filteredUsers = self.UsersToSearch.filter { $0.fullName.localizedCaseInsensitiveContains(searchText) }
+        tableView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         self.dismiss(animated: true, completion: nil)
     }
-
-   func findUsers(text: String)->Void{
     
-    let ref = DatabaseReference.allUsers.reference()
-    ref.queryOrdered(byChild: "username").queryStarting(atValue: searchBar.text, childKey: "username").observeSingleEvent(of: .value, with: { snapshot in
-        
-        let userDictionary = snapshot.value as! [String : AnyObject]
-        if let username = userDictionary["username"] as? String {
-            print("UID: \(snapshot.key) Username: \(username)")
-        }
 
-            
-        })
-
-    }
-
+    
 }
 
 

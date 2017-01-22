@@ -92,6 +92,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         //self.imageView.setImage(nil, for: .normal)
        
         
+        
         let mediaImageKey = "\(self.dime.uid)-\(dime.createdTime)-coverImage"
         
         if let image = cache?.object(forKey: mediaImageKey) as? UIImage
@@ -130,7 +131,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.circleProfileView.imageView?.contentMode = .scaleAspectFill
         
         // updateLabels()
-        usernameButton.setTitle(dime.createdBy.fullName, for: .normal)
+        usernameButton.setTitle(dime.createdBy.username, for: .normal)
         usernameButton.addTarget(self, action: #selector(usernameButtonPressed), for: .touchUpInside)
         circleProfileView.addTarget(self, action: #selector(usernameButtonPressed), for: .touchUpInside)
         
@@ -216,7 +217,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 
                 
                 for id in self.dime.createdBy.deviceTokens{
-                    OneSignal.postNotification(["contents" : ["en" : "\(self.currentUser.username) wants to be your friend!"], "subtitle" : ["en" : "Friend Request"], "include_player_ids" : [id]])
+                    OneSignal.postNotification(["contents" : ["en" : "\(self.currentUser.username) wants to be your friend!"], "headings" : ["en" : "Friend Request"], "include_player_ids" : [id]])
                 }
                 
                 
@@ -240,6 +241,15 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 
             })
         
+       
+        let removeFromTopFriends = UIAlertAction(title: "remove from top dimes", style: .default, handler: {
+            action in
+            self.currentUser.unTopFriendUser(user: self.dime.createdBy)
+            self.configureFriendButton()
+            
+        })
+        
+        
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: {
             action in
             print("Canceled")
@@ -248,14 +258,19 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             
         
         if !currentUser.friends.contains(dime.createdBy) {
-        actionSheet.addAction(friend)
+            actionSheet.addAction(friend)
         }
         
-        if currentUser.friends.contains(dime.createdBy){
-            actionSheet.addAction(topFriends)
+        if currentUser.topFriends.contains(dime.createdBy){
+            actionSheet.addAction(removeFromTopFriends)
             actionSheet.addAction(unfriend)
         }
         
+        if currentUser.friends.contains(dime.createdBy) && !currentUser.topFriends.contains(dime.createdBy) {
+            actionSheet.addAction(topFriends)
+            actionSheet.addAction(unfriend)
+        }
+
             actionSheet.addAction(cancel)
             self.parentCollectionView?.present(actionSheet, animated: true, completion: nil)
         }
@@ -484,6 +499,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
 extension DimeCollectionViewCell {
     
     func nextDidTap(){
+        
         var conversationMembers = [dime.createdBy]
         conversationMembers.append(currentUser)
         
@@ -493,15 +509,17 @@ extension DimeCollectionViewCell {
             openChatView(chat: chat)
         }else{
             
-            for acc in conversationMembers{
-                if title == "" {
-                    title += "\(acc.fullName)"
-                }else{
-                    title += " + \(acc.fullName)"
-                }
-            }
+//            for acc in conversationMembers{
+//                if title == "" {
+//                    title += "\(acc.fullName)"
+//                }else{
+//                    title += " + \(acc.fullName)"
+//                }
+//            }
             
-            let newChat = Chat(users: conversationMembers, title: title, featuredImageUID: conversationMembers.first!.uid)
+            title = dime.createdBy.username
+            
+            let newChat = Chat(users: conversationMembers, title: title, featuredImageUID: dime.createdBy.uid)
             openChatView(chat: newChat)
             
         }
@@ -512,6 +530,7 @@ extension DimeCollectionViewCell {
         //guard let chats = self.store.chats else { return nil }
         
         for chat in self.store.chats{
+           
             var results = [Bool]()
             
             for acc in chatAccounts{

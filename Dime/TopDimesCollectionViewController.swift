@@ -19,15 +19,15 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
     
-   lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+   lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
     var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
-        //self.dimeCollectionView.emptyDataSetDelegate = self
-        //self.dimeCollectionView.emptyDataSetSource = self
+        self.dimeCollectionView.emptyDataSetDelegate = self
+        self.dimeCollectionView.emptyDataSetSource = self
         
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
         backgroundImage.image = #imageLiteral(resourceName: "background_GREY")
@@ -89,7 +89,8 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         if let topFriends = store.currentUser?.topFriends{
             for friend in topFriends{
                 Dime.observeFriendsDimes(user: friend, { (dime) in
-                    if !self.passedDimes.contains(dime) {
+
+                    if !self.passedDimes.contains(dime) && Constants.isDimeWithinTwoDays(videoDate: dime.createdTime)  {
                         self.passedDimes.insert(dime, at: 0)
                         self.dimeCollectionView.reloadData()
                         
@@ -161,13 +162,7 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
 }
 
 extension TopDimesCollectionViewController : NavBarViewDelegate {
-    
-//    func rightBarButtonTapped(_ sender: AnyObject) {
-//        let destinationVC = ChatsTableViewController()
-//        destinationVC.currentUser = store.currentUser
-//        self.navigationController?.pushViewController(destinationVC, animated: true)
-//        print("Not sure what the right bar button will do yet.")
-//    }
+
     
     func rightBarButtonTapped(_ sender: AnyObject) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -178,7 +173,15 @@ extension TopDimesCollectionViewController : NavBarViewDelegate {
     
     func leftBarButtonTapped(_ sender: AnyObject) {
 
-        self.dismiss(animated: true, completion: nil)
+        let destinationVC = SearchDimeViewController()
+        destinationVC.user = store.currentUser
+        
+        if let user = store.currentUser{
+            destinationVC.user = user
+        }
+        
+        
+        self.navigationController?.pushViewController(destinationVC, animated: true)
         print("Not sure what the left bar button will do yet.")
     }
     
@@ -190,11 +193,11 @@ extension TopDimesCollectionViewController : NavBarViewDelegate {
     
 }
 
-extension ProfileCollectionViewController : DZNEmptyDataSetSource {
+extension TopDimesCollectionViewController : DZNEmptyDataSetSource {
     
     func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
         
-            let image = #imageLiteral(resourceName: "icon-logo")
+            let image = #imageLiteral(resourceName: "topDimesHome")
             
             let size = image.size.applying(CGAffineTransform(scaleX: 0.2, y: 0.2))
             let hasAlpha = true
@@ -208,10 +211,10 @@ extension ProfileCollectionViewController : DZNEmptyDataSetSource {
             
             return scaledImage
         }
-    }
+    
     
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        let text = "You have No Top Friends"
+        let text = "You haven't added any Top Dimes"
         
         let attributes = [NSFontAttributeName : UIFont.dimeFont(24.0),
                           NSForegroundColorAttributeName : UIColor.darkGray]
@@ -224,7 +227,7 @@ extension ProfileCollectionViewController : DZNEmptyDataSetSource {
     
     func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
         
-        var text = ""
+        var text = "You can add friends to your top dimes to keep up with your besties. Just hit the diamond located on the top of your friends' stories."
         
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineBreakMode = .byWordWrapping
@@ -234,14 +237,22 @@ extension ProfileCollectionViewController : DZNEmptyDataSetSource {
                           NSForegroundColorAttributeName : UIColor.lightGray,
                           NSParagraphStyleAttributeName : paragraph]
         
-            text = ""
             return NSAttributedString(string: text, attributes: attributes)
 
     }
+
+    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControlState) -> NSAttributedString! {
     
+    let attributes = [NSFontAttributeName : UIFont.dimeFontBold(18.0),
+                      NSForegroundColorAttributeName : UIColor.black]
+    
+    return NSAttributedString(string: "Add a Top Dime today!👬", attributes: attributes)
+    }
+
     func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
         return UIColor.white
     }
+}
 
 
 extension TopDimesCollectionViewController : DZNEmptyDataSetDelegate {

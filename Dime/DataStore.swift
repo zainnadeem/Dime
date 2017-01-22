@@ -91,9 +91,13 @@ class DataStore {
             print(snapshot.key)
             
             DatabaseReference.chats.reference().child(snapshot.key).observeSingleEvent(of: .value, with: { (snap) in
+                guard let data = snap.value as? [String: AnyObject] else { return }
                 
-                print(snap.value!)
-                let chat = Chat(dictionary: snap.value as! [String : Any])
+                print("++++++++++++")
+                print(data)
+                print("++++++++++++")
+                
+                let chat = Chat(dictionary: data)
                 self.chats.append(chat)
             })
             

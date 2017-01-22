@@ -82,6 +82,28 @@ class Constants {
         return Constants.dateFormatter().string(from: Date(timeInterval: -86400, since: Date(timeIntervalSinceNow: 0)))
     }
     
+    class func twoDaysAgo() -> String {
+        return Constants.dateFormatter().string(from: Date(timeInterval: -176800, since: Date(timeIntervalSinceNow: 0)))
+    }
+    
+    class func isDimeWithinTwoDays(videoDate date : String) -> Bool {
+        if let creationDate = Constants.dateFormatter().date(from: date) {
+            
+            let yesterday = Constants.dateFormatter().date(from: Constants.twoDaysAgo())!
+            
+            if creationDate.compare(yesterday) == .orderedDescending { return true }
+            else if creationDate.compare(yesterday) == .orderedSame  { return true }
+            else { return false }
+            
+        } else {
+            print("Couldn't get NSDate object from string date arguement")
+            return false
+        }
+    }
+    
+    
+    
+    
     class func displayAlert(_ title: String, message: String) -> UIAlertController {
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)

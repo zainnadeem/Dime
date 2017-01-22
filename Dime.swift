@@ -165,6 +165,7 @@ class Dime {
                 }else{
                     
                     mediaRef.child("\(media.uid)").setValue(media.toDictionary())
+                    
                     media.save(ref: ref, completion: { (error) in
                         if error != nil{
                             print(error?.localizedDescription)
@@ -319,7 +320,9 @@ class Dime {
 extension Dime {
     
     func updateOrCreateDime(completion: @escaping (Error?) -> Void){
+        
         let ref = DatabaseReference.dimes.reference()
+        
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             
             if snapshot.hasChild(self.uid){
@@ -336,6 +339,7 @@ extension Dime {
                 
                 
             }else{
+                
                 self.save(completion: { (error) in
                     print()
                 })

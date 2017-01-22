@@ -16,7 +16,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     var blurEffectView: UIVisualEffectView!
     var backgroundLocationImage = UIImageView()
-    var imageView : UIImageView!
+    var imageView = UIButton()
     
     //var captionLabel = UILabel()
     var locationLabel = UILabel()
@@ -56,7 +56,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
+        //imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
         
         configureCaptionNameLabel()
         configureImageView()
@@ -73,44 +73,39 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func updateUI() {
         
-        self.imageView.image = nil
+        self.imageView.setImage(#imageLiteral(resourceName: "LoadingDimeImageWhite"), for: .normal)
+        self.playButton.setImage(nil, for: .normal)
         
         let mediaImageKey = "\(media.uid)-mediaImage"
        
         if let image = cache?.object(forKey: mediaImageKey) as? UIImage
         {
-            self.imageView.image = image
+            self.imageView.setImage(image, for: .normal)
+            self.setUpVideoButton()
         }else {
             media.downloadMediaImage(completion: { [weak self] (image, error) in
                 if let image = image {
-                    self?.imageView.image = image
+                    self?.imageView.setImage(image, for: .normal)
+                    self?.setUpVideoButton()
                     self?.cache?.setObject(image, forKey: "\(self?.media.uid)-mediaImage")
                 }
             })
         }
         
+        self.imageView.imageView?.contentMode = .scaleAspectFit
         
         captionLabel.text = media.caption
         captionLabel.textColor = UIColor.white
         
         createdTimeLabel.textColor = UIColor.white
-        createdTimeLabel.text = parseDate(dime.createdTime)
+        createdTimeLabel.text = parseDate(media.createdTime)
         
         
         setUpLikeButton()
         setUpSuperLikeButton()
         configureSuperLikeFunctionality()
 
-        
-        
-        if media.type == "video" {
-            configurePlayButton()
-            playButton.isEnabled = true
-        }else{
-            playButton.setImage(nil, for: .normal)
-            playButton.isEnabled = false
-        }
-        
+
         
         if media.comments.count == 0{
             viewCommentsButton.setTitle("Be the first to comment!", for: .normal)
@@ -135,6 +130,16 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
             likeButton.setImage(#imageLiteral(resourceName: "friendsHomeUnfilled"), for: .normal)
         }
         
+    }
+    
+    func setUpVideoButton(){
+        if media.type == "video" {
+            configurePlayButton()
+            playButton.isEnabled = true
+        }else{
+            playButton.setImage(nil, for: .normal)
+            playButton.isEnabled = false
+        }
     }
     
     func setUpSuperLikeButton(){
@@ -178,19 +183,30 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func createVideoPlayer() {
         
-            
             media.downloadVideo(completion: { (url, error) in
+                if error != nil{
+                    
+                    let alertVC = UIAlertController(title: "sorry", message: "There was an error loading this video", preferredStyle: .alert)
+                    let cancel = UIAlertAction(title: "okay", style: .cancel, handler: nil)
+                    alertVC.addAction(cancel)
+                    
+                    self.parentCollectionView?.present(alertVC, animated: true, completion: nil)
                 
-                let player = AVPlayer(url: url)
-                
-                let playerViewController = AVPlayerViewController()
-                playerViewController.player = player
-                
-                let parentView = self.viewController()
-                
-                parentView?.present(playerViewController, animated: true, completion: {
-                    playerViewController.player?.play()
-                })
+                }else{
+                    
+                    guard let link = url else { return }
+
+                    let player = AVPlayer(url: link)
+                    
+                    let playerViewController = AVPlayerViewController()
+                    playerViewController.player = player
+                    
+                    let parentView = self.viewController()
+                    
+                    parentView?.present(playerViewController, animated: true, completion: {
+                        playerViewController.player?.play()
+                    })
+                }
             
             
             })
@@ -226,8 +242,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     func configureImageView() {
         contentView.addSubview(imageView)
-        
-        imageView.contentMode = UIViewContentMode.scaleAspectFit
+
         imageView.clipsToBounds = true
         
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -334,7 +349,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.viewCommentsButton.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
         self.viewCommentsButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
         self.viewCommentsButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8).isActive = true
-        self.viewCommentsButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -55).isActive = true
+        self.viewCommentsButton.topAnchor.constraint(equalTo: self.likeButton.bottomAnchor, constant: 7).isActive = true
         
         viewCommentsButton.titleLabel?.textAlignment = .center
         viewCommentsButton.titleLabel?.textColor = UIColor.white
@@ -422,9 +437,12 @@ extension ViewMediaCollectionViewCell{
         
         notification.save()
     
-    
+        
+        var heading = type.substring(to: type.index(before: type.endIndex))
+        
+        
         for id in self.media.createdBy.deviceTokens{
-            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) \(type) your post!"], "subtitle" : ["en" : currentUser.username], "include_player_ids" : [id]])
+            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) \(type) your post!"], "headings" : ["en" : "\(heading.capitalized)!"], "include_player_ids" : [id]])
         }
     }
     

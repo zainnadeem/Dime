@@ -9,6 +9,7 @@
 
 import UIKit
 import Firebase
+import DZNEmptyDataSet
 
 private let reuseIdentifier = "NotificationTableViewCell"
 private let friendRequestreuseIdentifier = "FriendRequestTableViewCell"
@@ -24,8 +25,7 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
     
     var captionTextView: UITextField = UITextField()
     var postButton: UIButton = UIButton()
-    
-    
+
     lazy var tableView : UITableView = UITableView()
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "icon-back"), middleButtonImage: nil)
     
@@ -44,6 +44,8 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
         self.view.addSubview(navBar)
         
         setUpTableView()
+        self.tableView.emptyDataSetDelegate = self
+        self.tableView.emptyDataSetSource = self
 
         self.tableView.register(NotificationsTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         self.tableView.register(FriendRequestTableViewCell.self, forCellReuseIdentifier: friendRequestreuseIdentifier)
@@ -82,7 +84,9 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
             
             let cell = tableView.dequeueReusableCell(withIdentifier: friendRequestreuseIdentifier, for: indexPath) as! FriendRequestTableViewCell
             
-            cell.parentTableView = self
+            cell.parentTableView = self.tableView
+            cell.parentViewController = self
+            cell.currentIndexPath = indexPath
             cell.selectionStyle = .none
             cell.setViewConstraints()
             cell.notification = self.notifications[indexPath.row]
@@ -94,7 +98,7 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
         
             let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! NotificationsTableViewCell
             
-            cell.parentTableView = self
+            cell.parentViewController = self
             cell.selectionStyle = .none
             cell.setViewConstraints()
             cell.notification = self.notifications[indexPath.row]
@@ -120,6 +124,11 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "NOTIFICATIONS"
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
     
     func setUpTableView(){
         self.view.addSubview(self.tableView)
@@ -160,4 +169,73 @@ extension NotificationTableViewController : NavBarViewDelegate {
     }
     
     
+}
+
+extension NotificationTableViewController : DZNEmptyDataSetSource {
+    
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        
+        let image = #imageLiteral(resourceName: "friendsHomeUnfilled")
+        
+        let size = image.size.applying(CGAffineTransform(scaleX: 0.2, y: 0.2))
+        let hasAlpha = true
+        let scale : CGFloat = 0.0
+        
+        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
+        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return scaledImage
+    }
+    
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        let text = "Loading your notifications..."
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFont(24.0),
+                          NSForegroundColorAttributeName : UIColor.darkGray]
+        
+        
+        return NSAttributedString(string: text, attributes: attributes)
+        
+        
+    }
+    
+    func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        
+        var text = "wow, there are a lot of them"
+        
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineBreakMode = .byWordWrapping
+        paragraph.alignment = .center
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFont(14.0),
+                          NSForegroundColorAttributeName : UIColor.lightGray,
+                          NSParagraphStyleAttributeName : paragraph]
+        
+        return NSAttributedString(string: text, attributes: attributes)
+        
+    }
+    
+    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControlState) -> NSAttributedString! {
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFontBold(18.0),
+                          NSForegroundColorAttributeName : UIColor.black]
+        
+        return NSAttributedString(string: "Here you go!", attributes: attributes)
+    }
+    
+    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
+        return UIColor.white
+    }
+}
+
+
+extension NotificationTableViewController : DZNEmptyDataSetDelegate {
+    
+    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
+        return true
+    }
 }

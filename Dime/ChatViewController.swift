@@ -36,6 +36,8 @@ class ChatViewController: JSQMessagesViewController {
         super.viewDidLoad()
         
         title = chat.title
+        self.inputToolbar.contentView.leftBarButtonItem = nil
+        
         self.setUpBubbleImages()
         self.setUpAvatarImages()
         self.navigationController?.setNavigationBarHidden(false, animated: false)
@@ -196,7 +198,7 @@ extension ChatViewController {
         for recipient in recipientUsers {
     
     for id in recipient.deviceTokens{
-        OneSignal.postNotification(["contents" : ["en" : newMessage.text], "subtitle" : ["en" : currentUser.username], "include_player_ids" : [id]])
+        OneSignal.postNotification(["contents" : ["en" :"\(self.currentUser.username): \(newMessage.text)"], "headings" : ["en" : "Message"], "include_player_ids" : [id]])
             }
         }
     }
@@ -227,6 +229,8 @@ extension ChatViewController
             jsqMessages.append(jsqMessage!)
         }
     }
+    
+    
 }
 
 

@@ -169,7 +169,6 @@ class Media {
             "dimeUID" : dimeUID,
             "type" : type,
             "caption" : caption,
-            "createdTime" : createdTime,
             "createdBy" : createdBy.toDictionary(),
             "mediaURL"  : mediaURL,
             "location"  : location
@@ -228,13 +227,12 @@ extension Media {
     
     
    
-    func downloadVideo(completion: @escaping (URL, Error?) -> Void) {
+    func downloadVideo(completion: @escaping (URL?, Error?) -> Void) {
         
-        let storageRef = StorageReference.videos.reference().child(uid)
-        
-        storageRef.downloadURL { (url, error) in
+        StorageReference.videos.reference().child(uid).downloadURL { (url, error) in
             
-            completion(url!, error)
+            completion(url, error)
+
         }
         
     }

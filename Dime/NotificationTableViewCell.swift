@@ -16,7 +16,8 @@ class NotificationsTableViewCell: UITableViewCell {
     lazy var timeAgoLabel           : UILabel       = UILabel()
     lazy var mediaButton            : UIButton      = UIButton()
     
-    weak var parentTableView = UIViewController()
+    weak var parentViewController = UIViewController()
+    var currentIndexPath = IndexPath()
     
     lazy var borderWidth                  : CGFloat =       3.0
     lazy var profileImageHeightMultiplier : CGFloat =      (0.75)
@@ -172,7 +173,7 @@ class NotificationsTableViewCell: UITableViewCell {
             
             guard let indexOfMedia = destinationVC.passedDime.media.index(of: media) else { return }
 
-            self.parentTableView?.navigationController?.pushViewController(viewController: destinationVC, animated: true){
+            self.parentViewController?.navigationController?.pushViewController(viewController: destinationVC, animated: true){
                 
                 
                 destinationVC.mediaCollectionView.scrollToItem(at: IndexPath(row: indexOfMedia, section: 0), at: .right, animated: false)
@@ -194,7 +195,7 @@ class NotificationsTableViewCell: UITableViewCell {
         print("Segue to user")
         let destinationVC = ProfileCollectionViewController()
         destinationVC.user = notification.from
-        self.parentTableView?.navigationController?.pushViewController(destinationVC, animated: true)
+        self.parentViewController?.navigationController?.pushViewController(destinationVC, animated: true)
         
     }
     

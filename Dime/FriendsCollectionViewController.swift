@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import DZNEmptyDataSet
 
 private let reuseIdentifier = "dimeCollectionViewCell"
 
@@ -18,7 +19,7 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
     
-      lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+      lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
     var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -29,7 +30,12 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
         backgroundImage.image = #imageLiteral(resourceName: "background_BLUE")
         self.view.insertSubview(backgroundImage, at: 0)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
         setUpCollectionView()
+        self.dimeCollectionView.emptyDataSetDelegate = self
+        self.dimeCollectionView.emptyDataSetSource = self
+        
+        
         self.navBar.delegate = self
         self.view.addSubview(navBar)
         configureTitleLabel()
@@ -54,7 +60,7 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
         viewControllerTitle.textAlignment = NSTextAlignment.left
         viewControllerTitle.textColor = UIColor.white
         viewControllerTitle.font = UIFont.dimeFont(15)
-        viewControllerTitle.text = "        Dimes"
+        viewControllerTitle.text = "        DIMES"
         
     }
     
@@ -83,7 +89,7 @@ class FriendsCollectionViewController: UIViewController, UICollectionViewDelegat
         if let friends = store.currentUser?.friends{
             for friend in friends{
                 Dime.observeFriendsDimes(user: friend, { (dime) in
-                    if !self.passedDimes.contains(dime) {
+                    if !self.passedDimes.contains(dime) && Constants.isDimeWithinTwoDays(videoDate: dime.createdTime){
                         self.passedDimes.insert(dime, at: 0)
                         self.dimeCollectionView.reloadData()
                         
@@ -166,8 +172,15 @@ extension FriendsCollectionViewController : NavBarViewDelegate {
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
+        let destinationVC = SearchDimeViewController()
+        destinationVC.user = store.currentUser
         
-        self.dismiss(animated: true, completion: nil)
+        if let user = store.currentUser{
+            destinationVC.user = user
+        }
+        
+        
+        self.navigationController?.pushViewController(destinationVC, animated: true)
         print("Not sure what the left bar button will do yet.")
     }
     
@@ -177,4 +190,73 @@ extension FriendsCollectionViewController : NavBarViewDelegate {
         self.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
+}
+
+extension FriendsCollectionViewController : DZNEmptyDataSetSource {
+    
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        
+        let image = #imageLiteral(resourceName: "friendsHome")
+        
+        let size = image.size.applying(CGAffineTransform(scaleX: 0.2, y: 0.2))
+        let hasAlpha = true
+        let scale : CGFloat = 0.0
+        
+        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
+        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return scaledImage
+    }
+    
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        let text = "You haven't added Friends"
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFont(24.0),
+                          NSForegroundColorAttributeName : UIColor.darkGray]
+        
+        
+        return NSAttributedString(string: text, attributes: attributes)
+        
+        
+    }
+    
+    func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        
+        var text = "Request friends from your trending feed or search for users using the search icon above. Just hit the diamond located on the top of your friends' stories to request."
+        
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineBreakMode = .byWordWrapping
+        paragraph.alignment = .center
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFont(14.0),
+                          NSForegroundColorAttributeName : UIColor.lightGray,
+                          NSParagraphStyleAttributeName : paragraph]
+        
+        return NSAttributedString(string: text, attributes: attributes)
+        
+    }
+    
+    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControlState) -> NSAttributedString! {
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFontBold(18.0),
+                          NSForegroundColorAttributeName : UIColor.black]
+        
+        return NSAttributedString(string: "Add a friend today!👬", attributes: attributes)
+    }
+    
+    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
+        return UIColor.white
+    }
+}
+
+
+extension FriendsCollectionViewController : DZNEmptyDataSetDelegate {
+    
+    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
+        return true
+    }
 }

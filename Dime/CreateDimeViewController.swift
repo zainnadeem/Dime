@@ -120,6 +120,7 @@ class CreateDimeViewController: UIViewController {
     
     func updateDimeInfo(){
         if self.store.currentDime != nil {
+            
             store.getCurrentDime()
             let dateCurrentDimeWasCreated = self.store.currentDime?.createdTime
             let date = Constants.dateFormatter().date(from: dateCurrentDimeWasCreated!)

@@ -28,14 +28,16 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
         view.backgroundColor = UIColor.clear
         view.isOpaque = false
         searchBar.becomeFirstResponder()
-        
+
         if let friends = userForView?.friends {
             UsersToSearch = friends
-    }
+            }
+        
 
     
         
 }
+
 
     // Mark - UITableView
     
@@ -79,8 +81,11 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
             user = self.UsersToSearch[indexPath.row]
         }
         
+     
         taggingViewController?.media?.usersTagged.append(user)
         taggingViewController?.tableView.reloadData()
+ 
+        
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -100,11 +105,15 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         taggingViewController?.hideButtons()
+    
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        taggingViewController?.unhideButtons()
+        
+            taggingViewController?.hideButtons()
+        
     }
     
 }

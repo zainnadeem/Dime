@@ -22,7 +22,9 @@ class FriendRequestTableViewCell: UITableViewCell {
     lazy var ignoreFriendButton           : UIButton      = UIButton()
     lazy var confirmFriendButton          : UIButton      = UIButton()
     
-    weak var parentTableView = UIViewController()
+    weak var parentTableView = UITableView()
+    weak var parentViewController = UIViewController()
+    var currentIndexPath = IndexPath()
     
     lazy var borderWidth                  : CGFloat =       3.0
     lazy var profileImageHeightMultiplier : CGFloat =      (0.75)
@@ -102,6 +104,9 @@ class FriendRequestTableViewCell: UITableViewCell {
         confirmFriendButton.setImage(#imageLiteral(resourceName: "FriendsHomeGrayedOut"), for: .normal)
         print("Ignored Friend request")
         
+        
+        self.deleteRow()
+        
     }
     
     func confirmFriendButtonTapped(){
@@ -116,8 +121,29 @@ class FriendRequestTableViewCell: UITableViewCell {
         for id in self.notification.from.deviceTokens{
             OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) accepted your friend request!"], "subtitle" : ["en" : "New Friend!"], "include_player_ids" : [id]])
         }
- 
+        
+    
+        self.deleteRow()
+        
     }
+    
+    func deleteRow(){
+        
+        
+        let parentView = self.parentViewController as! NotificationTableViewController
+        parentView.notifications.remove(at: currentIndexPath.row)
+        self.parentTableView?.deleteRows(at: [currentIndexPath], with: .fade)
+        
+        UIView.performWithoutAnimation({
+            let loc = parentTableView?.contentOffset
+            parentTableView?.reloadRows(at: [currentIndexPath], with: .none)
+            parentTableView?.contentOffset = loc!
+        })
+        
+        self.store.currentUser?.deleteNotification(notification: notification)
+    }
+    
+
     
     
     func updateUI()
@@ -166,7 +192,7 @@ class FriendRequestTableViewCell: UITableViewCell {
         print("Segue to user")
         let destinationVC = ProfileCollectionViewController()
         destinationVC.user = notification.from
-        self.parentTableView?.navigationController?.pushViewController(destinationVC, animated: true)
+        self.parentViewController?.navigationController?.pushViewController(destinationVC, animated: true)
         
     }
     

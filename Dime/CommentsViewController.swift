@@ -173,7 +173,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         
         for id in self.media.createdBy.deviceTokens{
-            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) \(type) your post!"], "subtitle" : ["en" : self.currentUser.username], "include_player_ids" : [id]])
+            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) \(type) your post!"], "headings" : ["en" : "Comment!"], "include_player_ids" : [id]])
         }
     }
 

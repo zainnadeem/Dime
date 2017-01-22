@@ -16,6 +16,7 @@ class EditingViewController: UIViewController {
     let store = DataStore.sharedInstance
     var passedDime: Dime!
     var dime: Dime?
+    let limitLength = 30
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
     
@@ -153,6 +154,13 @@ extension EditingViewController: UITextFieldDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
         
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    guard let text = textField.text else { return true }
+    let newLength = text.characters.count + string.characters.count - range.length
+    return newLength <= limitLength // Bool
+    
     }
  
 }

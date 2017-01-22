@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import DZNEmptyDataSet
 
 private let reuseIdentifier = "PopularTableViewCell"
 
@@ -18,7 +19,7 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
     var viewControllerIcon: UIButton = UIButton()
     
     lazy var tableView : UITableView = UITableView()
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +40,12 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         configureTitleLabel()
         configureTitleIcon()
         setUpTableView()
+        
+        self.tableView.emptyDataSetDelegate = self
+        self.tableView.emptyDataSetSource = self
+        
+        
+        
         fetchUsers()
 
     }
@@ -50,6 +57,8 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
                     if !self.usersFriends.contains(friend) {
                         self.usersFriends.insert(friend, at: 0)
                         self.usersFriends = sortByAverageLikes(self.usersFriends)
+                        if !usersFriends.contains(self.store.currentUser!){usersFriends.append(self.store.currentUser!)}
+                        if usersFriends.count == 1 { usersFriends.remove(at: 0)}
                         self.tableView.reloadData()
                         
                     }
@@ -57,8 +66,10 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
             }
         }
     
+    
     override func viewWillAppear(_ animated: Bool) {
-        fetchUsers()
+        self.store.currentUser?.updateAverageLikes()
+        self.fetchUsers()
     }
     
     func setUpTableView(){
@@ -72,7 +83,10 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         self.tableView.backgroundColor = UIColor.clear
         self.tableView.separatorColor = UIColor.black
+        
+        
         tableView.tableFooterView = UIView()
+        
     }
     
     
@@ -158,7 +172,15 @@ extension PopularFeedTableViewController : NavBarViewDelegate {
     
     func leftBarButtonTapped(_ sender: AnyObject) {
         
-        self.dismiss(animated: true, completion: nil)
+        let destinationVC = SearchDimeViewController()
+        destinationVC.user = store.currentUser
+        
+        if let user = store.currentUser{
+            destinationVC.user = user
+        }
+        
+        
+        self.navigationController?.pushViewController(destinationVC, animated: true)
         print("Not sure what the left bar button will do yet.")
     }
     
@@ -169,3 +191,77 @@ extension PopularFeedTableViewController : NavBarViewDelegate {
     }
     
 }
+
+extension PopularFeedTableViewController : DZNEmptyDataSetSource {
+    
+    func verticalOffset(forEmptyDataSet scrollView: UIScrollView!) -> CGFloat {
+        return  -80
+    }
+    
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        
+        let image = #imageLiteral(resourceName: "popularHome")
+        
+        let size = image.size.applying(CGAffineTransform(scaleX: 0.2, y: 0.2))
+        let hasAlpha = true
+        let scale : CGFloat = 0.0
+        
+        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
+        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return scaledImage
+    }
+    
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        let text = "The Popular Page"
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFont(24.0),
+                          NSForegroundColorAttributeName : UIColor.darkGray]
+        
+        
+        return NSAttributedString(string: text, attributes: attributes)
+        
+        
+    }
+    
+    func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        
+        var text = "This is where stars are born. See which one of your friends gets the most likes per post."
+        
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineBreakMode = .byWordWrapping
+        paragraph.alignment = .center
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFont(14.0),
+                          NSForegroundColorAttributeName : UIColor.lightGray,
+                          NSParagraphStyleAttributeName : paragraph]
+        
+        return NSAttributedString(string: text, attributes: attributes)
+        
+    }
+    
+    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControlState) -> NSAttributedString! {
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFontBold(18.0),
+                          NSForegroundColorAttributeName : UIColor.black]
+        
+        return NSAttributedString(string: "Let the games begin!🎖", attributes: attributes)
+    }
+    
+    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
+        return UIColor.white
+    }
+}
+
+
+extension PopularFeedTableViewController : DZNEmptyDataSetDelegate {
+    
+    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
+        return false
+    }
+}
+

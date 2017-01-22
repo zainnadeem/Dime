@@ -242,6 +242,13 @@ extension User {
         ref.setValue(notification.toDictionary())
         
     }
+    
+    func deleteNotification(notification: Notification){
+        self.notifications.append(notification)
+        let ref = DatabaseReference.users(uid: uid).reference().child("notifications/\(notification.uid)")
+        ref.setValue(nil)
+        
+    }
 
     
     func observeNewNotification(_ completion: @escaping (Notification) -> Void){
@@ -252,6 +259,9 @@ extension User {
             completion(notification)
         })
     }
+    
+    
+    
 
    func UserFromSnapshot(_ snapshot : FIRDataSnapshot, uid : String) -> User? {
         
@@ -283,6 +293,15 @@ extension User {
         
         
         
+    }
+    
+    
+    class func observeNewUser(_ completion: @escaping (User) -> Void) {
+        
+        DatabaseReference.allUsers.reference().observe(.childAdded, with: { (snapshot) in
+            let user = User(dictionary: snapshot.value as! [String : AnyObject])
+            completion(user)
+        })
     }
 
 
@@ -323,12 +342,15 @@ extension User {
             case .increment:
                 self.totalLikes += 1
                 ref.setValue(self.totalLikes)
+                if currentUser.friends.contains(self){
                 userFriendRef.setValue(self.totalLikes)
-                
+                }
             case .decrement:
                 self.totalLikes -= 1
                 ref.setValue(self.totalLikes)
-                userFriendRef.setValue(self.totalLikes)
+                if currentUser.friends.contains(self){
+                    userFriendRef.setValue(self.totalLikes)
+                }
             }
             
             self.updateAverageLikes()
@@ -347,9 +369,10 @@ extension User {
         ref.observeSingleEvent(of: .value, with: { total in
             
             self.totalLikes = total.value as! Int
-            
+                if currentUser.friends.contains(self){
                 userFriendRef.setValue(self.totalLikes)
-                self.updateAverageLikes()
+            }
+            self.updateAverageLikes()
         })
         
     }
@@ -367,8 +390,9 @@ extension User {
         self.averageLikesCount = average
         
         ref.setValue(self.averageLikesCount)
+            if currentUser.friends.contains(self){
         userFriendRef.setValue(self.averageLikesCount)
-
+            }
         }
         
         updatePopularRank()

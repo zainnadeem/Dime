@@ -43,8 +43,15 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
     
     func dimePostAlert(title: String, message: String, buttonTitle: String) {
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: buttonTitle, style: .default, handler: nil)
+       
+        let action = UIAlertAction(title: buttonTitle, style: .default, handler: {
+            action in
+            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+        
+        })
+        
         alertVC.addAction(action)
+        
         present(alertVC, animated: true, completion: nil)
     }
     
@@ -72,8 +79,10 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
                 self.cache?.setObject(coverImage, forKey: "\(currentDime.uid)-\(currentDime.createdTime)-coverImage")
             })
             
+            
             currentDime.updateOrCreateDime(completion: { (error) in
                 
+            
             })
     
     
@@ -228,6 +237,10 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
             
             
             footerView.coverPhotoImage.image = coverPhoto
+            if footerView.coverPhotoImage.image != nil {
+                footerView.coverLabel.text = ""
+            }
+            
             return footerView
             
         default:
@@ -365,7 +378,7 @@ extension MediaCollectionViewController : NavBarViewDelegate {
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
-        self.dismiss(animated: true, completion: nil)
+        self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
         print("Not sure what the left bar button will do yet.")
     }
     
