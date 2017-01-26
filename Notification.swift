@@ -10,10 +10,11 @@ import Foundation
 import Firebase
 import UIKit
 
-enum NotificationType {
-    case like
-    case comment
-    case friendRequest
+enum NotificationType: String {
+    case like = "liked"
+    case superLike = "super liked"
+    case comment = "commented on"
+    case friendRequest = "friend Request"
 }
 
 
@@ -25,11 +26,11 @@ class Notification{
     var from: User
     var toUser: String
     var caption: String
-    var notificationType: String
+    var notificationType: NotificationType
     var ref: FIRDatabaseReference
     
     
-    init(dimeUID: String, mediaUID: String, toUser: String, from: User, caption: String, notificationType: String) {
+    init(dimeUID: String, mediaUID: String, toUser: String, from: User, caption: String, notificationType: NotificationType) {
         self.mediaUID = mediaUID
         self.dimeUID = dimeUID
         self.from = from
@@ -49,7 +50,7 @@ class Notification{
         uid = dictionary["uid"] as! String
         createdTime = dictionary["createdTime"] as! String
         caption = dictionary["caption"] as! String
-        notificationType = dictionary["notificationType"] as! String
+        notificationType = NotificationType(rawValue: dictionary["notificationType"] as! String)!
         
         let fromDictionary = dictionary["from"] as! [String : Any]
         from = User(dictionary: fromDictionary)
@@ -62,6 +63,15 @@ class Notification{
     
     func save(){
         ref.setValue(toDictionary())
+        
+//        DatabaseReference.users(uid: toUser).reference().observe(.value, with: { (snapshot) in
+//            
+//            let user = User(dictionary: snapshot.value as! [String : Any])
+//            
+//            user.trimNotifications()
+//            
+//        })
+
     }
     
     func toDictionary() -> [String : Any]
@@ -70,7 +80,7 @@ class Notification{
             "mediaUID" : mediaUID,
             "dimeUID"  : dimeUID,
             "uid" : uid,
-            "notificationType" : notificationType,
+            "notificationType" : notificationType.rawValue,
             "toUser" : toUser,
             "createdTime" : createdTime,
             "from" : from.toDictionary(),

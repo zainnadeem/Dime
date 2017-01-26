@@ -246,7 +246,6 @@ class Dime {
         return [
             "uid" : uid,
             "caption" : caption,
-            "createdTime" : createdTime,
             "createdBy" : createdBy.toDictionary()
 
         ]

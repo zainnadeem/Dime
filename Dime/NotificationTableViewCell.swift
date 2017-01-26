@@ -100,11 +100,11 @@ class NotificationsTableViewCell: UITableViewCell {
         self.mediaButton.setImage(nil, for: .normal)
         
         switch self.notification.notificationType {
-        case "liked":
+        case .like  :
             self.mediaButton.setImage(#imageLiteral(resourceName: "friendsHome"), for: .normal)
-        case "superliked":
+        case .superLike:
             self.mediaButton.setImage(#imageLiteral(resourceName: "topDimesHome"), for: .normal)
-        case "commented on":
+        case .comment:
             self.mediaButton.setImage(#imageLiteral(resourceName: "commentNotification"), for: .normal)
         default:
             print("unable to determine media")
@@ -153,6 +153,12 @@ class NotificationsTableViewCell: UITableViewCell {
         
         DatabaseReference.dimes.reference().child("\(notification.dimeUID)").observeSingleEvent(of: .value, with: { (snapshot) in
            
+            if snapshot.value is NSNull {
+                
+               self.alert(title: "Sorry!", message: "This media no longer exists", buttonTitle: "Okay")
+                
+            }else{
+            
             let dime = Dime(dictionary: snapshot.value as! [String : AnyObject])
             
             let destinationVC = ViewMediaCollectionViewController()
@@ -178,13 +184,14 @@ class NotificationsTableViewCell: UITableViewCell {
                 
                 destinationVC.mediaCollectionView.scrollToItem(at: IndexPath(row: indexOfMedia, section: 0), at: .right, animated: false)
                 
-                if self.notification.notificationType == "commented on" {
+                if self.notification.notificationType == .comment {
                     let cell = destinationVC.mediaCollectionView.cellForItem(at: IndexPath(row: indexOfMedia, section: 0)) as?ViewMediaCollectionViewCell
                     cell?.showComments()
                 
                 }
             }
         
+            }
         })
 
         
@@ -207,6 +214,14 @@ class NotificationsTableViewCell: UITableViewCell {
         self.profileImage.layer.borderWidth = borderWidth
         self.profileImage.clipsToBounds = true
     }
+
+    func alert(title: String, message: String, buttonTitle: String) {
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: buttonTitle, style: .default, handler: nil)
+        alertVC.addAction(action)
+        self.parentViewController?.present(alertVC, animated: true, completion: nil)
+    }
+
 }
 
 fileprivate func parseDate(_ date : String) -> String {

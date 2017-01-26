@@ -27,6 +27,8 @@ class LoginTableViewController: UITableViewController {
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
+        
+       
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -39,6 +41,8 @@ class LoginTableViewController: UITableViewController {
         alertVC.addAction(action)
         present(alertVC, animated: true, completion: nil)
     }
+    
+    
     
     
     @IBAction func backDidTap(_ sender: AnyObject) {
@@ -59,17 +63,72 @@ class LoginTableViewController: UITableViewController {
                     self.alert(title: "Oops!", message: error.localizedDescription, buttonTitle: "OK")
                 }else{
                     self.dismissKeyboard()
-                    self.dismiss(animated: true, completion: { 
-                        NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
-                    })
+                    
+                    
+                    self.performSegue(withIdentifier: "showHomeViewController", sender: self)
+                    
+                    NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
+                    
+
                 }
             })
         }else{
             self.alert(title: "Oops!", message: "Please enter a valid email address and password", buttonTitle: "Okay")
         }
+ 
+    }
+    
+    @IBAction func forgotPasswordDidTap(_ sender: Any) {
+        self.sendPasswordResetEmail()
+
+    }
+    
+    func sendPasswordResetEmail(){
+
+        let alertVC = UIAlertController(title: "No worries", message: "We can reset your password with a few simple steps. Please enter your email address.", preferredStyle: .alert)
         
+
         
+        alertVC.addTextField(configurationHandler: configurationTextField)
         
+        let reset = UIAlertAction(title: "reset", style: .default, handler: {
+            action in
+            
+            self.resetPasswordWithEmail((alertVC.textFields?[0].text!)!)
+            
+        })
+       
+        let cancel = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
+        
+        alertVC.addAction(reset)
+        alertVC.addAction(cancel)
+        present(alertVC, animated: true, completion: nil)
+        
+    }
+    
+    func configurationTextField(textField: UITextField!){
+        print("generating the TextField")
+        textField.placeholder = "Email Address"
+    }
+    
+    func resetPasswordWithEmail(_ email: String){
+        FIRAuth.auth()?.sendPasswordReset(withEmail: email) { error in
+            if let error = error {
+                self.alert(title: "Sorry", message: "We did not recognize that email address.", buttonTitle: "okay")
+            } else {
+                self.alert(title: "Success", message: "An email to reset your password has been sent.", buttonTitle: "okay")
+            }
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showHomeViewController" {
+            
+            let destinationVC = segue.destination as! TabBarViewController
+            destinationVC.selectedIndex = 2
+            
+            
+        }
     }
 }
 

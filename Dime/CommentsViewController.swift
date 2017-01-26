@@ -160,20 +160,21 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         //add to user
         let ref = DatabaseReference.users(uid: media.createdBy.uid).reference().child("dimes/\(media.dimeUID)/media/\(media.uid)/comments/\(comment.uid)")
         ref.setValue(comment.toDictionary())
-        createNotification(type: "commented on")
+        createNotification(type: .comment)
         self.captionTextView.text = ""
         self.dismissKeyboard()
         self.tableView.reloadData()
     }
 
-    func createNotification(type: String){
+    func createNotification(type: NotificationType){
         
-        let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) \(type) your \(self.media.type)!", notificationType: type)
+        let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) \(type)ed on your \(self.media.type)!", notificationType: type)
+        
         notification.save()
         
         
         for id in self.media.createdBy.deviceTokens{
-            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) \(type) your post!"], "headings" : ["en" : "Comment!"], "include_player_ids" : [id]])
+            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) \(type)ed on your post!"], "headings" : ["en" : "Comment!"], "include_player_ids" : [id]])
         }
     }
 

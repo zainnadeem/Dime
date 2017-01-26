@@ -24,7 +24,11 @@ extension UIFont {
     
     class func dimeFontItalic(_ size : CGFloat) -> UIFont {
         return UIFont(name: "Avenir-MediumOblique", size: size)!
+        
+        
     }
+    
+    
 
     
 
@@ -42,7 +46,11 @@ extension UIColor {
     class func dimeLightRed() -> UIColor {
         return UIColor(red: 196.0/255.0, green: 119.0/255.0, blue: 110.0/255.0, alpha: 1.0)
     }
-        
+    
+    class func dimeDarkBlue() -> UIColor {
+        return UIColor(red: 39.0/255.0, green: 108.0/255.0, blue: 141.0/255.0, alpha: 1.0)
+    }
+    
     
     
     
@@ -210,6 +218,43 @@ extension UINavigationController {
         CATransaction.commit()
     }
     
+}
+
+extension UIWindow {
+func setRootViewController(_ newRootViewController: UIViewController, transition: CATransition? = nil) {
+    
+    let previousViewController = rootViewController
+    
+    if let transition = transition {
+        // Add the transition
+        layer.add(transition, forKey: kCATransition)
+    }
+    
+    rootViewController = newRootViewController
+    
+    // Update status bar appearance using the new view controllers appearance - animate if needed
+    if UIView.areAnimationsEnabled {
+        UIView.animate(withDuration: CATransaction.animationDuration(), animations: {
+            newRootViewController.setNeedsStatusBarAppearanceUpdate()
+        })
+    } else {
+        newRootViewController.setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    /// The presenting view controllers view doesn't get removed from the window as its currently transistioning and presenting a view controller
+    if let transitionViewClass = NSClassFromString("UITransitionView") {
+        for subview in subviews where subview.isKind(of: transitionViewClass) {
+            subview.removeFromSuperview()
+        }
+    }
+    if let previousViewController = previousViewController {
+        // Allow the view controller to be deallocated
+        previousViewController.dismiss(animated: false) {
+            // Remove the root view in case its still showing
+            previousViewController.view.removeFromSuperview()
+        }
+    }
+}
 }
 
 

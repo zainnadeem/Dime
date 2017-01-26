@@ -107,7 +107,9 @@ class PopularTableViewCell: UITableViewCell {
         setImageViewCircular()
         
         poularRank.text = user.averageLikesCount.description
+        poularRank.textColor = UIColor.white
         poularRank.textAlignment = .center
+        
         fullName.text = user.fullName
         fullName.textColor = UIColor.black
         fullName.font = UIFont.dimeFontBold(12)

@@ -224,7 +224,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         contentView.addSubview(captionLabel)
         
         self.captionLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.captionLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 100).isActive = true
+        self.captionLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 75).isActive = true
         self.captionLabel.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
         
         self.captionLabel.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.07).isActive = true
@@ -232,7 +232,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.captionLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8).isActive = true
         
         captionLabel.textAlignment = .center
-        captionLabel.font = UIFont.dimeFont(14)
+        captionLabel.font = UIFont.dimeFontBold(14)
         captionLabel.textColor = UIColor.black
     }
     
@@ -348,7 +348,7 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.viewCommentsButton.translatesAutoresizingMaskIntoConstraints = false
         self.viewCommentsButton.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
         self.viewCommentsButton.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, multiplier: 0.03).isActive = true
-        self.viewCommentsButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8).isActive = true
+        self.viewCommentsButton.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.4).isActive = true
         self.viewCommentsButton.topAnchor.constraint(equalTo: self.likeButton.bottomAnchor, constant: 7).isActive = true
         
         viewCommentsButton.titleLabel?.textAlignment = .center
@@ -414,7 +414,7 @@ extension ViewMediaCollectionViewCell{
             dime.updateLikes(.increment)
             media.updateLikes(.increment)
             
-            createNotification(type: "liked")
+            createNotification(type: NotificationType.like)
             
             
             dimeRef.setValue(currentUser.toDictionary())
@@ -431,18 +431,18 @@ extension ViewMediaCollectionViewCell{
         
     }
     
-    func createNotification(type: String){
+    func createNotification(type: NotificationType){
         
-        let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) \(type) your \(self.media.type)!", notificationType: type)
+        let notification = Notification(dimeUID: self.media.dimeUID, mediaUID: self.media.uid, toUser: self.media.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) \(type)d your \(self.media.type)!", notificationType: type)
         
         notification.save()
     
         
-        var heading = type.substring(to: type.index(before: type.endIndex))
+        var heading = type.rawValue.substring(to: type.rawValue.index(before: type.rawValue.endIndex))
         
         
         for id in self.media.createdBy.deviceTokens{
-            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) \(type) your post!"], "headings" : ["en" : "\(heading.capitalized)!"], "include_player_ids" : [id]])
+            OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) \(type)d your post!"], "headings" : ["en" : "\(heading.capitalized)!"], "include_player_ids" : [id]])
         }
     }
     
@@ -475,7 +475,7 @@ extension ViewMediaCollectionViewCell {
             superLikeButton.setImage(#imageLiteral(resourceName: "topDimesHome"), for: .normal)
             isSuperLikedByUser = true
         
-            createNotification(type: "superliked")
+            createNotification(type: NotificationType.superLike)
     }
     
     

@@ -38,7 +38,7 @@ class SignUpTableViewController: UITableViewController {
         fullNameTextField.delegate = self
         usernameTextField.delegate = self
         passwordTextField.delegate = self
-        
+  
     }
     
     @IBAction func createNewAccountDidTap() {
@@ -79,9 +79,10 @@ class SignUpTableViewController: UITableViewController {
                             } else {
                                 self.registerOneSignalToken(user: newUser)
                                 self.dismissKeyboard()
-                                self.dismiss(animated: true, completion: {
-                                    NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
-                                })
+                                
+                                self.performSegue(withIdentifier: "showHomeViewController", sender: self)
+                                
+                                NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
                             }
                         })
                     })
@@ -114,7 +115,15 @@ class SignUpTableViewController: UITableViewController {
         })
     }
     
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showHomeViewController" {
+            
+            let destinationVC = segue.destination as! TabBarViewController
+            destinationVC.selectedIndex = 2
+            
+            
+        }
+    }
     
 }
 

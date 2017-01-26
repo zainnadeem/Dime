@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class SearchUserViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate {
+class SearchUserViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate, UITextFieldDelegate {
     
     weak var taggingViewController : TaggingViewController?
     
@@ -32,11 +32,12 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
         if let friends = userForView?.friends {
             UsersToSearch = friends
             }
-        
 
-    
         
 }
+    override func viewDidDisappear(_ animated: Bool) {
+        taggingViewController?.unhideButtons()
+    }
 
 
     // Mark - UITableView
@@ -85,7 +86,7 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
         taggingViewController?.media?.usersTagged.append(user)
         taggingViewController?.tableView.reloadData()
  
-        
+        searchBar.resignFirstResponder()
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -101,6 +102,7 @@ class SearchUserViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
         self.dismiss(animated: true, completion: nil)
     }
     

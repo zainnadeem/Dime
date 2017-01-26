@@ -36,7 +36,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.dimeCollectionView.emptyDataSetSource = self
         
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-        backgroundImage.image = #imageLiteral(resourceName: "background_GREY")
+        backgroundImage.image = #imageLiteral(resourceName: "background_White")
         self.view.insertSubview(backgroundImage, at: 0)
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
@@ -59,7 +59,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         guard let profileUser = self.user else { return }
         if profileUser == self.store.currentUser {
           navBar.rightButton.image = #imageLiteral(resourceName: "icon-settings-filled")
-          viewAllMessagesButton.setImage(#imageLiteral(resourceName: "icon-comment"), for: .normal)
+          viewAllMessagesButton.setImage(#imageLiteral(resourceName: "icon-chatWhite"), for: .normal)
          viewAllMessagesButton.imageView?.tintColor = UIColor.white
           navBar.rightButton.isEnabled = true
           viewAllMessagesButton.isEnabled = true
@@ -87,18 +87,19 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.viewControllerTitle.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.07).isActive = true
         self.viewControllerTitle.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         
-        viewControllerTitle.backgroundColor = UIColor.darkGray
+        viewControllerTitle.backgroundColor = UIColor.dimeDarkBlue()
         viewControllerTitle.textAlignment = NSTextAlignment.left
         viewControllerTitle.textColor = UIColor.white
-        viewControllerTitle.font = UIFont.dimeFont(15)
+        viewControllerTitle.font = UIFont.dimeFontBold(15)
         if let currentUser = self.user{
-        viewControllerTitle.text = "        \(currentUser.username)"
+        viewControllerTitle.text = "\(currentUser.username)'s Profile"
+        viewControllerTitle.textAlignment = .center
         }
     }
     
     func configureTitleIcon() {
         self.view.addSubview(viewControllerIcon)
-        viewControllerIcon.setImage(#imageLiteral(resourceName: "icon-diamond-black"), for: .normal)
+        viewControllerIcon.titleLabel?.text = "👤"
         
         
         self.viewControllerIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -169,20 +170,31 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         layout.scrollDirection = UICollectionViewScrollDirection.horizontal
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
+        
         dimeCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        
+        
+        
         dimeCollectionView.dataSource = self
         dimeCollectionView.delegate = self
         self.dimeCollectionView.register(DimeCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         dimeCollectionView.backgroundColor = UIColor.clear
         self.view.addSubview(dimeCollectionView)
+        
+//        self.dimeCollectionView.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        self.dimeCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+//        self.dimeCollectionView.topAnchor.constraint(equalTo: self.viewControllerTitle.topAnchor).isActive = true
+//        self.dimeCollectionView.bottomAnchor.constraint(equalTo: self.viewControllerTitle.bottomAnchor).isActive = true
+//        self.dimeCollectionView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
+        
         dimeCollectionView.isPagingEnabled = true
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let collectionViewWidth = self.view
-            .bounds.size.width
-        let collectionViewHeight = self.view
-            .bounds.size.height
+        
+        let collectionViewWidth = self.view.bounds.size.width
+        let collectionViewHeight = self.view.bounds.size.height
         return CGSize(width: collectionViewWidth, height: collectionViewHeight)
     }
     

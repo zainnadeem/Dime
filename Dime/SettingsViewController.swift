@@ -80,10 +80,15 @@ class SettingsViewController: QuickTableViewController {
             }
             
             
-            self.view.window!.rootViewController?.dismiss(animated: false, completion: { 
-
-    
-            })
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            
+            let loginVC = storyboard.instantiateViewController(withIdentifier: "initialLogin")
+            
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            
+            let transition = CATransition()
+            transition.type = kCATransitionFade
+            appDelegate.window!.setRootViewController(loginVC, transition: transition)
 
 
             

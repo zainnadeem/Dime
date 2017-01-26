@@ -105,6 +105,9 @@ class DataStore {
         })
         
     }
+    
+    
+   
 
         func alreadyAdded(_ chat: Chat) -> Bool {
             for c in self.chats {
@@ -115,6 +118,28 @@ class DataStore {
             
             return false
         }
+    
+    func updateFriends(){
+        guard let user = currentUser else { return }
+        for friend in user.friends{
+            friend.getTotalLikes()
+        }
+        
+    }
+    
+    
+    
+    func updateFriendsRefresh(_ completion: @escaping () -> Void){
+       
+        guard let user = currentUser else { return }
+        for friend in user.friends{
+            friend.getTotalLikes()
+        }
+        
+        completion()
+        
+    }
+
     
     func registerOneSignalToken(user: User){
         

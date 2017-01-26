@@ -212,9 +212,21 @@ extension User {
         self.friends.append(user)
         let ref = DatabaseReference.users(uid: uid).reference().child("friends/\(user.uid)")
         ref.setValue(user.toDictionary())
-        
-        
     }
+     
+     func updatePopularStats(completion: @escaping (Error?) -> Void){
+
+           DatabaseReference.users(uid: uid).reference().observeSingleEvent(of: .value, with: { (snapshot) in
+                   if let userDict = snapshot.value as? [String : Any] {
+                    
+                    self.totalLikes = userDict["totalLikes"] as! Int
+                    self.averageLikesCount = userDict["averageLikesCount"] as! Int
+                    self.mediaCount = userDict["mediaCount"] as! Int
+
+               }
+          })
+          
+     }
     
     func unFriendUser(user: User){
         self.friends = self.friends.filter() {$0 !== user}
@@ -260,8 +272,9 @@ extension User {
         })
     }
     
-    
-    
+     
+     
+     
 
    func UserFromSnapshot(_ snapshot : FIRDataSnapshot, uid : String) -> User? {
         
@@ -303,11 +316,16 @@ extension User {
             completion(user)
         })
     }
-
-
-
-
+     
+     func observeFriends(_ completion: @escaping (User) -> Void) {
+          
+          DatabaseReference.users(uid: uid).reference().observe(.value, with: { (snapshot) in
+               let user = User(dictionary: snapshot.value as! [String : AnyObject])
+               completion(user)
+          })
+     }
 }
+
 
 //update media count, Average & popular rank
 extension User {
@@ -360,22 +378,45 @@ extension User {
         
     }
     
+     
+     
+     
+     
     func getTotalLikes(){
         guard let currentUser = self.store.currentUser else { return }
         
         let ref = DatabaseReference.users(uid: uid).reference().child("totalLikes")
-        let userFriendRef = DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(uid)/totalLikes")
+     
+        let mediaCountRef = DatabaseReference.users(uid: uid).reference().child("mediaCount")
+     
+     
+       let userFriendRef = DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(uid)/totalLikes")
+     
+        let userFriendMediaCountRef = DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(uid)/mediaCount")
         
         ref.observeSingleEvent(of: .value, with: { total in
-            
-            self.totalLikes = total.value as! Int
-                if currentUser.friends.contains(self){
-                userFriendRef.setValue(self.totalLikes)
-            }
-            self.updateAverageLikes()
+          
+               mediaCountRef.observeSingleEvent(of: .value, with: { count in
+                    
+                    self.totalLikes = total.value as! Int
+                    if currentUser.friends.contains(self){
+                         userFriendRef.setValue(self.totalLikes)
+                    }
+                    
+                    self.mediaCount = count.value as! Int
+                    if currentUser.friends.contains(self){
+                         userFriendMediaCountRef.setValue(self.mediaCount)
+                    }
+                    
+                    self.updateAverageLikes()
         })
-        
-    }
+     })
+    
+     }
+     
+ 
+     
+
     
     func updateAverageLikes() {
         guard let currentUser = self.store.currentUser else { return }
@@ -385,7 +426,7 @@ extension User {
         let userFriendRef = DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(uid)/averageLikesCount")
         
         if totalLikes > 0 {
-        
+
         let average = (self.totalLikes / self.mediaCount) as Int
         self.averageLikesCount = average
         
@@ -430,6 +471,28 @@ extension User {
         
         }
     }
+     
+     
+     func getTotalLikesForFriend(friend: User){
+          guard let currentUser = self.store.currentUser else { return }
+          
+          let ref = DatabaseReference.users(uid: friend.uid).reference().child("totalLikes")
+          let userFriendRef = DatabaseReference.users(uid: currentUser.uid).reference().child("friends/\(friend.uid)/totalLikes")
+          
+          ref.observeSingleEvent(of: .value, with: { total in
+               
+               friend.totalLikes = total.value as! Int
+               if currentUser.friends.contains(friend){
+                    userFriendRef.setValue(friend.totalLikes)
+               }
+               
+               friend.updateAverageLikes()
+          
+          })
+          
+     }
+     
+ 
 
 }
 

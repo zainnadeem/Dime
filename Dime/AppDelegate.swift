@@ -28,12 +28,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
         if let user = FIRAuth.auth()?.currentUser {
     
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let initialViewController = storyboard.instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
-                 var rootViewController = self.window!.rootViewController as! UINavigationController
-                 rootViewController.pushViewController(initialViewController, animated: true)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let initialViewController = storyboard.instantiateViewController(withIdentifier: "TabBarViewController") as! TabBarViewController
             
-            print("User Logged In")
+            
+        initialViewController.selectedIndex = 2
+        initialViewController.navigationController?.setNavigationBarHidden(true, animated: true)
+            
+        var rootViewController = self.window!.rootViewController as! UINavigationController
+
+        rootViewController.pushViewController(initialViewController, animated: true)
+            
+        print("User Logged In")
             
             
         }else{

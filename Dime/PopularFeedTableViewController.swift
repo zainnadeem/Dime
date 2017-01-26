@@ -17,6 +17,7 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
     var usersFriends: [User] = [User]()
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
+    var refreshControl: UIRefreshControl!
     
     lazy var tableView : UITableView = UITableView()
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
@@ -44,32 +45,54 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         self.tableView.emptyDataSetDelegate = self
         self.tableView.emptyDataSetSource = self
         
-        
-        
+        refreshControl = UIRefreshControl()
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
+        //tableView.addSubview(refreshControl)
+    
+
         fetchUsers()
 
     }
 
+  
+    
+    func refresh(){
+
+    }
+    
+    
     func fetchUsers() {
         self.tableView.reloadData()
         if let friends = store.currentUser?.friends{
             for friend in friends{
                     if !self.usersFriends.contains(friend) {
                         self.usersFriends.insert(friend, at: 0)
-                        self.usersFriends = sortByAverageLikes(self.usersFriends)
                         if !usersFriends.contains(self.store.currentUser!){usersFriends.append(self.store.currentUser!)}
                         if usersFriends.count == 1 { usersFriends.remove(at: 0)}
+                        self.usersFriends = sortByAverageLikes(self.usersFriends)
                         self.tableView.reloadData()
-                        
                     }
                 }
             }
         }
     
     
+    func updateUsers(){
+        self.usersFriends = sortByAverageLikes(self.usersFriends)
+        self.tableView.reloadData()
+    }
+ 
+    
+    
     override func viewWillAppear(_ animated: Bool) {
-        self.store.currentUser?.updateAverageLikes()
-        self.fetchUsers()
+        super.viewWillAppear(true)
+        updateUsers()
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
     }
     
     func setUpTableView(){

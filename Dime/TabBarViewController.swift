@@ -16,6 +16,8 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         self.delegate = self
         self.selectedIndex = tabBarIndex
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
 
         // Do any additional setup after loading the view.
     }
@@ -32,9 +34,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         
         let navController = self.viewControllers?[selectedIndex] as! UINavigationController
         
-        if item == self.tabBar.items?[2]{
-            self.dismiss(animated: false, completion: nil)
-        }
+   
         
         switch selectedIndex {
         case 0:
@@ -50,8 +50,9 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
             destinationVC.dimeCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
             }
         case 2:
-            let destinationVC = navController.viewControllers[0] as! DismissViewController
-            destinationVC.dismiss(animated: true, completion: nil)
+            let destinationVC = navController.viewControllers[0] as! HomeViewController
+            //self.viewDidLoad()
+
         case 3:
             let destinationVC = navController.viewControllers[0] as! TrendingCollectionViewController
             if destinationVC.dimeCollectionView.numberOfItems(inSection: 0) > 1 {
@@ -64,6 +65,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
             if destinationVC.tableView.numberOfRows(inSection: 0) > 1 {
                 destinationVC.tableView.reloadData()
                 destinationVC.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                destinationVC.updateUsers()
             }
         default:
             print("No tab bar selected-- this would be odd to say the least")

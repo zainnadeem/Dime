@@ -93,7 +93,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
        
         
         
-        let mediaImageKey = "\(self.dime.uid)-\(dime.createdTime)-coverImage"
+        let mediaImageKey = "\(self.dime.uid)-coverImage"
         
         if let image = cache?.object(forKey: mediaImageKey) as? UIImage
         {
@@ -211,7 +211,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 action in
                 
                 
-                let notification = Notification(dimeUID: self.dime.uid, mediaUID: self.dime.uid, toUser: self.dime.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) wants to be your friend!", notificationType: "friend request")
+                let notification = Notification(dimeUID: self.dime.uid, mediaUID: self.dime.uid, toUser: self.dime.createdBy.uid, from: self.currentUser, caption: "\(self.currentUser.username) wants to be your friend!", notificationType: .friendRequest)
                 
                 notification.save()
                 
@@ -326,7 +326,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         contentView.addSubview(chatButton)
         chatButton.titleLabel?.font = UIFont.dimeFont(16)
         chatButton.setTitleColor(UIColor.black, for: .normal)
-        chatButton.setImage(#imageLiteral(resourceName: "icon-comment"), for: .normal)
+        chatButton.setImage(#imageLiteral(resourceName: "icon-chatBlack"), for: .normal)
         chatButton.tintColor = UIColor.black
         
         self.chatButton.translatesAutoresizingMaskIntoConstraints = false
@@ -340,7 +340,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     func configurePopularRankButton(){
         contentView.addSubview(popularRankButton)
         popularRankButton.titleLabel?.font = UIFont.dimeFont(16)
-        popularRankButton.setTitleColor(UIColor.black, for: .normal)
+        popularRankButton.setTitleColor(UIColor.white, for: .normal)
        
         popularRankButton.tintColor = UIColor.black
         popularRankButton.addTarget(self, action: #selector(showPopularPage), for: .touchUpInside)
@@ -368,7 +368,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.captionLabel.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.8).isActive = true
         
         captionLabel.textAlignment = .center
-        captionLabel.font = UIFont.dimeFont(14)
+        captionLabel.font = UIFont.dimeFontBold(14)
         captionLabel.textColor = UIColor.black
     }
     
@@ -509,15 +509,14 @@ extension DimeCollectionViewCell {
             openChatView(chat: chat)
         }else{
             
-//            for acc in conversationMembers{
-//                if title == "" {
-//                    title += "\(acc.fullName)"
-//                }else{
-//                    title += " + \(acc.fullName)"
-//                }
-//            }
+            for acc in conversationMembers{
+                if title == "" {
+                    title += "\(acc.fullName)"
+                }else{
+                    title += " + \(acc.fullName)"
+                }
+            }
             
-            title = dime.createdBy.username
             
             let newChat = Chat(users: conversationMembers, title: title, featuredImageUID: dime.createdBy.uid)
             openChatView(chat: newChat)

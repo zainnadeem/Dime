@@ -28,6 +28,8 @@ class TaggingViewController: UIViewController, UITableViewDelegate, UITableViewD
         mediaImageView.contentMode = .scaleAspectFill
     }
     
+ 
+    
    func hideButtons() {
         self.cancelButton.title = ""
         self.doneButton.title = ""
@@ -90,6 +92,11 @@ class TaggingViewController: UIViewController, UITableViewDelegate, UITableViewD
        
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return  self.view.bounds.width / 5
+    }
+    
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
     {

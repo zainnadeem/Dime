@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import NVActivityIndicatorView
 
 class HomeViewController: UIViewController {
     
@@ -15,6 +16,7 @@ class HomeViewController: UIViewController {
     var currentUser: User?
     var store = DataStore.sharedInstance
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+    let activityData = ActivityData()
     
     @IBOutlet weak var topDimesButton: UIButton!
     @IBOutlet weak var topFriendsButton: UIButton!
@@ -28,9 +30,15 @@ class HomeViewController: UIViewController {
         makeButtonsBigger()
         self.navBar.delegate = self
         self.view.addSubview(navBar)
+        NVActivityIndicatorPresenter.sharedInstance.startAnimating(self.activityData)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.tabBarController?.navigationController?.setNavigationBarHidden(true, animated: true)
+        self.tabBarController?.tabBar.isHidden = true
     }
-    
+
+    override func viewWillDisappear(_ animated: Bool) {
+        self.tabBarController?.tabBar.isHidden = false
+    }
 
     func makeButtonsBigger(){
         for button in homeButtons{
@@ -38,13 +46,29 @@ class HomeViewController: UIViewController {
         }
     }
     
-
-
     
+    @IBAction func popularTapped(_ sender: Any) {
+        self.tabBarController?.selectedIndex = 4
+       
+    }
+    
+    @IBAction func trendingTapped(_ sender: Any) {
+        self.tabBarController?.selectedIndex = 3
+    }
+
+    @IBAction func friendsTapped(_ sender: Any) {
+        self.tabBarController?.selectedIndex = 1
+    }
+
     @IBAction func topDimesTapped(_ sender: Any) {
+        self.tabBarController?.selectedIndex = 0
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        self.store.updateFriends()
+        self.tabBarController?.tabBar.isHidden = true
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+         self.tabBarController?.navigationController?.setNavigationBarHidden(true, animated: true)
         
         FIRAuth.auth()?.addStateDidChangeListener({ (auth, user) in
             if let user = user {
@@ -55,20 +79,25 @@ class HomeViewController: UIViewController {
                         self.store.currentDime = nil
                         self.currentUser = User(dictionary: userDict)
                         self.store.currentUser = User(dictionary: userDict)
-                        
+                        NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
                         self.store.registerOneSignalToken(user: self.currentUser!)
                         self.store.getCurrentDime()
                         self.store.observeChats({ (chats) in
   
                         })
+                       
+                    
+                        guard let currentUser = self.store.currentUser else { return }
                         
-                        self.store.currentUser?.updatePopularRank()
+                        
+                    
+                        currentUser.updatePopularRank()
                         //self.enableButtons()
                     }
                 })
                 
             }else {
-                self.performSegue(withIdentifier: Storyboard.showWelcome, sender: nil)
+                print("No User")
             }
         })
        

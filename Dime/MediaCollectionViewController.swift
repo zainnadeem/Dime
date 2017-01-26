@@ -6,6 +6,7 @@
 import UIKit
 import NVActivityIndicatorView
 import SAMCache
+import Firebase
 
 class MediaCollectionViewController: UICollectionViewController, UIGestureRecognizerDelegate
 {
@@ -27,7 +28,7 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
     var cache = SAMCache.shared()
     
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "editIcon"), leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "editIcon"), leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: nil)
 
     var finishedEditing: Bool = Bool()
     
@@ -46,8 +47,17 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
        
         let action = UIAlertAction(title: buttonTitle, style: .default, handler: {
             action in
-            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-        
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarViewController") as! TabBarViewController
+            tabBarVC.selectedIndex = 2
+            tabBarVC.navigationController?.setNavigationBarHidden(true, animated: true)
+            
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            
+            let transition = CATransition()
+            transition.type = kCATransitionFade
+            appDelegate.window!.setRootViewController(tabBarVC, transition: transition)
         })
         
         alertVC.addAction(action)
@@ -74,9 +84,10 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
                 coverImage = currentDime.media[0].mediaImage
             }
         
+        
         let firImage = FIRImage(image: coverImage)
-            firImage.save("\(currentDime.uid)-\(currentDime.createdTime)-coverImage", completion: { error in
-                self.cache?.setObject(coverImage, forKey: "\(currentDime.uid)-\(currentDime.createdTime)-coverImage")
+            firImage.save("\(currentDime.uid)-coverImage", completion: { error in
+                self.cache?.setObject(coverImage, forKey: "\(currentDime.uid)-coverImage")
             })
             
             
@@ -91,6 +102,10 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         }
     }
 
+    
+
+    
+    
     @IBAction func changeCoverPhoto(_ sender: Any) {
         
     }

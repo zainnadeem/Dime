@@ -59,8 +59,10 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
                 self.notifications.insert(notification, at: 0)
                 self.notifications = sortByMostRecentlyCreated(self.notifications)
                 self.tableView.reloadData()
+                
             }
         }
+        
     }
 
     // Mark - UITableView
@@ -76,11 +78,12 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        return self.notifications.count
         
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if self.notifications[indexPath.row].notificationType == "friend request" {
+        if self.notifications[indexPath.row].notificationType == NotificationType.friendRequest {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: friendRequestreuseIdentifier, for: indexPath) as! FriendRequestTableViewCell
             
