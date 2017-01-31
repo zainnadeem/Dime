@@ -236,6 +236,10 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 
                 self.currentUser.unTopFriendUser(user: self.dime.createdBy)
                 self.currentUser.unFriendUser(user: self.dime.createdBy)
+                
+                self.dime.createdBy.unFriendUser(user: self.currentUser)
+                self.dime.createdBy.unFriendUser(user: self.currentUser)
+                
                 self.configureFriendButton()
                 
                 

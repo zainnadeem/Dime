@@ -83,7 +83,7 @@ extension MediaPickerHelper: UIImagePickerControllerDelegate, UINavigationContro
         let mediaType = info[UIImagePickerControllerMediaType] as! String
         if mediaType == kUTTypeImage as String {
             // photo
-            let snapshotImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+            let snapshotImage = info[UIImagePickerControllerEditedImage] as! UIImage
             completion(snapshotImage)
         } else {
             // video

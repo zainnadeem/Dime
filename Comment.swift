@@ -79,10 +79,6 @@ func == (lhs: Comment, rhs: Comment) -> Bool {
 }
 
 
-//func ==(lhs: Comment, rhs: Comment) -> Bool {
-//    return lhs.savedPathURL == rhs.savedPathURL
-//}
-
 func >(lhs: Comment, rhs: Comment) -> Bool {
     
     let lhsComment = Constants.dateFormatter().date(from: lhs.createdTime)

@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import DZNEmptyDataSet
 import SAMCache
+import OneSignal
 
 private let reuseIdentifier = "dimeCollectionViewCell"
 
@@ -23,6 +24,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
     var viewAllMessagesButton: UIButton = UIButton()
+    var friendDiamond: UIButton = UIButton()
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage:nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
@@ -45,35 +47,54 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.view.addSubview(navBar)
         configureTitleLabel()
         configureTitleIcon()
-        configureMessagesIcon()
-        showUserSpecificButtons()
+        
+
+        
+        configureUserSpecificButtons()
+        
         fetchDimes()
         
+        if self.passedDimes.isEmpty{
+        self.configureMessagesIcon()
+        self.configureFriendDiamond()
+        }
         
         
         
     }
     
-    func showUserSpecificButtons(){
+    func configureUserSpecificButtons(){
         
         guard let profileUser = self.user else { return }
+        
         if profileUser == self.store.currentUser {
+          
           navBar.rightButton.image = #imageLiteral(resourceName: "icon-settings-filled")
-          viewAllMessagesButton.setImage(#imageLiteral(resourceName: "icon-chatWhite"), for: .normal)
-         viewAllMessagesButton.imageView?.tintColor = UIColor.white
           navBar.rightButton.isEnabled = true
-          viewAllMessagesButton.isEnabled = true
+         
+         self.viewAllMessagesButton.removeTarget(self, action: #selector(startChat), for: .touchUpInside)
+         self.viewAllMessagesButton.addTarget(self, action: #selector(startChat), for: .touchUpInside)
+    
+        
             
         }else{
+            
             navBar.rightButton.image = nil
-            viewAllMessagesButton.setImage(nil, for: .normal)
             navBar.rightButton.isEnabled = false
-            viewAllMessagesButton.isEnabled = false
+            
+            self.viewAllMessagesButton.removeTarget(self, action: #selector(showChats), for: .touchUpInside)
+            self.viewAllMessagesButton.addTarget(self, action: #selector(startChat), for: .touchUpInside)
+
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         fetchDimes()
+        
+        if self.passedDimes.isEmpty{
+            self.configureMessagesIcon()
+            self.configureFriendDiamond()
+        }
     }
     
     func configureTitleLabel(){
@@ -99,7 +120,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     func configureTitleIcon() {
         self.view.addSubview(viewControllerIcon)
-        viewControllerIcon.titleLabel?.text = "👤"
+        //viewControllerIcon.setImage(<#T##image: UIImage?##UIImage?#>, for: <#T##UIControlState#>)
         
         
         self.viewControllerIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -111,9 +132,9 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     func configureMessagesIcon() {
         self.view.addSubview(viewAllMessagesButton)
-
+        viewAllMessagesButton.setImage(#imageLiteral(resourceName: "icon-chatWhite"), for: .normal)
+        viewAllMessagesButton.imageView?.tintColor = UIColor.white
         
-        self.viewAllMessagesButton.addTarget(self, action: #selector(showChats), for: .touchUpInside)
         self.viewAllMessagesButton.translatesAutoresizingMaskIntoConstraints = false
         self.viewAllMessagesButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15).isActive = true
         self.viewAllMessagesButton.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
@@ -121,13 +142,46 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.viewAllMessagesButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
     }
     
+    func configureFriendDiamond() {
+        self.view.addSubview(friendDiamond)
+        
+        guard let profileUser = user else { return }
+        guard let currentUser = self.store.currentUser else { return }
+        
+        if currentUser.topFriends.contains(profileUser){
+            self.friendDiamond.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
+        }else if currentUser.friends.contains(profileUser){
+            friendDiamond.setImage(#imageLiteral(resourceName: "icon-blueDiamond"), for: .normal)
+        }else{
+            friendDiamond.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
+        }
+
+        friendDiamond.titleLabel?.font = UIFont.dimeFont(16)
+        friendDiamond.setTitleColor(UIColor.black, for: .normal)
+        friendDiamond.tintColor = UIColor.black
+        friendDiamond.addTarget(self, action: #selector(filterFriendAlert), for: .touchUpInside)
+        
+
+        self.friendDiamond.translatesAutoresizingMaskIntoConstraints = false
+        self.friendDiamond.trailingAnchor.constraint(equalTo: self.viewAllMessagesButton.leadingAnchor, constant: -10).isActive = true
+        self.friendDiamond.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
+        self.friendDiamond.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.03).isActive = true
+        self.friendDiamond.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
+    }
+
+    
     
     
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
-        Dime.observeNewDimeForUser(user: user!, { (dime) in
+        Dime.observeNewDimeForUser(user: user!, { (dime) in            
+            
             if !self.passedDimes.contains(dime) {
                 self.passedDimes.insert(dime, at: 0)
+                
+                self.friendDiamond.isHidden = true
+                self.friendDiamond.isEnabled = false
+                
                 self.dimeCollectionView.reloadData()
                 
             }
@@ -180,14 +234,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.dimeCollectionView.register(DimeCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         dimeCollectionView.backgroundColor = UIColor.clear
         self.view.addSubview(dimeCollectionView)
-        
-//        self.dimeCollectionView.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        self.dimeCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-//        self.dimeCollectionView.topAnchor.constraint(equalTo: self.viewControllerTitle.topAnchor).isActive = true
-//        self.dimeCollectionView.bottomAnchor.constraint(equalTo: self.viewControllerTitle.bottomAnchor).isActive = true
-//        self.dimeCollectionView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
-        
+     
         dimeCollectionView.isPagingEnabled = true
     }
     
@@ -199,11 +246,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //show mediaCollection
-        
-//        let destinationVC = ViewMediaCollectionViewController()
-//        destinationVC.passedDime = passedDimes[indexPath.row]
-//        self.navigationController?.pushViewController(destinationVC, animated: true)
+
     }
    
     
@@ -213,6 +256,78 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     }
     
     
+    
+}
+
+extension ProfileCollectionViewController {
+    
+    func startChat(){
+        guard let profileUser = user else { return }
+        guard let currentUser = self.store.currentUser else { return }
+        
+        var conversationMembers = [profileUser]
+        conversationMembers.append(currentUser)
+        
+        var title = ""
+        
+        if let chat = findChat(among: conversationMembers){
+            openChatView(chat: chat)
+        }else{
+            
+            for acc in conversationMembers{
+                if title == "" {
+                    title += "\(acc.fullName)"
+                }else{
+                    title += " + \(acc.fullName)"
+                }
+            }
+            
+            
+            let newChat = Chat(users: conversationMembers, title: title, featuredImageUID: profileUser.uid)
+            openChatView(chat: newChat)
+            
+        }
+    }
+    
+    func findChat(among chatAccounts: [User]) -> Chat?{
+        
+        //guard let chats = self.store.chats else { return nil }
+        
+        for chat in self.store.chats{
+            
+            var results = [Bool]()
+            
+            for acc in chatAccounts{
+                let result = chat.users.contains(acc)
+                results.append(result)
+            }
+            
+            if !results.contains(false){
+                return chat
+            }
+        }
+        
+        return nil
+    }
+    
+    
+    func openChatView(chat: Chat){
+        guard let profileUser = user else { return }
+        guard let currentUser = self.store.currentUser else { return }
+        
+        let chatVC = ChatViewController()
+        
+        chatVC.senderId = currentUser.uid
+        chatVC.senderDisplayName = currentUser.fullName
+        
+        chatVC.currentUser = store.currentUser
+        chatVC.chat = chat
+        
+        chatVC.hidesBottomBarWhenPushed = true
+        
+        self.navigationController?.pushViewController(chatVC, animated: true)
+        print("Not sure what the right bar button will do yet.")
+    }
 }
 
 extension ProfileCollectionViewController : NavBarViewDelegate {
@@ -233,22 +348,14 @@ extension ProfileCollectionViewController : NavBarViewDelegate {
     }
     
     func middleBarButtonTapped(_ Sender: AnyObject) {
+        guard let profileUser = user else { return }
         
-        var visibleCurrentCell: IndexPath? {
-            for cell in self.dimeCollectionView.visibleCells {
-                let indexPath = self.dimeCollectionView.indexPath(for: cell)
-                return indexPath
-            }
-            
-            return nil
-        }
-        guard let currentUserCell = visibleCurrentCell else { return }
-        let dime = passedDimes[currentUserCell.row]
-        if dime.createdBy != store.currentUser{
+        if profileUser != store.currentUser {
             let destinationVC = ProfileCollectionViewController()
             destinationVC.user = store.currentUser
             self.navigationController?.pushViewController(destinationVC, animated: true)
         }
+        
     }
     
 }
@@ -324,4 +431,93 @@ extension ProfileCollectionViewController : DZNEmptyDataSetDelegate {
     func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
         return true
     }
+}
+
+
+//ConfigureFriendButton
+extension ProfileCollectionViewController {
+
+    func filterFriendAlert(){
+        guard let profileUser = user else { return }
+        guard let currentUser = self.store.currentUser else { return }
+        
+        let actionSheet = UIAlertController(title: "\(profileUser.username)", message: "", preferredStyle: .actionSheet)
+        
+        let topFriends = UIAlertAction(title: "Top Dimes", style: .default, handler: {
+            action in
+            
+            
+            currentUser.topFriendUser(user: profileUser)
+            currentUser.friendUser(user: profileUser)
+            profileUser.getMediaCount()
+            self.configureFriendDiamond()
+            
+            
+        })
+        
+        let friend = UIAlertAction(title: "Send Friend Request", style: .default, handler: {
+            action in
+            
+            
+            let notification = Notification(dimeUID: "", mediaUID: "", toUser: profileUser.uid, from: currentUser, caption: "\(currentUser.username) wants to be your friend!", notificationType: .friendRequest)
+            
+            notification.save()
+
+            for id in profileUser.deviceTokens{
+                OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) wants to be your friend!"], "headings" : ["en" : "Friend Request"], "include_player_ids" : [id]])
+            }
+            
+            
+        })
+        
+        
+        let unfriend = UIAlertAction(title: "Unfriend", style: .default, handler: {
+            action in
+            
+            currentUser.unTopFriendUser(user: profileUser)
+            currentUser.unFriendUser(user: profileUser)
+            
+            profileUser.unFriendUser(user: currentUser)
+            profileUser.unTopFriendUser(user: currentUser)
+            
+            self.configureFriendDiamond()
+            
+            
+        })
+        
+        
+        let removeFromTopFriends = UIAlertAction(title: "remove from top dimes", style: .default, handler: {
+            action in
+            currentUser.unTopFriendUser(user: profileUser)
+            self.configureFriendDiamond()
+            
+        })
+        
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: {
+            action in
+            print("Canceled")
+        })
+        
+        
+        
+        if !currentUser.friends.contains(profileUser) {
+            actionSheet.addAction(friend)
+        }
+        
+        if currentUser.topFriends.contains(profileUser){
+            actionSheet.addAction(removeFromTopFriends)
+            actionSheet.addAction(unfriend)
+        }
+        
+        if currentUser.friends.contains(profileUser) && !currentUser.topFriends.contains(profileUser) {
+            actionSheet.addAction(topFriends)
+            actionSheet.addAction(unfriend)
+        }
+        
+        actionSheet.addAction(cancel)
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    
 }

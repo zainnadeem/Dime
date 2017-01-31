@@ -13,6 +13,24 @@ import AVFoundation
 var borderWidth            : CGFloat       = 3.0
 var profileImageHeightMultiplier : CGFloat =      (0.75)
 
+public struct Storyboard {
+    static let showWelcome = "ShowWelcomeViewController"
+    static let postComposerNVC = "PostComposerNavigationVC"
+    
+    static let mediaCell = "MediaCell"
+    static let mediaHeaderCell = "MediaHeaderCell"
+    static let searchUserCell = "SearchUserCell"
+    static let mediaHeaderHeight: CGFloat = 57
+    static let mediaCellDefaultHeight: CGFloat = 597
+    
+    static let showMediaDetailSegue = "ShowMediaDetailSegue"
+    
+    static let commentCell = "CommentCell"
+    static let showCommentComposer = "ShowCommentComposer"
+    static let showHomeSegue = "ShowHomeViewController"
+    
+}
+
 extension UIFont {
     class func dimeFont(_ size : CGFloat) -> UIFont {
         return UIFont(name: "Avenir", size: size)!

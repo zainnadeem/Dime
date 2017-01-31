@@ -58,10 +58,14 @@ class NotificationTableViewController: UIViewController, UITableViewDataSource, 
             if !self.notifications.contains(notification) {
                 self.notifications.insert(notification, at: 0)
                 self.notifications = sortByMostRecentlyCreated(self.notifications)
-                self.tableView.reloadData()
-                
+                self.tableView.reloadData()  
+                }
             }
         }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.currentUser.trimNotifications()
+
         
     }
 

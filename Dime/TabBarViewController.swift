@@ -11,6 +11,8 @@ import UIKit
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
     var tabBarIndex: Int = Int()
+    let store = DataStore.sharedInstance
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +36,13 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         
         let navController = self.viewControllers?[selectedIndex] as! UINavigationController
         
+        
+        guard let currentUser = self.store.currentUser else { return }
+       
+        for friend in currentUser.friends{
+            friend.getMediaCount()
+        }
+        
    
         
         switch selectedIndex {
@@ -51,7 +60,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
             }
         case 2:
             let destinationVC = navController.viewControllers[0] as! HomeViewController
-            //self.viewDidLoad()
+                
 
         case 3:
             let destinationVC = navController.viewControllers[0] as! TrendingCollectionViewController
@@ -65,13 +74,13 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
             if destinationVC.tableView.numberOfRows(inSection: 0) > 1 {
                 destinationVC.tableView.reloadData()
                 destinationVC.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-                destinationVC.updateUsers()
+             
             }
         default:
             print("No tab bar selected-- this would be odd to say the least")
         }
 
-        
+        navController.popToRootViewController(animated: false)
     }
 
     

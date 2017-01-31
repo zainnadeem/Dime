@@ -17,8 +17,6 @@ class ViewMediaCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     var blurEffectView: UIVisualEffectView!
     var backgroundLocationImage = UIImageView()
     var imageView = UIButton()
-    
-    //var captionLabel = UILabel()
     var locationLabel = UILabel()
     var createdTimeLabel = UILabel()
     var captionLabel = UILabel()

@@ -15,23 +15,29 @@ class HomeViewController: UIViewController {
     var mediaPickerHelper: MediaPickerHelper!
     var currentUser: User?
     var store = DataStore.sharedInstance
+    
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+    
     let activityData = ActivityData()
     
     @IBOutlet weak var topDimesButton: UIButton!
     @IBOutlet weak var topFriendsButton: UIButton!
     @IBOutlet weak var trendingButton: UIButton!
     @IBOutlet weak var popularButton: UIButton!
+    
     var homeButtons: [UIButton] = [UIButton]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         homeButtons = [topDimesButton, topFriendsButton, trendingButton, popularButton]
         makeButtonsBigger()
+        
         self.navBar.delegate = self
         self.view.addSubview(navBar)
+        
         NVActivityIndicatorPresenter.sharedInstance.startAnimating(self.activityData)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
         self.tabBarController?.navigationController?.setNavigationBarHidden(true, animated: true)
         self.tabBarController?.tabBar.isHidden = true
     }
@@ -65,7 +71,7 @@ class HomeViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.store.updateFriends()
+       // self.store.updateFriends()
         self.tabBarController?.tabBar.isHidden = true
         self.navigationController?.setNavigationBarHidden(true, animated: false)
          self.tabBarController?.navigationController?.setNavigationBarHidden(true, animated: true)
@@ -79,52 +85,35 @@ class HomeViewController: UIViewController {
                         self.store.currentDime = nil
                         self.currentUser = User(dictionary: userDict)
                         self.store.currentUser = User(dictionary: userDict)
+                        
+                        guard let currentUser = self.store.currentUser else { return }
+                        
                         NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
+                        
                         self.store.registerOneSignalToken(user: self.currentUser!)
+                        
                         self.store.getCurrentDime()
+                       
                         self.store.observeChats({ (chats) in
   
                         })
-                       
-                    
-                        guard let currentUser = self.store.currentUser else { return }
-                        
-                        
-                    
-                        currentUser.updatePopularRank()
-                        //self.enableButtons()
+
+
+
                     }
                 })
                 
+            
+                
             }else {
+                
                 print("No User")
             }
         })
        
     }
     
-//    func enableButtons(){
-//        if self.currentUser != nil {
-//            self.navBar.rightButton.isEnabled = true
-//            self.navBar.leftButton.isEnabled = true
-//        }else{
-//            self.navBar.rightButton.isEnabled = false
-//            self.navBar.leftButton.isEnabled = false
-//        }
-//    }
-    
-    @IBAction func photoButtonDidTap(_ sender: Any) {
-      
 
-    }
-    
-
-    @IBAction func logOutDidTap() {
-        
-        
-        
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "TopDimes"{
@@ -182,8 +171,6 @@ extension HomeViewController : NavBarViewDelegate {
         destinationVC.user = store.currentUser
         self.navigationController?.pushViewController(destinationVC, animated: true)
     }
-
-
 
 }
 

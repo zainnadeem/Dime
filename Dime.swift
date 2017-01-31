@@ -16,13 +16,11 @@ class Dime {
     var uid                     : String
     var caption                 : String
     var createdTime             : String
-    //var coverMedia: Media
     var media                   : [Media]
     var createdBy               : User
     var likes                   : [User]
     var superLikes              : [User]
     var comments                : [Comment]
-
     var totalDimeSuperLikes         : Int
     var totalDimeLikes              : Int
 
@@ -89,6 +87,9 @@ class Dime {
         
         comments = []
     }
+    
+    
+    
     
     func save(completion: @escaping (Error?) -> Void) {
         let ref = DatabaseReference.dimes.reference().child(uid)
@@ -165,7 +166,6 @@ class Dime {
                 }else{
                     
                     mediaRef.child("\(media.uid)").setValue(media.toDictionary())
-                    
                     media.save(ref: ref, completion: { (error) in
                         if error != nil{
                             print(error?.localizedDescription)
@@ -310,9 +310,6 @@ class Dime {
             
         }
     }
-    
-    
-    
     
 }
 
@@ -473,6 +470,8 @@ func sortByMostRecentlyCreated(_ arrayOfDimes : [Dime]) -> [Dime] {
     return dimes
 }
 
+
+
 func sortByTrending(_ arrayOfDimes: [Dime]) -> [Dime] {
     var dimes = arrayOfDimes
     dimes.sort(by: { return $0.totalDimeLikes > $1.totalDimeLikes})
@@ -500,10 +499,11 @@ enum UpdateDirection : Int {
     case decrement = -1
 }
 
+extension Dime {
+    
 
-
-
-
-
+    
+    
+}
 
 

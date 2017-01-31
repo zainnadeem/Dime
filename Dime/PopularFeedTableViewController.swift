@@ -36,6 +36,7 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         
          self.tableView.register(PopularTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
        
+        
         self.navBar.delegate = self
         self.view.addSubview(navBar)
         configureTitleLabel()
@@ -55,13 +56,10 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
 
     }
 
-  
-    
     func refresh(){
 
     }
-    
-    
+
     func fetchUsers() {
         self.tableView.reloadData()
         if let friends = store.currentUser?.friends{
@@ -76,23 +74,18 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
                 }
             }
         }
-    
-    
-    func updateUsers(){
-        self.usersFriends = sortByAverageLikes(self.usersFriends)
-        self.tableView.reloadData()
-    }
- 
-    
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        updateUsers()
-        
+        guard let currentUser = self.store.currentUser else { return }
+        self.usersFriends = sortByAverageLikes(currentUser.friends)
+        fetchUsers()
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        
+
     }
     
     func setUpTableView(){
@@ -167,6 +160,13 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         cell.backgroundColor = UIColor.clear
         cell.setViewConstraints()
         cell.updateUI(user: usersFriends[indexPath.row])
+        
+        if usersFriends[indexPath.row] == self.store.currentUser{
+            cell.poularRank.text = self.store.currentUser?.averageLikesCount.description
+            cell.poularRank.textColor = UIColor.white
+        }
+        
+        cell.selectionStyle = .none
         return cell
     }
     

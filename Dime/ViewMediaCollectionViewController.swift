@@ -25,7 +25,7 @@ class ViewMediaCollectionViewController: UIViewController, UICollectionViewDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
-        passedDime.media = sortByMostRecentlyCreated(passedDime.media)
+        passedDime.media = sortByOrderCreated(passedDime.media)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.navigationItem.title = passedDime.createdBy.fullName
         

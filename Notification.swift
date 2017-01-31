@@ -63,14 +63,6 @@ class Notification{
     
     func save(){
         ref.setValue(toDictionary())
-        
-//        DatabaseReference.users(uid: toUser).reference().observe(.value, with: { (snapshot) in
-//            
-//            let user = User(dictionary: snapshot.value as! [String : Any])
-//            
-//            user.trimNotifications()
-//            
-//        })
 
     }
     
@@ -105,11 +97,6 @@ func sortByMostRecentlyCreated(_ arrayOfNotifications : [Notification]) -> [Noti
     notification.sort(by: { return $0 > $1 })
     return notification
 }
-
-
-//func ==(lhs: Comment, rhs: Comment) -> Bool {
-//    return lhs.savedPathURL == rhs.savedPathURL
-//}
 
 func >(lhs: Notification, rhs: Notification) -> Bool {
     

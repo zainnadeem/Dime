@@ -10,27 +10,25 @@ import Firebase
 
 class MediaCollectionViewController: UICollectionViewController, UIGestureRecognizerDelegate
 {
+    lazy var videoURL:              String        = String()
+    lazy var existingDime:          Bool          = Bool()
+    lazy var selectedIndexPath:     Int           = Int()
+    lazy var finishedEditing:       Bool          = Bool()
+    
+    var coverPhoto:            UIImage?
     
     var store = DataStore.sharedInstance
-    var selectedIndexPath: Int = Int()
-    
     var mediaPickerHelper: MediaPickerHelper?
     var passedDime: Dime!
-    
-    var coverPhoto: UIImage?
     var dime: Dime?
     var newMedia: Media?
-    var videoURL: String = String()
-    
-    var existingDime: Bool = Bool()
     
     let activityData = ActivityData()
     var cache = SAMCache.shared()
     
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "editIcon"), leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: nil)
-
-    var finishedEditing: Bool = Bool()
+    
     
     struct Storyboard {
         static let mediaCell = "mediaCell"
@@ -42,9 +40,10 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         static let titleHeightAdjustment: CGFloat = 30.0
     }
     
+    
     func dimePostAlert(title: String, message: String, buttonTitle: String) {
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-       
+        
         let action = UIAlertAction(title: buttonTitle, style: .default, handler: {
             action in
             
@@ -67,25 +66,26 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
     
     @IBAction func postButtonTapped(_ sender: Any) {
         if finishedEditing {
-        dime?.createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
-        store.currentDime = dime
-        
+            
+            dime?.createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
+            store.currentDime = dime
+            
             guard let currentDime = dime else{  print("NO CURRENT DIME")
                 return }
-        
+            
             self.dimePostAlert(title: "Nice...", message: "Your Dime is uploading", buttonTitle: "Okay")
-        
+            
             var coverImage: UIImage = UIImage()
             
-           
+            
             if let photo = coverPhoto{
                 coverImage = photo
             }else{
                 coverImage = currentDime.media[0].mediaImage
             }
-        
-        
-        let firImage = FIRImage(image: coverImage)
+            
+            
+            let firImage = FIRImage(image: coverImage)
             firImage.save("\(currentDime.uid)-coverImage", completion: { error in
                 self.cache?.setObject(coverImage, forKey: "\(currentDime.uid)-coverImage")
             })
@@ -93,23 +93,19 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
             
             currentDime.updateOrCreateDime(completion: { (error) in
                 
-            
+                
             })
-    
-    
+            
+            
         }else{
             alert(title: "Edit Your Photos", message: "Hit the edit button in the top right corner. Once you've edited your photos you can post your Dime!", buttonTitle: "Okay")
         }
     }
 
-    
-
-    
-    
     @IBAction func changeCoverPhoto(_ sender: Any) {
         
     }
-
+    
     @IBAction func homeButtonTap(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -120,9 +116,13 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         self.view.addSubview(navBar)
         
         
+        
         dime = self.store.currentDime
-        dime?.media = sortByMostRecentlyCreated((dime?.media)!)
-
+        
+        if let currentDime = dime {
+            currentDime.media = sortByOrderCreated(currentDime.media)
+        }
+        
         let bgImage = UIImageView()
         bgImage.image = #imageLiteral(resourceName: "background_GREY")
         bgImage.contentMode = .scaleToFill
@@ -142,6 +142,14 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         
         installsStandardGestureForInteractiveMovement = true
     }
+    
+    func populateDime(){
+        if UserDefaults.standard.bool(forKey: "hasUnpostedDime"){
+            
+        }
+    }
+    
+    
     
     func getCoverPhoto(){
         guard let currentDime = self.dime else { return }
@@ -181,9 +189,9 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         }
     }
     
-
+    
     @IBAction func editButtonTapped(_ sender: Any) {
-      if (dime?.media.count)! > 3 {
+        if (dime?.media.count)! > 3 {
             self.performSegue(withIdentifier: "showEditView", sender: nil)
         } else {
             alert(title: "Oops!", message: "Please select at least four items to edit", buttonTitle: "Got it!")
@@ -203,7 +211,7 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
             return 9
         }else{
             return (dime?.media.count)! + 1
-        
+            
         }
     }
     
@@ -216,26 +224,19 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         cell.layer.masksToBounds = true
         cell.mediaImageView.image = #imageLiteral(resourceName: "PLUS")
         if (dime?.media.count)! - 1 >= indexPath.row{
-        cell.mediaImageView.image = dime?.media[indexPath.row].mediaImage
+            cell.mediaImageView.image = dime?.media[indexPath.row].mediaImage
         }
         
         
-//        if indexPath.row == 0 {
-//            cell.layer.borderColor =  UIColor.blue.cgColor
-//            cell.layer.borderWidth = 1
-//            cell.imageLabel.text = "Cover"
-//            cell.visualEffectView.isHidden = false
-//        }else{
-            cell.layer.borderColor = UIColor.white.cgColor
-            cell.layer.borderWidth = 1
-            cell.imageLabel.text = ""
-            cell.visualEffectView.isHidden = true
-//        }
+        cell.layer.borderColor = UIColor.white.cgColor
+        cell.layer.borderWidth = 1
+        cell.imageLabel.text = ""
+        cell.visualEffectView.isHidden = true
         
         return cell
     }
     
-
+    
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
@@ -263,7 +264,13 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
             assert(false, "Unexpected element kind")
         }
         
+        let defaultView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionFooter", for: indexPath) as! SectionFooterCollectionReusableView
+        
+        return defaultView
     }
+    
+    
+    
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
@@ -299,12 +306,12 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
                     collectionView.reloadData()
                     
                 }
-                    self.newMedia = nil
+                self.newMedia = nil
             }
         })
     }
     
-
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showEditView" {
@@ -324,8 +331,8 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         let selectCover = UIAlertAction(title: "make cover photo", style: .default, handler: {
             action in
             
-                self.coverPhoto = currentDime.media[mediaNumber].mediaImage
-                self.collectionView?.reloadData()
+            self.coverPhoto = currentDime.media[mediaNumber].mediaImage
+            self.collectionView?.reloadData()
             
         })
         
@@ -340,11 +347,11 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
             self.store.currentUser?.updateMediaCount(.decrement, amount: 1)
             
             if currentDime.media.count == 0{
-                    currentDime.deleteDimeFromFireBase()
-                    self.store.currentDime = nil
-                 self.dismiss(animated: true, completion: {
-                        self.store.getCurrentDime()
-                    })
+                currentDime.deleteDimeFromFireBase()
+                self.store.currentDime = nil
+                self.dismiss(animated: true, completion: {
+                    self.store.getCurrentDime()
+                })
             }
             
             self.collectionView?.reloadData()
@@ -356,20 +363,20 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
             print("Cancel pressed")
         })
         
-
+        
         actionSheet.addAction(selectCover)
         actionSheet.addAction(delete)
         actionSheet.addAction(cancel)
         
         self.present(actionSheet, animated: true, completion: nil)
     }
-
-
+    
+    
 }
 
 
 extension MediaCollectionViewController {
-   
+    
     func alert(title: String, message: String, buttonTitle: String) {
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: buttonTitle, style: .default, handler: nil)
@@ -393,6 +400,15 @@ extension MediaCollectionViewController : NavBarViewDelegate {
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
+        guard let currentDime = self.dime else { return }
+        if currentDime.media.count > 1 {
+        
+        currentDime.updateOrCreateDime(completion: { (error) in
+            
+        })
+        
+        }
+        
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
         print("Not sure what the left bar button will do yet.")
     }

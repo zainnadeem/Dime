@@ -136,11 +136,19 @@ class FriendRequestTableViewCell: UITableViewCell {
         
         UIView.performWithoutAnimation({
             let loc = parentTableView?.contentOffset
+            if parentTableView?.visibleCells.count == 0{
+                print("one cell")
+            }else{
             parentTableView?.reloadRows(at: [currentIndexPath], with: .none)
+            
             parentTableView?.contentOffset = loc!
-        })
+            }
+            })
         
         self.store.currentUser?.deleteNotification(notification: notification)
+        self.parentTableView?.reloadData()
+    
+    
     }
     
 

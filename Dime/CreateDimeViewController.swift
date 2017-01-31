@@ -221,6 +221,21 @@ class CreateDimeViewController: UIViewController {
                 
                 self.store.currentDime?.media.append(newMedia)
                 self.store.currentUser?.updateMediaCount(.increment, amount: 1)
+                
+                UserDefaults.standard.set(true, forKey: "hasUnpostedDime")
+                
+                let userDefaults = UserDefaults.standard
+                let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: newDime)
+                
+                userDefaults.set(encodedData, forKey: "currentDime")
+                userDefaults.synchronize()
+                
+                
+                
+                
+                
+                
+                
                 self.present(controller, animated: true, completion: nil)
                 
             } else if let snapshotImage = mediaObject as? UIImage {
@@ -235,6 +250,15 @@ class CreateDimeViewController: UIViewController {
                 self.store.currentDime?.media.append(newMedia)
                 self.store.currentUser?.updateMediaCount(.increment, amount: 1)
                 controller.finishedEditing = false
+                
+                UserDefaults.standard.set(true, forKey: "hasUnpostedDime")
+                
+                let userDefaults = UserDefaults.standard
+                let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: newDime)
+                
+                userDefaults.set(encodedData, forKey: "currentDime")
+                userDefaults.synchronize()
+                
                 self.present(controller, animated: true, completion: nil)
                 
             
@@ -335,6 +359,8 @@ extension CreateDimeViewController: UITextFieldDelegate {
     }
     
 }
+
+
 
 extension CreateDimeViewController : NavBarViewDelegate {
     
