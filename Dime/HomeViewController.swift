@@ -97,9 +97,11 @@ class HomeViewController: UIViewController {
                         self.store.observeChats({ (chats) in
   
                         })
-
-
-
+                        self.store.updateMediaCount()
+                        
+                        for friend in currentUser.friends{
+                            friend.getMediaCount()
+                        }
                     }
                 })
                 
@@ -155,7 +157,7 @@ extension HomeViewController : NavBarViewDelegate {
         
         let destinationVC = SearchDimeViewController()
         destinationVC.user = store.currentUser
-        
+        destinationVC.showingUsersFriends = false
         if let user = store.currentUser{
             destinationVC.user = user
         }

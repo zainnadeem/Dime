@@ -400,16 +400,22 @@ extension MediaCollectionViewController : NavBarViewDelegate {
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
-        guard let currentDime = self.dime else { return }
-        if currentDime.media.count > 1 {
+        let alertVC = UIAlertController(title: "Unsaved Changes", message: "You have not posted your dime, unsaved images will be lost.", preferredStyle: .alert)
         
-        currentDime.updateOrCreateDime(completion: { (error) in
-            
+        let action = UIAlertAction(title: "okay", style: .default, handler: {
+            action in
+         
+            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+        
         })
         
-        }
+        let cancel = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
         
-        self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+        alertVC.addAction(action)
+        alertVC.addAction(cancel)
+        
+        present(alertVC, animated: true, completion: nil)
+       
         print("Not sure what the left bar button will do yet.")
     }
     

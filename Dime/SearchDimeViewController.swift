@@ -17,8 +17,11 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     var UsersToSearch = [User]()
     var filteredUsers = [User]()
     var selectedUser: User?
+    var store = DataStore.sharedInstance
     
-    
+    var showingUsersFriends: Bool = Bool()
+    var findingMessages: Bool = Bool()
+
     lazy var searchBar: UISearchBar = UISearchBar()
     
     lazy var tableView: UITableView = UITableView()
@@ -45,11 +48,24 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         
         self.navBar.delegate = self
         self.tableView.register(SearchDimeTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
-        fetchUsers()
+        
+        if showingUsersFriends{
+             guard let profileUser = self.user else { return }
+             navBar.middleButton.title = "\(profileUser.username)'s Friends"
+             fetchFriends()
+        }else{
+            fetchAllDimeUsers()
+        }
+        
+        if findingMessages {
+            navBar.middleButton.title = "start a conversation"
+        }
+        
+
         // Do any additional setup after loading the view.
     }
     
-    func fetchUsers() {
+    func fetchAllDimeUsers() {
         self.tableView.reloadData()
         User.observeNewUser { (user) in
             if !self.UsersToSearch.contains(user) {
@@ -58,6 +74,12 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
             }
         }
     }
+    
+    func fetchFriends() {
+        guard let profileUser = self.user else { return }
+        self.UsersToSearch = profileUser.friends
+    }
+    
     
     func setViewConstraints(){
         self.view.addSubview(searchBar)
@@ -74,7 +96,8 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         self.tableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor).isActive = true
         self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        
+        self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -49).isActive = true
         
         
     }
@@ -124,8 +147,9 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-       
+
         let destinationVC = ProfileCollectionViewController()
+
         var user: User
         
         if searchBar.text != ""{
@@ -138,9 +162,16 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         
         destinationVC.user = user
        
-        self.navigationController?.pushViewController(destinationVC, animated: true)
-
+        
+                if self.findingMessages{
+                    self.nextDidTap(messageRecipient: user)
+            }else{
+            
+                self.navigationController?.pushViewController(destinationVC, animated: true)
+        }
+        
     }
+    
     
     //Mark: Search
     
@@ -159,6 +190,74 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     
 
     
+}
+
+extension SearchDimeViewController {
+    
+    func nextDidTap(messageRecipient: User){
+        
+        guard let currentUser = self.user else { return }
+        var conversationMembers = [messageRecipient]
+        conversationMembers.append(currentUser)
+        
+        var title = ""
+        
+        if let chat = findChat(among: conversationMembers){
+            openChatView(chat: chat)
+        }else{
+            
+            for acc in conversationMembers{
+                if title == "" {
+                    title += "\(acc.fullName)"
+                }else{
+                    title += " + \(acc.fullName)"
+                }
+            }
+            
+            
+            let newChat = Chat(users: conversationMembers, title: title, featuredImageUID: messageRecipient.uid)
+            openChatView(chat: newChat)
+            
+        }
+    }
+    
+    func findChat(among chatAccounts: [User]) -> Chat?{
+        
+        //guard let chats = self.store.chats else { return nil }
+        
+        for chat in self.store.chats{
+            
+            var results = [Bool]()
+            
+            for acc in chatAccounts{
+                let result = chat.users.contains(acc)
+                results.append(result)
+            }
+            
+            if !results.contains(false){
+                return chat
+            }
+        }
+        
+        return nil
+    }
+    
+    
+    func openChatView(chat: Chat){
+        guard let currentUser = self.user else { return }
+        let chatVC = ChatViewController()
+        
+        chatVC.senderId = currentUser.uid
+        chatVC.senderDisplayName = currentUser.fullName
+        
+        chatVC.currentUser = store.currentUser
+        chatVC.chat = chat
+        
+        chatVC.hidesBottomBarWhenPushed = true
+        
+        self.navigationController?.pushViewController(chatVC, animated: true)
+        print("Not sure what the right bar button will do yet.")
+    }
 }
 
 

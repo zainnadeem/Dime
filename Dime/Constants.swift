@@ -12,6 +12,7 @@ import AVFoundation
 
 var borderWidth            : CGFloat       = 3.0
 var profileImageHeightMultiplier : CGFloat =      (0.75)
+var tabBarHeight                : CGFloat = 49
 
 public struct Storyboard {
     static let showWelcome = "ShowWelcomeViewController"

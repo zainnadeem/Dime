@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
@@ -20,7 +21,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         self.selectedIndex = tabBarIndex
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-
         // Do any additional setup after loading the view.
     }
     
@@ -35,13 +35,41 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         
         let navController = self.viewControllers?[selectedIndex] as! UINavigationController
-        
-        
-        guard let currentUser = self.store.currentUser else { return }
+
        
-        for friend in currentUser.friends{
-            friend.getMediaCount()
-        }
+        FIRAuth.auth()?.addStateDidChangeListener({ (auth, user) in
+            if let user = user {
+                // get current user
+                DatabaseReference.users(uid: user.uid).reference().observeSingleEvent(of: .value, with: { (snapshot) in
+                    if let userDict = snapshot.value as? [String : Any] {
+                        
+                        self.store.currentDime = nil
+                        self.store.currentUser = User(dictionary: userDict)
+                        
+                        guard let currentUser = self.store.currentUser else { return }
+
+                        self.store.getCurrentDime()
+                        
+                        self.store.observeChats({ (chats) in
+                            
+                        })
+                        self.store.updateMediaCount()
+                        
+                        for friend in currentUser.friends{
+                            friend.getMediaCount()
+                        }
+                    }
+                })
+                
+                
+                
+            }else {
+                
+                print("No User")
+            }
+        })
+        
+     
         
    
         

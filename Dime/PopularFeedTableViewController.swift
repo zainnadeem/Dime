@@ -50,7 +50,7 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
         //tableView.addSubview(refreshControl)
-    
+        tableView.contentInset = UIEdgeInsetsMake(0, 0, self.bottomLayoutGuide.length, 0)
 
         fetchUsers()
 
@@ -78,6 +78,7 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        self.loadViewIfNeeded()
         guard let currentUser = self.store.currentUser else { return }
         self.usersFriends = sortByAverageLikes(currentUser.friends)
         fetchUsers()
@@ -96,7 +97,7 @@ class PopularFeedTableViewController: UIViewController, UITableViewDelegate, UIT
         self.tableView.topAnchor.constraint(equalTo: self.viewControllerTitle.bottomAnchor, constant: 5.0).isActive = true
         self.tableView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         self.tableView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -tabBarHeight).isActive = true
         self.tableView.backgroundColor = UIColor.clear
         self.tableView.separatorColor = UIColor.black
         

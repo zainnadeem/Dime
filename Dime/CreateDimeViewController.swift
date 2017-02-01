@@ -149,7 +149,7 @@ class CreateDimeViewController: UIViewController {
         
         self.createNewDimeButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.75).isActive = true
         self.createNewDimeButton.backgroundColor = UIColor.white
-        self.createNewDimeButton.setTitle("CreateNewDime", for: UIControlState())
+        self.createNewDimeButton.setTitle("Create New Dime", for: UIControlState())
         self.createNewDimeButton.titleLabel?.font = UIFont.dimeFontBold(14)
         self.createNewDimeButton.setTitleColor(UIColor.black, for: UIControlState())
         createNewDimeButton.layer.cornerRadius = 10
@@ -221,21 +221,7 @@ class CreateDimeViewController: UIViewController {
                 
                 self.store.currentDime?.media.append(newMedia)
                 self.store.currentUser?.updateMediaCount(.increment, amount: 1)
-                
-                UserDefaults.standard.set(true, forKey: "hasUnpostedDime")
-                
-                let userDefaults = UserDefaults.standard
-                let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: newDime)
-                
-                userDefaults.set(encodedData, forKey: "currentDime")
-                userDefaults.synchronize()
-                
-                
-                
-                
-                
-                
-                
+
                 self.present(controller, animated: true, completion: nil)
                 
             } else if let snapshotImage = mediaObject as? UIImage {
@@ -251,13 +237,6 @@ class CreateDimeViewController: UIViewController {
                 self.store.currentUser?.updateMediaCount(.increment, amount: 1)
                 controller.finishedEditing = false
                 
-                UserDefaults.standard.set(true, forKey: "hasUnpostedDime")
-                
-                let userDefaults = UserDefaults.standard
-                let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: newDime)
-                
-                userDefaults.set(encodedData, forKey: "currentDime")
-                userDefaults.synchronize()
                 
                 self.present(controller, animated: true, completion: nil)
                 

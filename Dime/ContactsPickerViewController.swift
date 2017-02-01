@@ -22,14 +22,14 @@ class ContactsPickerViewController: UIViewController {
     
     var selectedAccounts = [User]()
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     lazy var contactsPickerField: VENTokenField = VENTokenField()
     lazy var tableView : UITableView = UITableView()
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navBar.rightButton.title = "Next"
+        
         
         self.currentUser = self.store.currentUser
         self.tableView.delegate = self
@@ -103,14 +103,14 @@ class ContactsPickerViewController: UIViewController {
     
     func addRecipient(account: User){
         self.selectedAccounts.append(account)
-        self.contactsPickerField.reloadData()
+        nextDidTap()
     }
     
-    func deleteRecipient(account: User, index: Int){
-        self.selectedAccounts.remove(at: index)
-        self.contactsPickerField.reloadData()
-        
-    }
+//    func deleteRecipient(account: User, index: Int){
+//        self.selectedAccounts.remove(at: index)
+//        self.contactsPickerField.reloadData()
+//        
+//    }
     
    // MARK: - CHAT 
     
@@ -190,14 +190,14 @@ extension ContactsPickerViewController : VENTokenFieldDelegate {
         
     }
     
-    func tokenField(_ tokenField: VENTokenField, didDeleteTokenAt index: UInt) {
-        let indexPath = IndexPath(row: Int(index), section: 0)
-        let cell = self.tableView.cellForRow(at: indexPath) as!
-        ContactTableViewCell
-        cell.added = !cell.added
-        self.deleteRecipient(account: cell.user, index: Int(index))
-        
-    }
+//    func tokenField(_ tokenField: VENTokenField, didDeleteTokenAt index: UInt) {
+//        let indexPath = IndexPath(row: Int(index), section: 0)
+//        let cell = self.tableView.cellForRow(at: indexPath) as!
+//        ContactTableViewCell
+//        cell.added = !cell.added
+//        self.deleteRecipient(account: cell.user, index: Int(index))
+//        
+//    }
 }
 
 // MARK: - TableViewDelegate
@@ -244,8 +244,8 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     if cell.added == true {
         self.addRecipient(account: cell.user)
     }else{
-        let index = selectedAccounts.index(of: cell.user)!
-        self.deleteRecipient(account: cell.user, index: index)
+       // let index = selectedAccounts.index(of: cell.user)!
+       // self.deleteRecipient(account: cell.user, index: index)
     }
 
 }
@@ -256,7 +256,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 extension ContactsPickerViewController : NavBarViewDelegate {
     
     func rightBarButtonTapped(_ sender: AnyObject) {
-        nextDidTap()
+        
         print("Not sure what the right bar button will do yet.")
     }
     

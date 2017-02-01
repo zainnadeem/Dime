@@ -11,8 +11,9 @@ import Firebase
 import DZNEmptyDataSet
 import SAMCache
 import OneSignal
+import Firebase
 
-private let reuseIdentifier = "dimeCollectionViewCell"
+private let reuseIdentifier = "ProfileCollectionViewCell"
 
 class ProfileCollectionViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UITextViewDelegate {
     
@@ -21,10 +22,18 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     var cache = SAMCache.shared()
     let store = DataStore.sharedInstance
     var passedDimes: [Dime] = [Dime]()
-    var viewControllerTitle: UILabel = UILabel()
-    var viewControllerIcon: UIButton = UIButton()
-    var viewAllMessagesButton: UIButton = UIButton()
+    
+
+    
+    //for header view
+    var banner: UIView = UIView()
+    var userNameButton: UIButton = UIButton()
     var friendDiamond: UIButton = UIButton()
+    var circleProfileView = UIButton()
+    var messagesButton: UIButton = UIButton()
+    var friendsCountButton: UIButton = UIButton()
+    var friendsCountIcon: UIButton = UIButton()
+    var popularRankButton = UIButton()
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage:nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
@@ -45,22 +54,28 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         
         self.navBar.delegate = self
         self.view.addSubview(navBar)
-        configureTitleLabel()
-        configureTitleIcon()
         
-
-        
+        configureProfilePic()
+        configureBanner()
+        configureUsernameButton()
+        configureFriendDiamond()
+        configurePopularRankButton()
+        configureMessagesIcon()
+        fetchUser()
+        fetchDimes()
         configureUserSpecificButtons()
         
-        fetchDimes()
+    }
+    
+    func fetchUser() {
+        guard let profileUser = self.user else { return }
         
-        if self.passedDimes.isEmpty{
-        self.configureMessagesIcon()
-        self.configureFriendDiamond()
-        }
-        
-        
-        
+        DatabaseReference.users(uid: profileUser.uid).reference().observeSingleEvent(of: .value, with: { user in
+            
+            self.user = User(dictionary: user.value as! [String : AnyObject])
+            
+            self.configureFriendsCountButton()
+        })
     }
     
     func configureUserSpecificButtons(){
@@ -68,82 +83,101 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         guard let profileUser = self.user else { return }
         
         if profileUser == self.store.currentUser {
-          
-          navBar.rightButton.image = #imageLiteral(resourceName: "icon-settings-filled")
-          navBar.rightButton.isEnabled = true
-         
-         self.viewAllMessagesButton.removeTarget(self, action: #selector(startChat), for: .touchUpInside)
-         self.viewAllMessagesButton.addTarget(self, action: #selector(startChat), for: .touchUpInside)
-    
-        
+            
+            friendDiamond.isHidden = true
+            friendDiamond.isEnabled = false
+            self.messagesButton.removeTarget(self, action: #selector(startChat), for: .touchUpInside)
+            self.messagesButton.addTarget(self, action: #selector(showChats), for: .touchUpInside)
+
             
         }else{
+            
+            friendDiamond.isHidden = false
+            friendDiamond.isEnabled = true
             
             navBar.rightButton.image = nil
             navBar.rightButton.isEnabled = false
             
-            self.viewAllMessagesButton.removeTarget(self, action: #selector(showChats), for: .touchUpInside)
-            self.viewAllMessagesButton.addTarget(self, action: #selector(startChat), for: .touchUpInside)
-
+            self.messagesButton.removeTarget(self, action: #selector(showChats), for: .touchUpInside)
+            self.messagesButton.addTarget(self, action: #selector(startChat), for: .touchUpInside)
+        
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         fetchDimes()
+    }
+    
+    func configureBanner(){
+        self.view.addSubview(banner)
         
-        if self.passedDimes.isEmpty{
-            self.configureMessagesIcon()
-            self.configureFriendDiamond()
+        
+        self.banner.translatesAutoresizingMaskIntoConstraints = false
+        self.banner.topAnchor.constraint(equalTo: self.navBar.bottomAnchor, constant: 5).isActive = true
+        
+        self.banner.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        self.banner.leadingAnchor.constraint(equalTo: self.circleProfileView.centerXAnchor).isActive = true
+        
+        self.banner.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.13).isActive = true
+        
+        self.banner.backgroundColor = UIColor.dimeDarkBlue()
+       
+        self.view.bringSubview(toFront: self.circleProfileView)
+        
+    }
+    
+    
+    
+    func configureProfilePic() {
+        self.view.addSubview(circleProfileView)
+        
+        self.circleProfileView.translatesAutoresizingMaskIntoConstraints = false
+        self.circleProfileView.topAnchor.constraint(equalTo: self.navBar.bottomAnchor, constant: 5).isActive = true
+        self.circleProfileView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+        self.circleProfileView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.13).isActive = true
+        self.circleProfileView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.24).isActive = true
+        
+        guard let profileUser = self.user else { return }
+        
+        
+        self.circleProfileView.setImage(#imageLiteral(resourceName: "icon-defaultAvatar"), for: .normal)
+        
+        let profileImageKey = "\(profileUser.uid)-profileImage"
+        
+        if let image = cache?.object(forKey: profileImageKey) as? UIImage {
+            self.circleProfileView.setImage(image.circle, for: .normal)
+        }else{
+            profileUser.downloadProfilePicture { [weak self] (image, error) in
+                if let image = image {
+                    self?.circleProfileView.setImage(image.circle, for: .normal)
+                    self?.cache?.setObject(image.circle, forKey: profileImageKey)
+                }else if error != nil {
+                    print(error?.localizedDescription)
+                }
+            }
         }
+        
+        setImageViewCircular()
+       
+       
     }
     
-    func configureTitleLabel(){
-        self.view.addSubview(viewControllerTitle)
-        
-        self.viewControllerTitle.translatesAutoresizingMaskIntoConstraints = false
-        self.viewControllerTitle.topAnchor.constraint(equalTo: self.navBar.bottomAnchor).isActive = true
-        
-        self.viewControllerTitle.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        
-        self.viewControllerTitle.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.07).isActive = true
-        self.viewControllerTitle.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
-        
-        viewControllerTitle.backgroundColor = UIColor.dimeDarkBlue()
-        viewControllerTitle.textAlignment = NSTextAlignment.left
-        viewControllerTitle.textColor = UIColor.white
-        viewControllerTitle.font = UIFont.dimeFontBold(15)
-        if let currentUser = self.user{
-        viewControllerTitle.text = "\(currentUser.username)'s Profile"
-        viewControllerTitle.textAlignment = .center
-        }
+    func setImageViewCircular() {
+        self.view.layoutIfNeeded()
+        self.circleProfileView.contentMode = .scaleAspectFit
+        self.circleProfileView.isUserInteractionEnabled = true
+        self.circleProfileView.layer.cornerRadius = self.circleProfileView.frame.size.width / 2
+        self.circleProfileView.layer.borderColor = UIColor.white.cgColor
+        self.circleProfileView.layer.borderWidth = 3.0
+        self.circleProfileView.clipsToBounds = true
     }
     
-    func configureTitleIcon() {
-        self.view.addSubview(viewControllerIcon)
-        //viewControllerIcon.setImage(<#T##image: UIImage?##UIImage?#>, for: <#T##UIControlState#>)
-        
-        
-        self.viewControllerIcon.translatesAutoresizingMaskIntoConstraints = false
-        self.viewControllerIcon.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 5).isActive = true
-        self.viewControllerIcon.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
-        self.viewControllerIcon.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.03).isActive = true
-        self.viewControllerIcon.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
-    }
+
     
-    func configureMessagesIcon() {
-        self.view.addSubview(viewAllMessagesButton)
-        viewAllMessagesButton.setImage(#imageLiteral(resourceName: "icon-chatWhite"), for: .normal)
-        viewAllMessagesButton.imageView?.tintColor = UIColor.white
-        
-        self.viewAllMessagesButton.translatesAutoresizingMaskIntoConstraints = false
-        self.viewAllMessagesButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15).isActive = true
-        self.viewAllMessagesButton.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
-        self.viewAllMessagesButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.03).isActive = true
-        self.viewAllMessagesButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
-    }
+
     
     func configureFriendDiamond() {
-        self.view.addSubview(friendDiamond)
+        self.banner.addSubview(friendDiamond)
         
         guard let profileUser = user else { return }
         guard let currentUser = self.store.currentUser else { return }
@@ -151,7 +185,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         if currentUser.topFriends.contains(profileUser){
             self.friendDiamond.setImage(#imageLiteral(resourceName: "icon-blackDiamond"), for: .normal)
         }else if currentUser.friends.contains(profileUser){
-            friendDiamond.setImage(#imageLiteral(resourceName: "icon-blueDiamond"), for: .normal)
+            friendDiamond.setImage(#imageLiteral(resourceName: "icon-Gray"), for: .normal)
         }else{
             friendDiamond.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
         }
@@ -160,15 +194,123 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         friendDiamond.setTitleColor(UIColor.black, for: .normal)
         friendDiamond.tintColor = UIColor.black
         friendDiamond.addTarget(self, action: #selector(filterFriendAlert), for: .touchUpInside)
-        
 
         self.friendDiamond.translatesAutoresizingMaskIntoConstraints = false
-        self.friendDiamond.trailingAnchor.constraint(equalTo: self.viewAllMessagesButton.leadingAnchor, constant: -10).isActive = true
-        self.friendDiamond.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
-        self.friendDiamond.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.03).isActive = true
-        self.friendDiamond.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
+        self.friendDiamond.topAnchor.constraint(equalTo: self.banner.topAnchor, constant: 10).isActive = true
+        self.friendDiamond.trailingAnchor.constraint(equalTo: self.banner.trailingAnchor, constant: -10).isActive = true
+        self.friendDiamond.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.05).isActive = true
+        self.friendDiamond.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.08).isActive = true
+    }
+    
+    func configureUsernameButton() {
+        self.banner.addSubview(userNameButton)
+        
+        guard let profileUser = user else { return }
+
+        self.userNameButton.translatesAutoresizingMaskIntoConstraints = false
+        self.userNameButton.topAnchor.constraint(equalTo: self.banner.topAnchor, constant: 5).isActive = true
+        self.userNameButton.centerXAnchor.constraint(equalTo: self.banner.centerXAnchor).isActive = true
+        self.userNameButton.heightAnchor.constraint(equalTo: self.banner.heightAnchor, multiplier: 0.5).isActive = true
+        self.userNameButton.widthAnchor.constraint(equalTo: self.banner.widthAnchor, multiplier: 0.7).isActive = true
+
+        userNameButton.titleLabel?.font = UIFont.dimeFontBold(30)
+        
+        
+        userNameButton.setTitle("\(profileUser.username)", for: .normal)
+        userNameButton.setTitleColor(UIColor.white, for: .normal)
+        userNameButton.titleLabel?.textAlignment = .center
+        userNameButton.titleLabel?.font = UIFont.dimeFontBold(30)
+       
+        
+    }
+    
+    func configurePopularRankButton(){
+        
+        guard let profileUser = user else { return }
+        guard let currentUser = self.store.currentUser else { return }
+        
+        self.banner.addSubview(popularRankButton)
+        popularRankButton.titleLabel?.font = UIFont.dimeFont(16)
+        popularRankButton.setTitleColor(UIColor.white, for: .normal)
+        
+        popularRankButton.tintColor = UIColor.black
+        //popularRankButton.addTarget(self, action: #selector(showPopularPage), for: .touchUpInside)
+        
+        self.popularRankButton.translatesAutoresizingMaskIntoConstraints = false
+        self.popularRankButton.leadingAnchor.constraint(equalTo: self.userNameButton.leadingAnchor).isActive = true
+        self.popularRankButton.bottomAnchor.constraint(equalTo: self.banner.bottomAnchor, constant: -7).isActive = true
+        
+        self.popularRankButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.04).isActive = true
+        self.popularRankButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.08).isActive = true
+ 
+        
+        if currentUser.friends.contains(profileUser){
+            let friendIndex = currentUser.friends.index(of: profileUser)
+            self.popularRankButton.setTitle(currentUser.friends[friendIndex!].popularRank.description, for: .normal)
+            self.popularRankButton.titleLabel?.font = UIFont.dimeFont(12)
+            self.popularRankButton.setTitleColor(UIColor.white, for: .normal)
+            self.popularRankButton.titleLabel?.textAlignment = .right
+            popularRankButton.setBackgroundImage(#imageLiteral(resourceName: "icon-popularGray"), for: .normal)
+        }else{
+            popularRankButton.setTitle("", for: .normal)
+            popularRankButton.setBackgroundImage(nil, for: .normal)
+        }
+        
     }
 
+    func configureMessagesIcon() {
+        self.view.addSubview(messagesButton)
+        messagesButton.setImage(#imageLiteral(resourceName: "icon-chatWhite"), for: .normal)
+        messagesButton.imageView?.alpha = 0.5
+        messagesButton.imageView?.contentMode = .scaleAspectFill
+        messagesButton.imageView?.tintColor = UIColor.white
+        
+        self.messagesButton.translatesAutoresizingMaskIntoConstraints = false
+        self.messagesButton.centerXAnchor.constraint(equalTo: self.banner.centerXAnchor).isActive = true
+        self.messagesButton.bottomAnchor.constraint(equalTo: self.banner.bottomAnchor, constant: -2).isActive = true
+        
+        self.messagesButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.05).isActive = true
+        self.messagesButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.10).isActive = true
+    }
+
+    
+    
+
+    
+    func configureFriendsCountButton() {
+        self.view.addSubview(friendsCountButton)
+        
+        guard let profileUser = user else { return }
+        guard let currentUser = self.store.currentUser else { return }
+        
+        self.friendsCountButton.translatesAutoresizingMaskIntoConstraints = false
+        self.friendsCountButton.trailingAnchor.constraint(equalTo: self.friendDiamond.trailingAnchor).isActive = true
+        self.friendsCountButton.bottomAnchor.constraint(equalTo: self.banner.bottomAnchor, constant: -3).isActive = true
+        
+        self.friendsCountButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.04).isActive = true
+        self.friendsCountButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.15).isActive = true
+
+        
+        friendsCountButton.addTarget(self, action: #selector(showAllFriends), for: .touchUpInside)
+        
+        friendsCountButton.setTitle("💎 \(profileUser.friends.count)", for: .normal)
+        self.friendsCountButton.titleLabel?.font = UIFont.dimeFontBold(15)
+        self.friendsCountButton.setTitleColor(UIColor.white, for: .normal)
+    
+    }
+    
+    
+
+    
+    
+    func showAllFriends(){
+        
+        let destinationVC = SearchDimeViewController()
+        destinationVC.user = self.user
+        destinationVC.showingUsersFriends = true
+        self.navigationController?.pushViewController(destinationVC, animated: true)
+
+    }
     
     
     
@@ -178,10 +320,6 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             
             if !self.passedDimes.contains(dime) {
                 self.passedDimes.insert(dime, at: 0)
-                
-                self.friendDiamond.isHidden = true
-                self.friendDiamond.isEnabled = false
-                
                 self.dimeCollectionView.reloadData()
                 
             }
@@ -203,16 +341,14 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DimeCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProfileCollectionViewCell
         
         cell.parentCollectionView = self
         cell.collectionView = dimeCollectionView
         
         cell.currentUser = store.currentUser
         cell.dime = passedDimes[indexPath.row]
-        
-        cell.usernameButton.isUserInteractionEnabled = false
-        cell.circleProfileView.isUserInteractionEnabled = false
+
         
         return cell
     }
@@ -231,7 +367,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         
         dimeCollectionView.dataSource = self
         dimeCollectionView.delegate = self
-        self.dimeCollectionView.register(DimeCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.dimeCollectionView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         dimeCollectionView.backgroundColor = UIColor.clear
         self.view.addSubview(dimeCollectionView)
      
@@ -418,6 +554,10 @@ extension ProfileCollectionViewController : DZNEmptyDataSetSource {
                           NSForegroundColorAttributeName : UIColor.black]
         
         return NSAttributedString(string: "Check back later!", attributes: attributes)
+    }
+    
+    func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
+        
     }
     
     func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {

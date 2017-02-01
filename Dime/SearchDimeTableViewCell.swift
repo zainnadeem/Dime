@@ -100,6 +100,7 @@ class SearchDimeTableViewCell: UITableViewCell {
     }
     
     func setImageViewCircular() {
+        
         self.profileImage.contentMode = .scaleAspectFill
         self.profileImage.isUserInteractionEnabled = true
         self.profileImage.layer.cornerRadius = self.frame.height * profileImageHeightMultiplier / 2

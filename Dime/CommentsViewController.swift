@@ -49,7 +49,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         setUpPostButton()
         
         self.tableView.register(CommentTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
- 
+        tableView.contentInset = UIEdgeInsetsMake(0, 0, self.bottomLayoutGuide.length, 0)
     }
     
     func fetchComments(){
@@ -78,6 +78,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         cell.setViewConstraints()
         cell.comment = media.comments[indexPath.row]
         cell.backgroundColor = UIColor.clear
+        cell.selectionStyle = .none
         return cell
 
     }
@@ -150,6 +151,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
 
     
     func postDidTap(){
+        if !(captionTextView.text! == "") {
         let comment = Comment(dimeUID: media.dimeUID, mediaUID: media.uid, from: store.currentUser!, caption:captionTextView.text!)
         
         //add to dime
@@ -164,6 +166,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.captionTextView.text = ""
         self.dismissKeyboard()
         self.tableView.reloadData()
+        }
     }
 
     func createNotification(type: NotificationType){

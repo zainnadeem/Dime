@@ -4,51 +4,13 @@
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Dime/ProfileCollectionViewController.swift"
-            timestampString = "507538479.35248"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "177"
-            endingLineNumber = "177"
-            landmarkName = "fetchDimes()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Dime.ProfileCollectionViewController.fetchDimes () -&gt; ()"
-                  moduleName = "Dime"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Zain/Desktop/Dime/Dime/ProfileCollectionViewController.swift"
-                  timestampString = "507538479.59582"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "177"
-                  endingLineNumber = "177"
-                  offsetFromSymbolStart = "84">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Dime.ProfileCollectionViewController.(fetchDimes () -&gt; ()).(closure #1)"
-                  moduleName = "Dime"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Zain/Desktop/Dime/Dime/ProfileCollectionViewController.swift"
-                  timestampString = "507538479.597149"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "179"
-                  endingLineNumber = "179"
-                  offsetFromSymbolStart = "28">
-               </Location>
-            </Locations>
+            scope = "0"
+            stopOnStyle = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -58,12 +20,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Dime/ProfileCollectionViewController.swift"
-            timestampString = "507538479.35248"
+            timestampString = "507595635.420326"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
-            landmarkName = "viewWillAppear(_:)"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
+            landmarkName = "fetchUser()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Dime/ProfileCollectionViewController.swift"
+            timestampString = "507595635.420326"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
+            landmarkName = "fetchUser()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Dime/ProfileCollectionViewController.swift"
+            timestampString = "507606468.009789"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
+            landmarkName = "configureFriendsCountButton()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

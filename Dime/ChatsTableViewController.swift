@@ -22,7 +22,7 @@ class ChatsTableViewController: UIViewController {
     
     var selectedAccounts = [User]()
     
-    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "editIcon"), leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: nil)
     lazy var contactsPickerField: VENTokenField = VENTokenField()
     lazy var tableView : UITableView = UITableView()
     
@@ -83,7 +83,7 @@ class ChatsTableViewController: UIViewController {
         self.tableView.topAnchor.constraint(equalTo: self.navBar.bottomAnchor, constant: 0.8).isActive = true
         self.tableView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         self.tableView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -tabBarHeight).isActive = true
         self.tableView.backgroundColor = UIColor.white
         self.tableView.separatorColor = UIColor.black
         tableView.tableFooterView = UIView()
@@ -145,9 +145,11 @@ extension ChatsTableViewController : UITableViewDelegate, UITableViewDataSource{
     extension ChatsTableViewController : NavBarViewDelegate {
         
         func rightBarButtonTapped(_ sender: AnyObject) {
-//            let destinationVC = ContactsPickerViewController()
-//            destinationVC.currentUser = store.currentUser
-//            self.navigationController?.pushViewController(destinationVC, animated: true)
+            let destinationVC = SearchDimeViewController()
+            destinationVC.user = store.currentUser
+            destinationVC.showingUsersFriends = false
+            destinationVC.findingMessages = true
+            self.navigationController?.pushViewController(destinationVC, animated: false)
             print("Not sure what the right bar button will do yet.")
         }
         
