@@ -213,35 +213,7 @@ extension User {
         let ref = DatabaseReference.users(uid: uid).reference().child("friends/\(user.uid)")
         ref.setValue(user.toDictionary())
     }
-//     
-//     func updatePopularStats(completion: @escaping (Error?) -> Void){
-//          if !friends.contains(self){self.friends.append(self)}
-//         
-//          for friend in self.friends{
-//               DatabaseReference.users(uid: uid).reference().child("friends/\(friend.uid)").observe(.value, with: { (snapshot) in
-//                    
-//                    if snapshot.value is NSNull{
-//                         
-//                         print("could not update popular rank")
-//                    
-//                    }else{
-//                    
-//                    let userDict = snapshot.value as! [String : AnyObject]
-//                         guard let index = self.friends.index(of: friend) else { return }
-//                   
-//                    self.friends[index].totalLikes = userDict["totalLikes"] as! Int
-//                    self.friends[index].averageLikesCount = userDict["averageLikesCount"] as! Int
-//                    self.friends[index].mediaCount = userDict["mediaCount"] as! Int
-//                    
-//                    self.updatePopularRank()
-//                    
-//                    }
-//               })
-//               
-//          
-//          }
-//     }
-    
+
     func unFriendUser(user: User){
         self.friends = self.friends.filter() {$0 !== user}
         self.store.currentUser = self

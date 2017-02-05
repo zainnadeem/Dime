@@ -146,6 +146,7 @@ class ProfileCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         contentView.addSubview(likeButton)
         likeButton.titleLabel?.font = UIFont.dimeFont(13)
         likeButton.setImage(#imageLiteral(resourceName: "friendsHome"), for: .normal)
+        likeButton.addTarget(self, action: #selector(seeLikesTapped), for: .touchUpInside)
         
         self.likeButton.translatesAutoresizingMaskIntoConstraints = false
         self.likeButton.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor, constant: 10).isActive = true
@@ -215,6 +216,13 @@ class ProfileCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         
     }
     
+    func seeLikesTapped(){
+        let destinationVC = SearchDimeViewController()
+        destinationVC.user = store.currentUser
+        destinationVC.dime = self.dime
+        destinationVC.viewContollerType = SearchViewControllerType.likes
+        self.parentCollectionView?.navigationController?.pushViewController(destinationVC, animated: true)
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

@@ -51,13 +51,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Dime/ProfileCollectionViewController.swift"
-            timestampString = "507606468.009789"
+            filePath = "Dime/SearchDimeViewController.swift"
+            timestampString = "508029806.052118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "296"
-            endingLineNumber = "296"
-            landmarkName = "configureFriendsCountButton()"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
+            landmarkName = "configureType()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

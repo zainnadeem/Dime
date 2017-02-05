@@ -50,10 +50,6 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-       // imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
-        
-        //configureBackgroundImage()
-        
         configureProfilePic()
         configureUsernameButton()
     
@@ -80,19 +76,17 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         self.chatButton.isHidden = true
         self.friendDiamond.isHidden = true
         }else{
+            
             self.chatButton.isHidden = false
             self.friendDiamond.isHidden = false
-            
+    
         }
     }
     
     func updateUI() {
  
         hideButtonsForUser()
-        //self.imageView.setImage(nil, for: .normal)
-       
-        
-        
+
         let mediaImageKey = "\(self.dime.uid)-coverImage"
         
         if let image = cache?.object(forKey: mediaImageKey) as? UIImage
@@ -219,13 +213,6 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                 for id in self.dime.createdBy.deviceTokens{
                     OneSignal.postNotification(["contents" : ["en" : "\(self.currentUser.username) wants to be your friend!"], "headings" : ["en" : "Friend Request"], "include_player_ids" : [id]])
                 }
-                
-                
-                
-                //self.currentUser.friendUser(user: self.dime.createdBy)
-                //self.currentUser.unTopFriendUser(user: self.dime.createdBy)
-                //self.dime.createdBy.getTotalLikes()
-                //self.configureFriendButton()
                 
                 
             })
@@ -399,6 +386,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         contentView.addSubview(likeButton)
         likeButton.titleLabel?.font = UIFont.dimeFont(13)
         likeButton.setImage(#imageLiteral(resourceName: "friendsHome"), for: .normal)
+        likeButton.addTarget(self, action: #selector(seeLikesTapped), for: .touchUpInside)
         
         self.likeButton.translatesAutoresizingMaskIntoConstraints = false
         self.likeButton.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor, constant: 10).isActive = true
@@ -483,6 +471,17 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     }
     
 
+    func seeLikesTapped(){
+        
+        let destinationVC = SearchDimeViewController()
+        destinationVC.user = store.currentUser
+        destinationVC.dime = self.dime
+        destinationVC.viewContollerType = SearchViewControllerType.likes
+        self.parentCollectionView?.navigationController?.pushViewController(destinationVC, animated: true)
+        
+
+    }
+    
     
     func startChat(){
         //guard let chats = self.store.chats else { return }

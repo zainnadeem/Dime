@@ -11,35 +11,49 @@ import Firebase
 
 private let reuseIdentifier = "SearchDimeTableViewCell"
 
-class SearchDimeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate {
 
+public enum SearchViewControllerType {
+    case friends
+    case likes
+    case superLikes
+    case searchAllUsers
+    case showMessages
+}
+
+class SearchDimeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate {
+    
     var user: User?
+    var dime: Dime?
+    
     var UsersToSearch = [User]()
+    
     var filteredUsers = [User]()
     var selectedUser: User?
+    
     var store = DataStore.sharedInstance
     
     var showingUsersFriends: Bool = Bool()
+    
     var findingMessages: Bool = Bool()
-
+    
     lazy var searchBar: UISearchBar = UISearchBar()
     
     lazy var tableView: UITableView = UITableView()
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "icon-back"), middleButtonImage: nil)
     
+
+    var viewContollerType: SearchViewControllerType?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.addSubview(navBar)
         setViewConstraints()
         addSearchProperties()
-        
-        //searchBar.becomeFirstResponder()
-        
+ 
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-    
-        
+
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
@@ -48,21 +62,48 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         
         self.navBar.delegate = self
         self.tableView.register(SearchDimeTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+    
+        configureType()
+    }
+    
+    func configureType(){
+        guard let profileUser = self.user else { return }
         
-        if showingUsersFriends{
-             guard let profileUser = self.user else { return }
-             navBar.middleButton.title = "\(profileUser.username)'s Friends"
-             fetchFriends()
-        }else{
+        guard let type = self.viewContollerType else { return }
+        
+        switch type {
+        
+        case .friends:
+            print("showing friends")
+            navBar.middleButton.title = "\(profileUser.username)'s Friends"
+            fetchFriends()
+            
+        case .likes:
+            print("likes page")
+            navBar.middleButton.title = "Liked By"
+            fetchLikers()
+            
+            
+        case .superLikes:
+            print("searchAllUsers")
+            navBar.middleButton.title = "Super Liked By"
+            fetchSuperLikers()
+            
+        case .searchAllUsers:
+            print("searchAllUsers")
+            navBar.middleButton.title = "Search Dime"
             fetchAllDimeUsers()
-        }
-        
-        if findingMessages {
-            navBar.middleButton.title = "start a conversation"
-        }
-        
 
-        // Do any additional setup after loading the view.
+            
+        case .showMessages:
+            print("show messages page")
+            navBar.middleButton.title = "start a conversation"
+            fetchFriends()
+            
+        
+        default:
+            print("default")
+        }
     }
     
     func fetchAllDimeUsers() {
@@ -79,6 +120,17 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         guard let profileUser = self.user else { return }
         self.UsersToSearch = profileUser.friends
     }
+    
+    func fetchLikers() {
+        guard let currentDime = self.dime else { return }
+        self.UsersToSearch = currentDime.likes
+    }
+    
+    func fetchSuperLikers() {
+        guard let currentDime = self.dime else { return }
+        self.UsersToSearch = currentDime.superLikes
+    }
+    
     
     
     func setViewConstraints(){
@@ -114,11 +166,32 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchBar.text != ""{
-            return self.filteredUsers.count
-        }else{
-            return self.UsersToSearch.count
+        guard let type = self.viewContollerType else { return 0 }
+        
+        switch type {
+       
+        case .friends, .likes, .superLikes:
+            if searchBar.text != ""{
+                return self.filteredUsers.count
+            }else{
+                return self.UsersToSearch.count
+            }
+        
+        case .searchAllUsers:
+            if searchBar.text != ""{
+                return self.filteredUsers.count
+            }else{
+                return 0
+            }
+            
+        case .showMessages:
+            print("showUsers")
+        
+        default:
+            print("default")
         }
+        
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -127,8 +200,7 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         cell.setViewConstraints()
         
         var user: User
-        
-        
+
         if searchBar.text != ""{
             cell.user = self.filteredUsers[indexPath.row]
         }else{

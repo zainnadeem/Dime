@@ -197,15 +197,13 @@ extension PopularFeedTableViewController : NavBarViewDelegate {
     func leftBarButtonTapped(_ sender: AnyObject) {
         
         let destinationVC = SearchDimeViewController()
-        destinationVC.user = store.currentUser
         
         if let user = store.currentUser{
             destinationVC.user = user
         }
         
-        
+        destinationVC.viewContollerType = SearchViewControllerType.searchAllUsers
         self.navigationController?.pushViewController(destinationVC, animated: true)
-        print("Not sure what the left bar button will do yet.")
     }
     
     func middleBarButtonTapped(_ Sender: AnyObject) {

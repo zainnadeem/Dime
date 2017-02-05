@@ -307,7 +307,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         
         let destinationVC = SearchDimeViewController()
         destinationVC.user = self.user
-        destinationVC.showingUsersFriends = true
+        destinationVC.viewContollerType = SearchViewControllerType.friends
         self.navigationController?.pushViewController(destinationVC, animated: true)
 
     }
