@@ -64,7 +64,13 @@ class CreateDimeViewController: UIViewController {
             self.expiringLabel.isHidden = true
             
             self.dimeTitleLabel.text = "Get Started!"
+            
+
+            
             self.dimeCoverPhoto.setImage(#imageLiteral(resourceName: "NoDimeImage"), for: .normal)
+            
+            
+            
             self.dimeCoverPhoto.imageView?.contentMode = .scaleAspectFit
             
             self.dimeCoverPhoto.removeTarget(self, action: #selector(EditCurrentDimeTapped), for: .touchUpInside)
@@ -221,6 +227,11 @@ class CreateDimeViewController: UIViewController {
                 
                 self.store.currentDime?.media.append(newMedia)
                 self.store.currentUser?.updateMediaCount(.increment, amount: 1)
+                
+//                UserDefaults.standard.set(videoData, forKey: "0Video")
+//                UserDefaults.standard.set(createThumbnailForVideo(path: videoURL.path), forKey: "0Image")
+//                UserDefaults.standard.set(true, forKey: "0")
+//                UserDefaults.standard.synchronize()
 
                 self.present(controller, animated: true, completion: nil)
                 
@@ -236,6 +247,10 @@ class CreateDimeViewController: UIViewController {
                 self.store.currentDime?.media.append(newMedia)
                 self.store.currentUser?.updateMediaCount(.increment, amount: 1)
                 controller.finishedEditing = false
+                
+//                UserDefaults.standard.set(UIImagePNGRepresentation(snapshotImage), forKey: "0")
+//                UserDefaults.standard.set(true, forKey: "0")
+//                UserDefaults.standard.synchronize()
                 
                 
                 self.present(controller, animated: true, completion: nil)

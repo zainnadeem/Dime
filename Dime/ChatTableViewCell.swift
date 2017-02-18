@@ -34,8 +34,6 @@ class ChatTableViewCell: UITableViewCell {
     
     func updateUI(){
         
-        
-        
        featuredImageView.image = #imageLiteral(resourceName: "icon-defaultAvatar")
         
         let featuredImageViewKey = "\(self.chat.title)-titleImage"
@@ -47,8 +45,7 @@ class ChatTableViewCell: UITableViewCell {
 
         chat.downloadFeaturedImage { (image, error) in
             self.featuredImageView.image = image
-            self.cache?.setObject(image, forKey: featuredImageViewKey)
-           
+            self.cache?.setObject(image, forKey: featuredImageViewKey)    
             
         }
 

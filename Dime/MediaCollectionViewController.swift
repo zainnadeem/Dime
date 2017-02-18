@@ -291,11 +291,21 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
                         videoData?.write(toFile: dataPath, atomically: false)
                         
                         media.mediaURL = dataPath
+                    
+//                        UserDefaults.standard.set(videoData, forKey: "\(indexPath.row)Video")
+//                        UserDefaults.standard.set(createThumbnailForVideo(path: videoURL.path), forKey: "\(indexPath.row)Image")
+//                        UserDefaults.standard.set(true, forKey: "\(indexPath.row)")
+//                        UserDefaults.standard.synchronize()
+                    
                     }
                 } else if let snapshotImage = mediaObject as? UIImage {
                     
                     self.newMedia = Media(dimeUID: dime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: snapshotImage, likesCount: 0, superLikesCount: 0)
                     self.store.currentUser?.updateMediaCount(.increment, amount: 1)
+//                    
+//                        UserDefaults.standard.set(UIImagePNGRepresentation(snapshotImage), forKey: "\(indexPath.row)")
+//                        UserDefaults.standard.set(true, forKey: "\(indexPath.row)")
+//                        UserDefaults.standard.synchronize()
                     
                 }
                 
@@ -303,9 +313,13 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
                     
                     if (dime.media.count) >= indexPath.row + 1 { dime.media.remove(at: indexPath.row) }
                     dime.media.insert(media, at: indexPath.row)
+                    
+                    
+                    
                     collectionView.reloadData()
                     
                 }
+                
                 self.newMedia = nil
             }
         })
