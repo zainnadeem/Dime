@@ -148,6 +148,47 @@ class Media {
 }
     }
     
+    func saveDraft(ref :FIRDatabaseReference, completion: @escaping (Error?) -> Void) {
+        let ref = DatabaseReference.drafts.reference().child("\(dimeUID)/media/\(uid)")
+        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("drafts/\(dimeUID)/media/\(uid)")
+        //ref.setValue(toDictionary())
+        
+        //save likes
+        for like in likes {
+            ref.child("likes/\(like.uid)").setValue(like.toDictionary())
+        }
+        
+        //save superLikes
+        for superLike in superLikes {
+            ref.child("superLikes/\(superLike.uid)").setValue(superLike.toDictionary())
+        }
+        
+        //save comments
+        for comment in comments {
+            ref.child("comments/\(comment.uid)").setValue(comment.toDictionary())
+        }
+        
+        for user in usersTagged {
+            ref.child("users tagged/\(user.uid)").setValue(user.toDictionary())
+        }
+        
+        //upload image to storage database
+        let firImage = FIRImage(image: mediaImage)
+        firImage.save(self.uid, completion: { error in
+            completion(error)
+        })
+        
+        if type == "video" {
+            let firVideo = FIRVideo(videoURL: URL(fileURLWithPath: mediaURL))
+            firVideo.save(self.uid, completion: { (meta, error) in
+                
+                ref.child("mediaURL").setValue(meta?.downloadURL()?.absoluteString)
+                userRef.child("mediaURL").setValue(meta?.downloadURL()?.absoluteString)
+                
+            })
+        }
+    }
+    
     func toDictionary() -> [String: Any] {
         return [
             "uid" : uid,

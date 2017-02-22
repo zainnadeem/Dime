@@ -21,6 +21,7 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
     var mediaPickerHelper: MediaPickerHelper?
     var passedDime: Dime!
     var dime: Dime?
+    var draftDime: Dime?
     var newMedia: Media?
     
     let activityData = ActivityData()
@@ -101,7 +102,7 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
             alert(title: "Edit Your Photos", message: "Hit the edit button in the top right corner. Once you've edited your photos you can post your Dime!", buttonTitle: "Okay")
         }
     }
-
+    
     @IBAction func changeCoverPhoto(_ sender: Any) {
         
     }
@@ -122,6 +123,12 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         if let currentDime = dime {
             currentDime.media = sortByOrderCreated(currentDime.media)
         }
+        
+        draftDime = self.store.currentDime
+        
+        //        if let currentDraft = draftDime {
+        //            currentDraft.media = sortByOrderCreated(currentDraft.media)
+        //        }
         
         let bgImage = UIImageView()
         bgImage.image = #imageLiteral(resourceName: "background_GREY")
@@ -291,21 +298,21 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
                         videoData?.write(toFile: dataPath, atomically: false)
                         
                         media.mediaURL = dataPath
-                    
-//                        UserDefaults.standard.set(videoData, forKey: "\(indexPath.row)Video")
-//                        UserDefaults.standard.set(createThumbnailForVideo(path: videoURL.path), forKey: "\(indexPath.row)Image")
-//                        UserDefaults.standard.set(true, forKey: "\(indexPath.row)")
-//                        UserDefaults.standard.synchronize()
-                    
+                        
+                        //                        UserDefaults.standard.set(videoData, forKey: "\(indexPath.row)Video")
+                        //                        UserDefaults.standard.set(createThumbnailForVideo(path: videoURL.path), forKey: "\(indexPath.row)Image")
+                        //                        UserDefaults.standard.set(true, forKey: "\(indexPath.row)")
+                        //                        UserDefaults.standard.synchronize()
+                        
                     }
                 } else if let snapshotImage = mediaObject as? UIImage {
                     
                     self.newMedia = Media(dimeUID: dime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: snapshotImage, likesCount: 0, superLikesCount: 0)
                     self.store.currentUser?.updateMediaCount(.increment, amount: 1)
-//                    
-//                        UserDefaults.standard.set(UIImagePNGRepresentation(snapshotImage), forKey: "\(indexPath.row)")
-//                        UserDefaults.standard.set(true, forKey: "\(indexPath.row)")
-//                        UserDefaults.standard.synchronize()
+                    //
+                    //                        UserDefaults.standard.set(UIImagePNGRepresentation(snapshotImage), forKey: "\(indexPath.row)")
+                    //                        UserDefaults.standard.set(true, forKey: "\(indexPath.row)")
+                    //                        UserDefaults.standard.synchronize()
                     
                 }
                 
@@ -418,19 +425,43 @@ extension MediaCollectionViewController : NavBarViewDelegate {
         
         let action = UIAlertAction(title: "okay", style: .default, handler: {
             action in
-         
+            
             self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-        
+            
         })
+        
+        let draft = UIAlertAction(title: "save draft", style: .default) { (action) in
+            self.draftDime?.createdTime = Constants.dateFormatter().string(from: Date(timeIntervalSinceNow: 0))
+            self.store.currentDime = self.draftDime
+            
+            var coverImage: UIImage = UIImage()
+            
+            if let photo = self.coverPhoto{
+                coverImage = photo
+            } else if let image = self.draftDime?.media[0].mediaImage {
+                coverImage = image
+            }
+            
+            let firImage = FIRImage(image: coverImage)
+            firImage.save("\(self.draftDime?.uid)-coverImage", completion: { error in
+                self.cache?.setObject(coverImage, forKey: "\(self.draftDime?.uid)-coverImage")
+            })
+            
+            self.draftDime?.updateOrCreateDraft(completion: { (error) in
+            })
+            
+            self.dimePostAlert(title: "Great!", message: "Draft Saved", buttonTitle: "Okay")
+            
+        }
         
         let cancel = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
         
         alertVC.addAction(action)
+        alertVC.addAction(draft)
         alertVC.addAction(cancel)
         
         present(alertVC, animated: true, completion: nil)
-       
-        print("Not sure what the left bar button will do yet.")
+        
     }
     
     func middleBarButtonTapped(_ Sender: AnyObject) {

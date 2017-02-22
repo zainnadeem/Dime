@@ -23,7 +23,7 @@ class Dime {
     var comments                : [Comment]
     var totalDimeSuperLikes         : Int
     var totalDimeLikes              : Int
-
+    
     
     
     init(caption: String, createdBy: User, media: [Media], totalDimeLikes: Int, averageLikesCount: Int, totalDimeSuperLikes: Int)
@@ -37,7 +37,7 @@ class Dime {
         
         self.totalDimeLikes = totalDimeLikes
         self.totalDimeSuperLikes = totalDimeSuperLikes
-           
+        
         comments = []
         likes = []
         superLikes = []
@@ -120,6 +120,35 @@ class Dime {
         }
     }
     
+    func saveDraft(completion: @escaping (Error?) -> Void) {
+        let ref = DatabaseReference.drafts.reference().child(uid)
+        ref.setValue(toDictionary())
+        
+        for media in media{
+            ref.child("media/\(media.uid)").setValue(media.toDictionary())
+            media.saveDraft(ref: ref, completion: { (error) in
+                if error != nil{
+                    print(error?.localizedDescription)
+                }
+            })
+        }
+        
+        //save likes
+        for like in likes {
+            ref.child("likes/\(like.uid)").setValue(like.toDictionary())
+        }
+        
+        for superLike in superLikes {
+            ref.child("superLikes/\(superLike.uid)").setValue(superLike.toDictionary())
+        }
+        
+        
+        //save comments
+        for comment in comments {
+            ref.child("comments/\(comment.uid)").setValue(comment.toDictionary())
+        }
+    }
+    
     func saveToUser(saveToUser user : User, completion: @escaping (Error?) -> Void) {
         let ref = DatabaseReference.users(uid: user.uid).reference().child("dimes/\(uid)")
         ref.setValue(toDictionary())
@@ -150,9 +179,40 @@ class Dime {
         
     }
     
+    func saveDraftToUser(saveToUser user: User, completion: @escaping (Error?) -> Void) {
+        let ref = DatabaseReference.users(uid: user.uid).reference().child("drafts/\(uid)")
+        ref.setValue(toDictionary())
+        
+        
+        for media in media{
+            ref.child("media/\(media.uid)").setValue(media.toDictionary())
+            media.saveDraft(ref: ref, completion: { (error) in
+                if error != nil{
+                    print(error?.localizedDescription)
+                }
+            })
+        }
+        
+        //save likes
+        for like in likes {
+            ref.child("likes/\(like.uid)").setValue(like.toDictionary())
+        }
+        
+        for superLike in superLikes {
+            ref.child("superLikes/\(superLike.uid)").setValue(superLike.toDictionary())
+        }
+        
+        //save comments
+        for comment in comments {
+            ref.child("comments/\(comment.uid)").setValue(comment.toDictionary())
+        }
+    }
+    
     func update(completion: @escaping (Error?) -> Void) {
         let ref = DatabaseReference.dimes.reference().child(uid)
         ref.updateChildValues(updateDictionary())
+        
+        
         
         for media in media{
             let mediaRef = ref.child("media")
@@ -176,7 +236,35 @@ class Dime {
                 }
             })
         }
-
+    }
+    
+        func updateDraft(completion: @escaping (Error?) -> Void) {
+            let ref = DatabaseReference.drafts.reference().child(uid)
+            ref.updateChildValues(updateDictionary())
+            
+            for media in media{
+                let mediaRef = ref.child("media")
+                mediaRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                    
+                    if snapshot.hasChild(media.uid){
+                        
+                        mediaRef.child("\(media.uid)").updateChildValues(media.updateDictionary())
+                        
+                        
+                    }else{
+                        
+                        mediaRef.child("\(media.uid)").setValue(media.toDictionary())
+                        media.saveDraft(ref: ref, completion: { (error) in
+                            if error != nil{
+                                print(error?.localizedDescription)
+                            }
+                        })
+                        
+                        
+                    }
+                })
+            }
+        
         //save likes
         for like in likes {
             ref.child("likes/\(like.uid)").setValue(like.toDictionary())
@@ -211,8 +299,8 @@ class Dime {
                     
                 }else{
                     
-                     mediaRef.child("\(media.uid)").setValue(media.toDictionary())
-                     media.save(ref: ref, completion: { (error) in
+                    mediaRef.child("\(media.uid)").setValue(media.toDictionary())
+                    media.save(ref: ref, completion: { (error) in
                         if error != nil{
                             print(error?.localizedDescription)
                         }
@@ -222,6 +310,36 @@ class Dime {
                 }
             })
         }
+    }
+    
+    func updateDraftForUser(saveToUser user: User, completion: @escaping (Error?) -> Void) {
+        let ref = DatabaseReference.users(uid: user.uid).reference().child("drafts/\(uid)")
+        ref.updateChildValues(self.updateDictionary())
+        
+        
+        for media in media{
+            let mediaRef = ref.child("media")
+            mediaRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                if snapshot.hasChild(media.uid){
+                    
+                    mediaRef.child("\(media.uid)").updateChildValues(media.updateDictionary())
+                    
+                    
+                }else{
+                    
+                    mediaRef.child("\(media.uid)").setValue(media.toDictionary())
+                    media.saveDraft(ref: ref, completion: { (error) in
+                        if error != nil{
+                            print(error?.localizedDescription)
+                        }
+                    })
+                    
+                    
+                }
+            })
+        }
+    
         
         //save likes
         for like in likes {
@@ -247,7 +365,7 @@ class Dime {
             "uid" : uid,
             "caption" : caption,
             "createdBy" : createdBy.toDictionary()
-
+            
         ]
     }
     
@@ -350,7 +468,50 @@ extension Dime {
         })
     }
     
-    
+    func updateOrCreateDraft(completion: @escaping (Error?) -> Void) {
+        
+        let ref = DatabaseReference.drafts.reference()
+        
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if snapshot.hasChild(self.uid){
+                
+                self.updateDraft(completion: { (error) in
+                    
+                })
+                
+                
+                self.updateDraftForUser(saveToUser: self.createdBy, completion: { (error) in
+                    
+                })
+                
+                
+                
+            }else{
+                
+                self.saveDraft(completion: { (error) in
+                    print()
+                })
+                
+                self.saveDraftToUser(saveToUser: self.createdBy, completion: { (error) in
+                    print()
+                })
+                
+            }
+            
+            
+        })
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
     
     func downloadMediaImage(completion: @escaping (UIImage?, Error?) -> Void) {
         
@@ -443,7 +604,7 @@ extension Dime {
             ref.setValue(nil)
         }
     }
-
+    
     func deleteDimeFromFireBase(){
         let dimeRef = DatabaseReference.dimes.reference().child("\(uid)")
         dimeRef.setValue(nil)
@@ -451,8 +612,8 @@ extension Dime {
         let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("dimes/\(uid)")
         userRef.setValue(nil)
     }
-
-
+    
+    
 }
 
 
@@ -501,7 +662,7 @@ enum UpdateDirection : Int {
 
 extension Dime {
     
-
+    
     
     
 }

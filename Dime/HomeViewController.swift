@@ -41,11 +41,11 @@ class HomeViewController: UIViewController {
         self.tabBarController?.navigationController?.setNavigationBarHidden(true, animated: true)
         self.tabBarController?.tabBar.isHidden = true
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = false
     }
-
+    
     func makeButtonsBigger(){
         for button in homeButtons{
             button.contentEdgeInsets = UIEdgeInsetsMake(-44, -44, -44, -44)
@@ -55,26 +55,26 @@ class HomeViewController: UIViewController {
     
     @IBAction func popularTapped(_ sender: Any) {
         self.tabBarController?.selectedIndex = 4
-       
+        
     }
     
     @IBAction func trendingTapped(_ sender: Any) {
         self.tabBarController?.selectedIndex = 3
     }
-
+    
     @IBAction func friendsTapped(_ sender: Any) {
         self.tabBarController?.selectedIndex = 1
     }
-
+    
     @IBAction func topDimesTapped(_ sender: Any) {
         self.tabBarController?.selectedIndex = 0
     }
     
     override func viewWillAppear(_ animated: Bool) {
-       // self.store.updateFriends()
+        // self.store.updateFriends()
         self.tabBarController?.tabBar.isHidden = true
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-         self.tabBarController?.navigationController?.setNavigationBarHidden(true, animated: true)
+        self.tabBarController?.navigationController?.setNavigationBarHidden(true, animated: true)
         
         FIRAuth.auth()?.addStateDidChangeListener({ (auth, user) in
             if let user = user {
@@ -83,6 +83,7 @@ class HomeViewController: UIViewController {
                     if let userDict = snapshot.value as? [String : Any] {
                         
                         self.store.currentDime = nil
+                        self.store.currentDraft = nil
                         self.currentUser = User(dictionary: userDict)
                         self.store.currentUser = User(dictionary: userDict)
                         
@@ -93,9 +94,10 @@ class HomeViewController: UIViewController {
                         self.store.registerOneSignalToken(user: self.currentUser!)
                         
                         self.store.getCurrentDime()
-                       
+                        self.store.getCurrentDraft()
+                        
                         self.store.observeChats({ (chats) in
-  
+                            
                         })
                         self.store.updateMediaCount()
                         
@@ -105,24 +107,24 @@ class HomeViewController: UIViewController {
                     }
                 })
                 
-            
+                
                 
             }else {
                 
                 print("No User")
             }
         })
-       
+        
     }
     
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "TopDimes"{
             if let nextViewController = segue.destination as? TabBarViewController{
                 nextViewController.tabBarIndex = 0
             }
-        
+            
         } else if segue.identifier == "Dimes" {
             if let nextViewController = segue.destination as? TabBarViewController{
                 nextViewController.tabBarIndex = 1
@@ -140,9 +142,9 @@ class HomeViewController: UIViewController {
         }
         
     }
-
-
-
+    
+    
+    
 }
 extension HomeViewController : NavBarViewDelegate {
     
@@ -153,7 +155,7 @@ extension HomeViewController : NavBarViewDelegate {
     }
     
     func leftBarButtonTapped(_ sender: AnyObject) {
-
+        
         
         let destinationVC = SearchDimeViewController()
         destinationVC.user = store.currentUser
@@ -161,8 +163,8 @@ extension HomeViewController : NavBarViewDelegate {
         
         
         self.navigationController?.pushViewController(destinationVC, animated: true)
-
-
+        
+        
     }
     
     func middleBarButtonTapped(_ Sender: AnyObject) {
@@ -170,7 +172,7 @@ extension HomeViewController : NavBarViewDelegate {
         destinationVC.user = store.currentUser
         self.navigationController?.pushViewController(destinationVC, animated: true)
     }
-
+    
 }
 
 extension UIButton {

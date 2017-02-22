@@ -20,6 +20,7 @@ enum DatabaseReference {
     case dimes
     case chats
     case messages
+    case drafts
     
     // MARK: - Public
     
@@ -48,7 +49,8 @@ enum DatabaseReference {
             return "dimes"
         case .messages:
             return "messages"
-            
+        case .drafts:
+            return "drafts"
             
         }
     }

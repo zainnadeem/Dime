@@ -1,4 +1,4 @@
- //
+//
 //  WelcomeViewController.swift
 //  Dime
 //
