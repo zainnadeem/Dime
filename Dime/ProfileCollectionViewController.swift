@@ -17,13 +17,13 @@ private let reuseIdentifier = "ProfileCollectionViewCell"
 
 class ProfileCollectionViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UITextViewDelegate {
     
-
+    
     var user : User?
     var cache = SAMCache.shared()
     let store = DataStore.sharedInstance
     var passedDimes: [Dime] = [Dime]()
     
-
+    
     
     //for header view
     var banner: UIView = UIView()
@@ -34,6 +34,8 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     var friendsCountButton: UIButton = UIButton()
     var friendsCountIcon: UIButton = UIButton()
     var popularRankButton = UIButton()
+    
+    var draftButton = UIButton()
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage:nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
@@ -64,6 +66,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         fetchUser()
         fetchDimes()
         configureUserSpecificButtons()
+        configureDraftButton()
         
     }
     
@@ -88,7 +91,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             friendDiamond.isEnabled = false
             self.messagesButton.removeTarget(self, action: #selector(startChat), for: .touchUpInside)
             self.messagesButton.addTarget(self, action: #selector(showChats), for: .touchUpInside)
-
+            
             
         }else{
             
@@ -100,7 +103,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             
             self.messagesButton.removeTarget(self, action: #selector(showChats), for: .touchUpInside)
             self.messagesButton.addTarget(self, action: #selector(startChat), for: .touchUpInside)
-        
+            
         }
     }
     
@@ -121,7 +124,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.banner.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.13).isActive = true
         
         self.banner.backgroundColor = UIColor.dimeDarkBlue()
-       
+        
         self.view.bringSubview(toFront: self.circleProfileView)
         
     }
@@ -158,8 +161,8 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         }
         
         setImageViewCircular()
-       
-       
+        
+        
     }
     
     func setImageViewCircular() {
@@ -172,9 +175,9 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.circleProfileView.clipsToBounds = true
     }
     
-
     
-
+    
+    
     
     func configureFriendDiamond() {
         self.banner.addSubview(friendDiamond)
@@ -189,12 +192,12 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         }else{
             friendDiamond.setImage(#imageLiteral(resourceName: "icon-blueDiamondUnfilled"), for: .normal)
         }
-
+        
         friendDiamond.titleLabel?.font = UIFont.dimeFont(16)
         friendDiamond.setTitleColor(UIColor.black, for: .normal)
         friendDiamond.tintColor = UIColor.black
         friendDiamond.addTarget(self, action: #selector(filterFriendAlert), for: .touchUpInside)
-
+        
         self.friendDiamond.translatesAutoresizingMaskIntoConstraints = false
         self.friendDiamond.topAnchor.constraint(equalTo: self.banner.topAnchor, constant: 10).isActive = true
         self.friendDiamond.trailingAnchor.constraint(equalTo: self.banner.trailingAnchor, constant: -10).isActive = true
@@ -206,13 +209,13 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.banner.addSubview(userNameButton)
         
         guard let profileUser = user else { return }
-
+        
         self.userNameButton.translatesAutoresizingMaskIntoConstraints = false
         self.userNameButton.topAnchor.constraint(equalTo: self.banner.topAnchor, constant: 5).isActive = true
         self.userNameButton.centerXAnchor.constraint(equalTo: self.banner.centerXAnchor).isActive = true
         self.userNameButton.heightAnchor.constraint(equalTo: self.banner.heightAnchor, multiplier: 0.5).isActive = true
         self.userNameButton.widthAnchor.constraint(equalTo: self.banner.widthAnchor, multiplier: 0.7).isActive = true
-
+        
         userNameButton.titleLabel?.font = UIFont.dimeFontBold(30)
         
         
@@ -220,7 +223,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         userNameButton.setTitleColor(UIColor.white, for: .normal)
         userNameButton.titleLabel?.textAlignment = .center
         userNameButton.titleLabel?.font = UIFont.dimeFontBold(30)
-       
+        
         
     }
     
@@ -242,7 +245,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         
         self.popularRankButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.04).isActive = true
         self.popularRankButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.08).isActive = true
- 
+        
         
         if currentUser.friends.contains(profileUser){
             let friendIndex = currentUser.friends.index(of: profileUser)
@@ -257,7 +260,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         }
         
     }
-
+    
     func configureMessagesIcon() {
         self.view.addSubview(messagesButton)
         messagesButton.setImage(#imageLiteral(resourceName: "icon-chatWhite"), for: .normal)
@@ -272,10 +275,10 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.messagesButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.05).isActive = true
         self.messagesButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.10).isActive = true
     }
-
     
     
-
+    
+    
     
     func configureFriendsCountButton() {
         self.view.addSubview(friendsCountButton)
@@ -289,19 +292,40 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         
         self.friendsCountButton.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.04).isActive = true
         self.friendsCountButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.15).isActive = true
-
+        
         
         friendsCountButton.addTarget(self, action: #selector(showAllFriends), for: .touchUpInside)
         
         friendsCountButton.setTitle("💎 \(profileUser.friends.count)", for: .normal)
         self.friendsCountButton.titleLabel?.font = UIFont.dimeFontBold(15)
         self.friendsCountButton.setTitleColor(UIColor.white, for: .normal)
-    
+        
     }
     
     
-
     
+    func configureDraftButton() {
+
+        self.view.addSubview(draftButton)
+        
+        draftButton.translatesAutoresizingMaskIntoConstraints = false
+        draftButton.trailingAnchor.constraint(equalTo: banner.trailingAnchor).isActive = true
+        draftButton.centerYAnchor.constraint(equalTo: userNameButton.centerYAnchor).isActive = true
+        draftButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.04).isActive = true
+        draftButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.1).isActive = true
+        
+        draftButton.addTarget(self, action: #selector(draftButtonTapped), for: .touchUpInside)
+        
+        draftButton.backgroundColor = .red
+        
+    }
+    
+    func draftButtonTapped() {
+        let draftsStoryboard = UIStoryboard(name: "Drafts", bundle: nil)
+        if let draftsVC = draftsStoryboard.instantiateInitialViewController() {
+            present(draftsVC, animated: true, completion: nil)
+        }
+    }
     
     func showAllFriends(){
         
@@ -309,14 +333,14 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         destinationVC.user = self.user
         destinationVC.viewContollerType = SearchViewControllerType.friends
         self.navigationController?.pushViewController(destinationVC, animated: true)
-
+        
     }
     
     
     
     func fetchDimes() {
         self.dimeCollectionView.reloadData()
-        Dime.observeNewDimeForUser(user: user!, { (dime) in            
+        Dime.observeNewDimeForUser(user: user!, { (dime) in
             
             if !self.passedDimes.contains(dime) {
                 self.passedDimes.insert(dime, at: 0)
@@ -348,7 +372,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         
         cell.currentUser = store.currentUser
         cell.dime = passedDimes[indexPath.row]
-
+        
         
         return cell
     }
@@ -370,7 +394,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.dimeCollectionView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         dimeCollectionView.backgroundColor = UIColor.clear
         self.view.addSubview(dimeCollectionView)
-     
+        
         dimeCollectionView.isPagingEnabled = true
     }
     
@@ -382,9 +406,9 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+        
     }
-   
+    
     
     func showChats(){
         let destinationVC = ChatsTableViewController()
@@ -576,7 +600,7 @@ extension ProfileCollectionViewController : DZNEmptyDataSetDelegate {
 
 //ConfigureFriendButton
 extension ProfileCollectionViewController {
-
+    
     func filterFriendAlert(){
         guard let profileUser = user else { return }
         guard let currentUser = self.store.currentUser else { return }
@@ -602,7 +626,7 @@ extension ProfileCollectionViewController {
             let notification = Notification(dimeUID: "", mediaUID: "", toUser: profileUser.uid, from: currentUser, caption: "\(currentUser.username) wants to be your friend!", notificationType: .friendRequest)
             
             notification.save()
-
+            
             for id in profileUser.deviceTokens{
                 OneSignal.postNotification(["contents" : ["en" : "\(currentUser.username) wants to be your friend!"], "headings" : ["en" : "Friend Request"], "include_player_ids" : [id]])
             }

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="T6Q-ig-AxV">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Drafts-->
+        <scene sceneID="iUu-5C-vkJ">
+            <objects>
+                <viewController id="CSR-yL-lpY" customClass="DraftsViewController" customModule="Dime" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hMr-dF-L2m"/>
+                        <viewControllerLayoutGuide type="bottom" id="N07-Dp-mWi"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="eRr-5D-jeA">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4hT-Lq-Utf">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="draftsCell" rowHeight="150" id="YDL-e0-3gR" customClass="DraftsTableViewCell" customModule="Dime" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="150"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YDL-e0-3gR" id="c33-NF-Ldg">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="149"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hA5-Lv-M39">
+                                                    <rect key="frame" x="67" y="10" width="240" height="128"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                </imageView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="draftImageView" destination="hA5-Lv-M39" id="KWd-EP-t7s"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="4hT-Lq-Utf" firstAttribute="top" secondItem="hMr-dF-L2m" secondAttribute="bottom" id="2TY-HZ-hxk"/>
+                            <constraint firstItem="N07-Dp-mWi" firstAttribute="top" secondItem="4hT-Lq-Utf" secondAttribute="bottom" id="HxU-Qu-1ca"/>
+                            <constraint firstItem="4hT-Lq-Utf" firstAttribute="leading" secondItem="eRr-5D-jeA" secondAttribute="leading" id="hNo-pJ-Q5x"/>
+                            <constraint firstAttribute="trailing" secondItem="4hT-Lq-Utf" secondAttribute="trailing" id="oGX-5m-Ttz"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Drafts" id="Nym-nf-6ja">
+                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="a3m-kN-tDd">
+                            <connections>
+                                <action selector="editButtonTapped:" destination="CSR-yL-lpY" id="1sP-h1-Fha"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="0oP-Zp-E3W">
+                            <connections>
+                                <action selector="doneButtonTapped:" destination="CSR-yL-lpY" id="Ioc-b5-7U3"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="doneButton" destination="0oP-Zp-E3W" id="IlD-6I-bAl"/>
+                        <outlet property="draftsTableView" destination="4hT-Lq-Utf" id="iGL-co-HQ2"/>
+                        <outlet property="editButton" destination="a3m-kN-tDd" id="Q6v-qc-n5p"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1VW-A3-a0M" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="847.20000000000005" y="179.46026986506749"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="f10-gT-Vgl">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="T6Q-ig-AxV" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="ucg-Dj-rad">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="CSR-yL-lpY" kind="relationship" relationship="rootViewController" id="0s5-fI-1rR"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0yE-n9-sak" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-92" y="179.46026986506749"/>
+        </scene>
+    </scenes>
+</document>

@@ -83,7 +83,6 @@ class HomeViewController: UIViewController {
                     if let userDict = snapshot.value as? [String : Any] {
                         
                         self.store.currentDime = nil
-                        self.store.currentDraft = nil
                         self.currentUser = User(dictionary: userDict)
                         self.store.currentUser = User(dictionary: userDict)
                         
@@ -94,7 +93,6 @@ class HomeViewController: UIViewController {
                         self.store.registerOneSignalToken(user: self.currentUser!)
                         
                         self.store.getCurrentDime()
-                        self.store.getCurrentDraft()
                         
                         self.store.observeChats({ (chats) in
                             

@@ -19,9 +19,7 @@ class DataStore {
     var currentUser: User?
     
     var currentDime: Dime?
-    
-    var currentDraft: Dime?
-    
+
     var chatKeys = [String]()
     var chats = [Chat]()
     
@@ -66,44 +64,6 @@ class DataStore {
             completion()
         }
     }
-    
-    func getCurrentDraft() {
-        
-        if var drafts = currentUser?.drafts {
-            if drafts.count > 0 {
-                drafts = sortByMostRecentlyCreated(drafts)
-//                let lastDraftCreatedTime = drafts.first?.createdTime
-                
-                self.currentDraft = drafts.first
-                self.currentDraft?.media = sortByMostRecentlyCreated((self.currentDraft?.media)!)
-                
-                self.getDraftImages {
-                    
-                }
-                
-            }
-        }
-    }
-    
-    func getDraftImages(_ completion: @escaping () -> Void) {
-        if currentDraft != nil,
-            let draftMedia = currentDraft?.media {
-            for media in draftMedia {
-                if let image = cache?.object(forKey: "\(media.uid)-mediaImage") as? UIImage {
-                    media.mediaImage = image
-                } else {
-                    media.downloadMediaImage(completion: { [weak self] (image, error) in
-                        if let image = image {
-                            media.mediaImage = image
-                            self?.cache?.setObject(image, forKey: "\(media.uid)-mediaImage")
-                        }
-                    })
-                }
-            }
-            completion()
-        }
-    }
-    
     
     func updateMediaCount(){
         guard let currentUser = self.currentUser else { return }

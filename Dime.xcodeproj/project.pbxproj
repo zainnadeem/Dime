@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		17C0EA221BDC559CBCFF8F24 /* Pods_Dime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 423E19BC95A6B01B838A4DD9 /* Pods_Dime.framework */; };
+		6EC100521E5E23F200BD767E /* Drafts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6EC100511E5E23F200BD767E /* Drafts.storyboard */; };
+		6EC100541E5E248300BD767E /* DraftsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC100531E5E248300BD767E /* DraftsViewController.swift */; };
+		6EC100561E5E24CA00BD767E /* DraftsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC100551E5E24CA00BD767E /* DraftsTableViewCell.swift */; };
 		BF1BBC161DFDED230031A5FE /* ProfileCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1BBC151DFDED230031A5FE /* ProfileCollectionViewController.swift */; };
 		BF2A9B421DE3652A001A7704 /* Dime.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2A9B411DE3652A001A7704 /* Dime.swift */; };
 		BF2A9B441DE36B7B001A7704 /* DimeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */; };
@@ -70,6 +73,9 @@
 		35FC2D94581D3F3D58B00A26 /* Pods-Dime.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dime.release.xcconfig"; path = "Pods/Target Support Files/Pods-Dime/Pods-Dime.release.xcconfig"; sourceTree = "<group>"; };
 		423E19BC95A6B01B838A4DD9 /* Pods_Dime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		67DA19E38EAB55B578D203F9 /* Pods-Dime.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dime.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Dime/Pods-Dime.debug.xcconfig"; sourceTree = "<group>"; };
+		6EC100511E5E23F200BD767E /* Drafts.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Drafts.storyboard; sourceTree = "<group>"; };
+		6EC100531E5E248300BD767E /* DraftsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraftsViewController.swift; sourceTree = "<group>"; };
+		6EC100551E5E24CA00BD767E /* DraftsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraftsTableViewCell.swift; sourceTree = "<group>"; };
 		BF1BBC151DFDED230031A5FE /* ProfileCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileCollectionViewController.swift; sourceTree = "<group>"; };
 		BF2A9B411DE3652A001A7704 /* Dime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dime.swift; sourceTree = "<group>"; };
 		BF2A9B431DE36B7B001A7704 /* DimeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimeCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -236,6 +242,7 @@
 				BFAA92D61DF1EEA60063F660 /* SearchUserTableViewCell.swift */,
 				BF5564F51DF8AA0C0086290D /* PopularTableViewCell.swift */,
 				BFC0512A1E30823500E4FD15 /* FriendRequestTableViewCell.swift */,
+				6EC100551E5E24CA00BD767E /* DraftsTableViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -291,6 +298,7 @@
 				BF6BA55B1E300C5200EE8266 /* Dime.entitlements */,
 				BFE387891DCCE902000FA9EA /* AppDelegate.swift */,
 				BF2A9B451DE5012C001A7704 /* Main.storyboard */,
+				6EC100511E5E23F200BD767E /* Drafts.storyboard */,
 				BF5564EB1DF37D880086290D /* NavBarView.swift */,
 				BF5564ED1DF72EC40086290D /* Constants.swift */,
 				BF9342AD1DCE913A006BE70C /* DataStore.swift */,
@@ -323,6 +331,7 @@
 				BF35B8C81DFB39CB006D87D1 /* CommentsViewController.swift */,
 				BF6BA5571E2DD2FC00EE8266 /* SettingsViewController.swift */,
 				BF6BA5591E2EE6F500EE8266 /* SearchDimeViewController.swift */,
+				6EC100531E5E248300BD767E /* DraftsViewController.swift */,
 			);
 			name = Home;
 			sourceTree = "<group>";
@@ -398,6 +407,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6EC100521E5E23F200BD767E /* Drafts.storyboard in Resources */,
 				BF2A9B461DE5012C001A7704 /* Main.storyboard in Resources */,
 				BFEC6D2B1E3D8A940089C83B /* Assets.xcassets in Resources */,
 				BFE387A11DCCEF73000FA9EA /* GoogleService-Info.plist in Resources */,
@@ -461,12 +471,14 @@
 			files = (
 				BFAA92D51DF0BFDA0063F660 /* SearchUserViewController.swift in Sources */,
 				BF5A008E1DDA40E500F825DD /* HomeViewController.swift in Sources */,
+				6EC100561E5E24CA00BD767E /* DraftsTableViewCell.swift in Sources */,
 				BFF5A5171E1C186C00F81B62 /* NotificationsTableViewController.swift in Sources */,
 				BF5A00851DDA39CF00F825DD /* Media.swift in Sources */,
 				BF51A5031E26905E00C28523 /* ContactsPickerViewController.swift in Sources */,
 				BF86AC471E07954C00431E32 /* FIRVideo.swift in Sources */,
 				BF5A00891DDA3BA200F825DD /* MediaPickerHelper.swift in Sources */,
 				BF5564F21DF88D0C0086290D /* TrendingCollectionViewController.swift in Sources */,
+				6EC100541E5E248300BD767E /* DraftsViewController.swift in Sources */,
 				BF86AC451E0790BE00431E32 /* GeneralHelper.swift in Sources */,
 				BF2A9B421DE3652A001A7704 /* Dime.swift in Sources */,
 				BF6BA55A1E2EE6F500EE8266 /* SearchDimeViewController.swift in Sources */,
