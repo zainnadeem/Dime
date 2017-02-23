@@ -34,7 +34,8 @@ class DraftsViewController: UIViewController {
     func tableViewSetup() {
         draftsTableView.delegate = self
         draftsTableView.dataSource = self
-        draftsTableView.estimatedRowHeight = 150
+        draftsTableView.estimatedRowHeight = 500
+        draftsTableView.rowHeight = UITableViewAutomaticDimension
         draftsTableView.reloadData()
     }
     
@@ -62,26 +63,24 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        
+        // Need to display the cover image of the draft in the image view in each cell
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "draftsCell") as! DraftsTableViewCell
         
-        
-        if let drafts = store.currentUser?.drafts {
-            for draft in drafts {
-                
-                
-                //                draft.downloadCoverImage(coverPhoto: "", completion: { (image, error) in
-                //
-                //                    cell.draftImageView.image = image
-                //
-                //                })
-                for media in draft.media {
-                    cell.draftImageView.image = media.mediaImage
+        if let media = store.currentUser?.drafts?[indexPath.row].media {
+            for image in media {
+                if let url = Data(base64Encoded: image.mediaURL) {
+                    let coverPhoto = UIImage(data: url)
+                    cell.draftImageView.image = coverPhoto
+
                 }
             }
         }
-        
         return cell
     }
+    
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
@@ -89,6 +88,18 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let draftToDelete = store.currentUser?.drafts?[indexPath.row]
+            store.removeDraftAtIndex(indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            draftToDelete?.deleteDraftFromFirebase()
+            tableView.reloadData()
+        } else {
+            tableView.reloadData()
+        }
     }
     
 }

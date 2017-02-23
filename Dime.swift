@@ -613,6 +613,14 @@ extension Dime {
         userRef.setValue(nil)
     }
     
+    func deleteDraftFromFirebase() {
+        let draftRef = DatabaseReference.drafts.reference().child(uid)
+        draftRef.setValue(nil)
+        
+        let userRef = DatabaseReference.users(uid: createdBy.uid).reference().child("drafts/\(uid)")
+        userRef.setValue(nil)
+    }
+    
     
 }
 

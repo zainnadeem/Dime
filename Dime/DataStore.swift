@@ -163,6 +163,10 @@ class DataStore {
             }
         })
     }
+
+    func removeDraftAtIndex(_ index: Int) {
+        currentUser?.drafts?.remove(at: index)
+    }
     
     
 }
