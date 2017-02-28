@@ -108,6 +108,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     }
     
     override func viewWillAppear(_ animated: Bool) {
+//        circleProfileView.setImage(store.currentUser?.profileImage, for: .normal)
         fetchDimes()
     }
     
@@ -139,6 +140,9 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.circleProfileView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
         self.circleProfileView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.13).isActive = true
         self.circleProfileView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.24).isActive = true
+        
+        self.circleProfileView.addTarget(self, action: #selector(changeProfilePic), for: .touchUpInside)
+        
         
         guard let profileUser = self.user else { return }
         
@@ -177,6 +181,80 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     
     
+    
+    
+//    func startNewDimeCreation(){
+//        
+//        mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
+//            
+//            
+//            if let videoURL = mediaObject as? URL {
+//                
+//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
+//                let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
+//                self.store.currentDime = newDime
+//                
+//                let newMedia = Media(dimeUID: newDime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0, superLikesCount: 0)
+//                let videoData = NSData(contentsOf: videoURL as URL)
+//                
+//                let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
+//                let dataPath = NSTemporaryDirectory().appendingPathComponent("/\(newMedia.uid).mp4")
+//                videoData?.write(toFile: dataPath, atomically: false)
+//                
+//                newMedia.mediaURL = dataPath
+//                
+//                self.store.currentDime?.media.append(newMedia)
+//                self.store.currentUser?.updateMediaCount(.increment, amount: 1)
+// 
+//                self.present(controller, animated: true, completion: nil)
+//                
+//            } else if let snapshotImage = mediaObject as? UIImage {
+//                
+//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
+//                let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
+//                self.store.currentDime = newDime
+//                
+//                self.image = snapshotImage
+//                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image, likesCount: 0, superLikesCount: 0)
+//                self.store.currentDime?.media.append(newMedia)
+//                self.store.currentUser?.updateMediaCount(.increment, amount: 1)
+//                controller.finishedEditing = false
+//                
+//                self.present(controller, animated: true, completion: nil)
+//
+//                
+//            }
+//            
+//        })
+//        
+//    }
+    
+    
+    
+    
+    
+    func changeProfilePic() {
+        let editPictureAlert = UIAlertController(title: "Edit Profile Pic", message: nil, preferredStyle: .actionSheet)
+        let editPictureAction = UIAlertAction(title: "Change Profile Picture", style: .default) { (edit) in
+            
+            let mediaPicker = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
+             
+                if let snapshotImage = mediaObject as? UIImage {
+                    self.store.currentUser?.profileImage = snapshotImage
+                    self.circleProfileView.setImage(snapshotImage, for: .normal)
+                    self.circleProfileView.reloadInputViews()
+                    self.reloadInputViews()
+                }
+            })
+            
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        editPictureAlert.addAction(editPictureAction)
+        editPictureAlert.addAction(cancelAction)
+        present(editPictureAlert, animated: true, completion: nil)
+    }
     
     
     func configureFriendDiamond() {
