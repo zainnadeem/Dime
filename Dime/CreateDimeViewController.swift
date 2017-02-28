@@ -320,41 +320,29 @@ class CreateDimeViewController: UIViewController, UIGestureRecognizerDelegate {
             self.dimeCoverPhoto.imageView?.contentMode = .scaleAspectFit
         }
     }
-
+    
     func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
-        if gestureRecognizer.state != .began {
-            return
-        }
-
+        if gestureRecognizer.state != .began { return }
         let alert = UIAlertController(title: "Edit Dime", message: "", preferredStyle: .actionSheet)
-        let endDimeAction = UIAlertAction(title: "End Dime", style: .default) { (endDime) in
-            self.store.currentDime = nil
-           
-            self.dismiss(animated: true, completion: nil)
-        }
-        
         let deleteDimeAction = UIAlertAction(title: "Delete Dime", style: .default) { (deleteDime) in
-            
-            let deleteAlert = UIAlertController(title: "Are you sure?", message: "This will permenantly delete the Dime from your profile.", preferredStyle: .alert)
-
-            let deleteAction = UIAlertAction(title: "Delete", style: .default, handler: { (delete) in
-                self.store.currentDime?.deleteDimeFromFireBase()
-                self.dismiss(animated: true, completion: nil)
-            })
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-            
-            deleteAlert.addAction(cancelAction)
-            deleteAlert.addAction(deleteAction)
-            self.present(deleteAlert, animated: true, completion: nil)
+            self.deleteDimeAlertActions()
         }
-        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        
-        alert.addAction(endDimeAction)
         alert.addAction(deleteDimeAction)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
-        
+    }
+    
+    func deleteDimeAlertActions() {
+        let deleteAlert = UIAlertController(title: "Are you sure?", message: "This will permenantly delete the Dime from your profile.", preferredStyle: .alert)
+        let deleteAction = UIAlertAction(title: "Delete", style: .default, handler: { (delete) in
+            self.store.currentDime?.deleteDimeFromFireBase()
+            self.dismiss(animated: true, completion: nil)
+        })
+        let cancelDelete = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        deleteAlert.addAction(cancelDelete)
+        deleteAlert.addAction(deleteAction)
+        self.present(deleteAlert, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
