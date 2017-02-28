@@ -18,9 +18,7 @@ class DraftsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         viewCustomizations()
-        
     }
     
     func viewCustomizations() {
@@ -67,6 +65,9 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
         
         // Need to display the cover image of the draft in the image view in each cell
         
+        
+        store.currentDime = store.currentUser?.drafts?[indexPath.row]
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "draftsCell") as! DraftsTableViewCell
         
         if let media = store.currentUser?.drafts?[indexPath.row].media {
@@ -74,7 +75,7 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
                 if let url = Data(base64Encoded: image.mediaURL) {
                     let coverPhoto = UIImage(data: url)
                     cell.draftImageView.image = coverPhoto
-
+                    
                 }
             }
         }
@@ -87,7 +88,32 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // let destination = MediaCollectionViewController()
+        
         tableView.deselectRow(at: indexPath, animated: false)
+        
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        if let dest = sb.instantiateViewController(withIdentifier: "MediaCollectionViewController") as? MediaCollectionViewController,
+            let draftSelected = store.currentUser?.drafts?[indexPath.row] {
+            
+            print("This is the draft's media count: \(draftSelected.media.count)")
+            
+            dest.draftDime = draftSelected
+            dest.passedDime = draftSelected
+            dest.dime = draftSelected
+            
+            dest.newMedia?.dimeUID = draftSelected.uid
+        
+            
+            present(dest, animated: true, completion: nil)
+        }
+        
+        
+        
+        
+        
+        
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {

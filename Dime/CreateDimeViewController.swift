@@ -18,7 +18,7 @@ class CreateDimeViewController: UIViewController {
     var mediaPickerHelper: MediaPickerHelper!
     
     lazy var passedImage:               UIImage     =   UIImage()
-    lazy var image:                     UIImage     =   UIImage()
+    lazy var image:                     UIImageView     =   UIImageView()
 
     lazy var dimeTitleLabel:            UILabel     =   UILabel()
     lazy var dimeCoverPhoto:            UIButton    =   UIButton()
@@ -242,8 +242,8 @@ class CreateDimeViewController: UIViewController {
                 let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
                 self.store.currentDime = newDime
                 
-                self.image = snapshotImage
-                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image, likesCount: 0, superLikesCount: 0)
+                self.image.image = snapshotImage
+                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image.image!, likesCount: 0, superLikesCount: 0)
                 self.store.currentDime?.media.append(newMedia)
                 self.store.currentUser?.updateMediaCount(.increment, amount: 1)
                 controller.finishedEditing = false
@@ -312,6 +312,43 @@ class CreateDimeViewController: UIViewController {
         }
     }
     
+//    func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+//        if gestureReconizer.state != UIGestureRecognizerState.began {
+//            return
+//        }
+//        
+//        let point = gestureReconizer.location(in: self.collectionView)
+//        let indexPath = self.collectionView?.indexPathForItem(at: point)
+//        
+//        if let index = indexPath {
+//            var cell = self.collectionView?.cellForItem(at: index)
+//            
+//            print(index.row)
+//            
+//            deleteMediaAlert(mediaNumber: index.row)
+//        } else {
+//            print("Could not find index path")
+//        }
+//    }
+    
+    
+    func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state != .began {
+            return
+        }
+        
+        let point = gestureRecognizer.location(in: image)
+        
+        let alert = UIAlertController(title: "Edit Dime", message: "", preferredStyle: .actionSheet)
+        
+        let endDimeAction = UIAlertAction(title: "End Dime", style: .default) { (endDime) in
+            
+        }
+        
+        let deleteDimeAction = UIAlertAction(
+        
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "mediaCollectionSegue" {
             let destinationVC = segue.destination as! MediaCollectionViewController
@@ -319,6 +356,7 @@ class CreateDimeViewController: UIViewController {
             destinationVC.passedDime = store.currentDime
         }
     }
+    
     
     
 }
@@ -372,6 +410,7 @@ extension CreateDimeViewController : NavBarViewDelegate {
     }
     
 }
+
 
 //media thumbnail
 

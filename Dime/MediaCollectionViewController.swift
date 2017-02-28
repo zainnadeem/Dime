@@ -125,11 +125,7 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
         }
         
         draftDime = self.store.currentDime
-        
-        //        if let currentDraft = draftDime {
-        //            currentDraft.media = sortByOrderCreated(currentDraft.media)
-        //        }
-        
+
         let bgImage = UIImageView()
         bgImage.image = #imageLiteral(resourceName: "background_GREY")
         bgImage.contentMode = .scaleToFill
