@@ -11,15 +11,15 @@ import Firebase
 import AVFoundation
 import SAMCache
 
-class CreateDimeViewController: UIViewController {
+class CreateDimeViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var cache = SAMCache.shared()
     let store = DataStore.sharedInstance
     var mediaPickerHelper: MediaPickerHelper!
     
     lazy var passedImage:               UIImage     =   UIImage()
-    lazy var image:                     UIImageView     =   UIImageView()
-
+    lazy var image:                     UIImage     =   UIImage()
+    
     lazy var dimeTitleLabel:            UILabel     =   UILabel()
     lazy var dimeCoverPhoto:            UIButton    =   UIButton()
     lazy var numberOfImages:            UILabel     =   UILabel()
@@ -31,9 +31,9 @@ class CreateDimeViewController: UIViewController {
     var videoURL:                  URL?
     
     let textFieldlimitLength                        = 30
-
+    
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: nil, leftButtonImage: #imageLiteral(resourceName: "icon-home"), middleButtonImage: nil)
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,10 +45,11 @@ class CreateDimeViewController: UIViewController {
         self.navBar.delegate = self
         self.view.addSubview(navBar)
         self.setViewConstraints()
-
+        
+        setUpLongPress()
         
         updateDimeInfo()
-        self.store.getImages { 
+        self.store.getImages {
             
         }
     }
@@ -65,7 +66,7 @@ class CreateDimeViewController: UIViewController {
             
             self.dimeTitleLabel.text = "Get Started!"
             
-
+            
             
             self.dimeCoverPhoto.setImage(#imageLiteral(resourceName: "NoDimeImage"), for: .normal)
             
@@ -75,12 +76,12 @@ class CreateDimeViewController: UIViewController {
             
             self.dimeCoverPhoto.removeTarget(self, action: #selector(EditCurrentDimeTapped), for: .touchUpInside)
             self.dimeCoverPhoto.addTarget(self, action: #selector(createNewDimeButtonTapped), for: .touchUpInside)
-        
+            
         }else{
             
             self.editCurrentDimeButton.isEnabled = true
             self.createNewDimeButton.isEnabled = true
-           
+            
             self.editCurrentDimeButton.isHidden = false
             self.createNewDimeButton.isHidden = false
             
@@ -90,7 +91,7 @@ class CreateDimeViewController: UIViewController {
             self.dimeCoverPhoto.addTarget(self, action: #selector(EditCurrentDimeTapped), for: .touchUpInside)
             
             self.dimeCoverPhoto.imageView?.contentMode = .scaleAspectFit
-
+            
         }
     }
     
@@ -129,7 +130,7 @@ class CreateDimeViewController: UIViewController {
         self.expiringLabel.font = UIFont.dimeFontBold(12)
         
         
-
+        
         self.view.addSubview(editCurrentDimeButton)
         self.editCurrentDimeButton.translatesAutoresizingMaskIntoConstraints = false
         self.editCurrentDimeButton.topAnchor.constraint(equalTo: self.expiringLabel.bottomAnchor, constant: 5).isActive
@@ -145,7 +146,7 @@ class CreateDimeViewController: UIViewController {
         
         self.editCurrentDimeButton.addTarget(self, action: #selector(EditCurrentDimeTapped), for: .touchUpInside)
         
-
+        
         self.view.addSubview(createNewDimeButton)
         self.createNewDimeButton.translatesAutoresizingMaskIntoConstraints = false
         self.createNewDimeButton.topAnchor.constraint(equalTo: self.editCurrentDimeButton.bottomAnchor, constant: 15).isActive
@@ -166,15 +167,28 @@ class CreateDimeViewController: UIViewController {
     }
     
     
+    func setUpLongPress() {
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPress.delegate = self
+        longPress.minimumPressDuration = 0.5
+        longPress.delaysTouchesBegan = true
+        dimeCoverPhoto.addGestureRecognizer(longPress)
+        //        image.addGestureRecognizer(longPress)
+        //        image.gestureRecognizerShouldBegin(longPress)
+        
+        
+        
+    }
+    
     func EditCurrentDimeTapped() {
-   
+        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
         controller.finishedEditing = true
         controller.coverPhoto = dimeCoverPhoto.imageView?.image
         self.present(controller, animated: true, completion: nil)
     }
-
+    
     
     func alert(title: String, message: String) {
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -188,7 +202,7 @@ class CreateDimeViewController: UIViewController {
         }))
         present(alertVC, animated: true, completion: nil)
     }
-
+    
     
     
     
@@ -208,7 +222,7 @@ class CreateDimeViewController: UIViewController {
         
         mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
             
-       
+            
             if let videoURL = mediaObject as? URL {
                 
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -228,11 +242,11 @@ class CreateDimeViewController: UIViewController {
                 self.store.currentDime?.media.append(newMedia)
                 self.store.currentUser?.updateMediaCount(.increment, amount: 1)
                 
-//                UserDefaults.standard.set(videoData, forKey: "0Video")
-//                UserDefaults.standard.set(createThumbnailForVideo(path: videoURL.path), forKey: "0Image")
-//                UserDefaults.standard.set(true, forKey: "0")
-//                UserDefaults.standard.synchronize()
-
+                //                UserDefaults.standard.set(videoData, forKey: "0Video")
+                //                UserDefaults.standard.set(createThumbnailForVideo(path: videoURL.path), forKey: "0Image")
+                //                UserDefaults.standard.set(true, forKey: "0")
+                //                UserDefaults.standard.synchronize()
+                
                 self.present(controller, animated: true, completion: nil)
                 
             } else if let snapshotImage = mediaObject as? UIImage {
@@ -242,23 +256,23 @@ class CreateDimeViewController: UIViewController {
                 let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
                 self.store.currentDime = newDime
                 
-                self.image.image = snapshotImage
-                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image.image!, likesCount: 0, superLikesCount: 0)
+                self.image = snapshotImage
+                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image, likesCount: 0, superLikesCount: 0)
                 self.store.currentDime?.media.append(newMedia)
                 self.store.currentUser?.updateMediaCount(.increment, amount: 1)
                 controller.finishedEditing = false
                 
-//                UserDefaults.standard.set(UIImagePNGRepresentation(snapshotImage), forKey: "0")
-//                UserDefaults.standard.set(true, forKey: "0")
-//                UserDefaults.standard.synchronize()
+                //                UserDefaults.standard.set(UIImagePNGRepresentation(snapshotImage), forKey: "0")
+                //                UserDefaults.standard.set(true, forKey: "0")
+                //                UserDefaults.standard.synchronize()
                 
                 
                 self.present(controller, animated: true, completion: nil)
                 
-            
-            
-            
-            
+                
+                
+                
+                
             }
             
         })
@@ -299,53 +313,39 @@ class CreateDimeViewController: UIViewController {
             if let image = cache?.object(forKey: mediaImageKey) as? UIImage
             {
                 dimeCoverPhoto.setImage(image, for: .normal)
-            
+                
             }else {
                 
                 self.store.currentDime?.downloadCoverImage(coverPhoto: mediaImageKey, completion: {  [weak self] (image, error)in
                     self?.dimeCoverPhoto.setImage(image, for: .normal)
                     self?.cache?.setObject(image, forKey: mediaImageKey)
                 })
-
+                
             }
             self.dimeCoverPhoto.imageView?.contentMode = .scaleAspectFit
         }
     }
-    
-//    func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
-//        if gestureReconizer.state != UIGestureRecognizerState.began {
-//            return
-//        }
-//        
-//        let point = gestureReconizer.location(in: self.collectionView)
-//        let indexPath = self.collectionView?.indexPathForItem(at: point)
-//        
-//        if let index = indexPath {
-//            var cell = self.collectionView?.cellForItem(at: index)
-//            
-//            print(index.row)
-//            
-//            deleteMediaAlert(mediaNumber: index.row)
-//        } else {
-//            print("Could not find index path")
-//        }
-//    }
-    
-    
+
     func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
         if gestureRecognizer.state != .began {
             return
         }
-        
-        let point = gestureRecognizer.location(in: image)
-        
+
         let alert = UIAlertController(title: "Edit Dime", message: "", preferredStyle: .actionSheet)
-        
         let endDimeAction = UIAlertAction(title: "End Dime", style: .default) { (endDime) in
             
         }
         
-        let deleteDimeAction = UIAlertAction(
+        let deleteDimeAction = UIAlertAction(title: "Delete Dime", style: .default) { (deleteDime) in
+            
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alert.addAction(endDimeAction)
+        alert.addAction(deleteDimeAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
         
     }
     
@@ -369,7 +369,7 @@ extension CreateDimeViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-
+        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -391,8 +391,6 @@ extension CreateDimeViewController: UITextFieldDelegate {
     }
     
 }
-
-
 
 extension CreateDimeViewController : NavBarViewDelegate {
     
