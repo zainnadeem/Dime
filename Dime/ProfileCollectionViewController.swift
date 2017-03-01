@@ -236,17 +236,33 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     
     func changeProfilePic() {
+        
+        guard let profileUser = user else {
+            print("There was an error unwrapping the User in changeProfilePic in ProfileCollectionVC")
+            return
+        }
+        
+       
+        
         let editPictureAlert = UIAlertController(title: "Edit Profile Pic", message: nil, preferredStyle: .actionSheet)
         let editPictureAction = UIAlertAction(title: "Change Profile Picture", style: .default) { (edit) in
             
-            let mediaPicker = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
+            
+            
+            
+            let _ = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
              
                 if let snapshotImage = mediaObject as? UIImage {
                     self.store.currentUser?.profileImage = snapshotImage
+                    profileUser.profileImage = snapshotImage
                     self.circleProfileView.setImage(snapshotImage, for: .normal)
-                    self.circleProfileView.reloadInputViews()
-                    self.reloadInputViews()
+//                    self.circleProfileView.reloadInputViews()
+//                    self.reloadInputViews()
                 }
+                
+                print("Image successfully uploaded!")
+
+          
             })
             
         }
