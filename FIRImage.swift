@@ -47,7 +47,7 @@ extension FIRImage {
         
         // Delete the file
         ref.delete { error in
-            if let error = error {
+            if error != nil {
                 // Uh-oh, an error occurred!
             } else {
                 // File deleted successfully

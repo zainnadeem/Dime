@@ -289,7 +289,7 @@ class MediaCollectionViewController: UICollectionViewController, UIGestureRecogn
                     
                     if let media = self.newMedia{
                         let videoData = NSData(contentsOf: videoURL as URL)
-                        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
+                        let _ = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
                         let dataPath = NSTemporaryDirectory().appendingPathComponent("/\(media.uid).mp4")
                         videoData?.write(toFile: dataPath, atomically: false)
                         

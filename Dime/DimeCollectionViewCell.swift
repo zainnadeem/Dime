@@ -115,7 +115,7 @@ class DimeCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
                     self?.circleProfileView.setImage(image.circle, for: .normal)
                     self?.cache?.setObject(image, forKey: profileImageKey)
                 }else if error != nil {
-                    print(error?.localizedDescription)
+                    print("\(error?.localizedDescription)")
                 }
             }
         }

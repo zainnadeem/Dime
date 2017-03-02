@@ -99,7 +99,7 @@ class Dime {
             ref.child("media/\(media.uid)").setValue(media.toDictionary())
             media.save(ref: ref, completion: { (error) in
                 if error != nil{
-                    print(error?.localizedDescription)
+                    print("\(error?.localizedDescription)")
                 }
             })
         }
@@ -128,7 +128,7 @@ class Dime {
             ref.child("media/\(media.uid)").setValue(media.toDictionary())
             media.saveDraft(ref: ref, completion: { (error) in
                 if error != nil{
-                    print(error?.localizedDescription)
+                    print("\(error?.localizedDescription)")
                 }
             })
         }
@@ -158,7 +158,7 @@ class Dime {
             ref.child("media/\(media.uid)").setValue(media.toDictionary())
             media.save(ref: ref, completion: { (error) in
                 if error != nil{
-                    print(error?.localizedDescription)
+                    print("\(error?.localizedDescription)")
                 }
             })
         }
@@ -215,7 +215,7 @@ class Dime {
                     mediaRef.child("\(media.uid)").setValue(media.toDictionary())
                     media.save(ref: ref, completion: { (error) in
                         if error != nil{
-                            print(error?.localizedDescription)
+                            print("\(error?.localizedDescription)")
                         }
                     })
                     
@@ -243,7 +243,7 @@ class Dime {
                         mediaRef.child("\(media.uid)").setValue(media.toDictionary())
                         media.saveDraft(ref: ref, completion: { (error) in
                             if error != nil{
-                                print(error?.localizedDescription)
+                                print("\(error?.localizedDescription)")
                             }
                         })
                         
@@ -289,7 +289,7 @@ class Dime {
                     mediaRef.child("\(media.uid)").setValue(media.toDictionary())
                     media.save(ref: ref, completion: { (error) in
                         if error != nil{
-                            print(error?.localizedDescription)
+                            print("\(error?.localizedDescription)")
                         }
                     })
                     
@@ -318,7 +318,7 @@ class Dime {
                     mediaRef.child("\(media.uid)").setValue(media.toDictionary())
                     media.saveDraft(ref: ref, completion: { (error) in
                         if error != nil{
-                            print(error?.localizedDescription)
+                            print("\(error?.localizedDescription)")
                         }
                     })
                     

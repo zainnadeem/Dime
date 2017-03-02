@@ -155,7 +155,7 @@ extension ChatsTableViewController : UITableViewDelegate, UITableViewDataSource{
         
         func leftBarButtonTapped(_ sender: AnyObject) {
             
-           self.navigationController?.popViewController(animated: true)
+           let _ = self.navigationController?.popViewController(animated: true)
             print("Not sure what the left bar button will do yet.")
         }
         

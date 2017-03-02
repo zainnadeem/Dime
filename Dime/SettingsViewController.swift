@@ -48,14 +48,10 @@ class SettingsViewController: QuickTableViewController {
     
     func back(_ sender: UIBarButtonItem){
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        self.navigationController?.popViewController(animated: true)
+        let _ = self.navigationController?.popViewController(animated: true)
     }
     
-    
-    
-    
-    
-    
+
     private func  openMailForFeedback(_ sender: Row){
         let email = "dimeAppDevelopment@gmail.com"
         let url = NSURL(string: "mailto:\(email)")

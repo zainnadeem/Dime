@@ -113,7 +113,7 @@ class LoginTableViewController: UITableViewController {
     
     func resetPasswordWithEmail(_ email: String){
         FIRAuth.auth()?.sendPasswordReset(withEmail: email) { error in
-            if let error = error {
+            if error != nil {
                 self.alert(title: "Sorry", message: "We did not recognize that email address.", buttonTitle: "okay")
             } else {
                 self.alert(title: "Success", message: "An email to reset your password has been sent.", buttonTitle: "okay")

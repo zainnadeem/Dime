@@ -99,10 +99,7 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
             print("show messages page")
             navBar.middleButton.title = "start a conversation"
             fetchFriends()
-            
-        
-        default:
-            print("default")
+
         }
     }
     

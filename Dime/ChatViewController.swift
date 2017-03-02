@@ -51,10 +51,10 @@ class ChatViewController: JSQMessagesViewController {
     func back(_ sender: UIBarButtonItem){
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         if self.presentingViewController == ContactsPickerViewController(){
-            self.navigationController?.popToViewController(ChatsTableViewController(), animated: true)
+            let _ = self.navigationController?.popToViewController(ChatsTableViewController(), animated: true)
         }
         
-            self.navigationController?.popViewController(animated: true)
+            let _ = self.navigationController?.popViewController(animated: true)
     }
     
     

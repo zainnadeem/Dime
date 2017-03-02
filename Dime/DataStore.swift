@@ -70,7 +70,7 @@ class DataStore {
         let ref = DatabaseReference.users(uid: currentUser.uid).reference().child("mediaCount")
         var mediaCount = 0
         for dimes in currentUser.dimes {
-            for media in dimes.media {
+            for _ in dimes.media {
                 mediaCount += 1
             }
         }

@@ -158,7 +158,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
                     self?.circleProfileView.setImage(image.circle, for: .normal)
                     self?.cache?.setObject(image.circle, forKey: profileImageKey)
                 }else if error != nil {
-                    print(error?.localizedDescription)
+                    print("\(error?.localizedDescription)")
                 }
             }
         }
@@ -236,10 +236,10 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     func changeProfilePic() {
         
-        guard let profileUser = user else {
-            print("There was an error unwrapping the User in changeProfilePic in ProfileCollectionVC")
-            return
-        }
+//        guard let profileUser = user else {
+//            print("There was an error unwrapping the User in changeProfilePic in ProfileCollectionVC")
+//            return
+//        }
         
        
         
@@ -601,7 +601,7 @@ extension ProfileCollectionViewController : NavBarViewDelegate {
     
     func leftBarButtonTapped(_ sender: AnyObject) {
         
-        self.navigationController?.popViewController(animated: true)
+        let _ = self.navigationController?.popViewController(animated: true)
         print("Not sure what the left bar button will do yet.")
     }
     

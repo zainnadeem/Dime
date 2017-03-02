@@ -40,7 +40,7 @@ class SearchUserTableViewCell: UITableViewCell {
                    // self?.profileImage.image = image
                     self?.cache?.setObject(image, forKey: "\(user.uid)-headerImage")
                 }else if error != nil {
-                    print(error?.localizedDescription)
+                    print("\(error?.localizedDescription)")
                 }
             }
         }

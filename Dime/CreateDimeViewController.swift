@@ -228,7 +228,7 @@ class CreateDimeViewController: UIViewController, UIGestureRecognizerDelegate {
                 let newMedia = Media(dimeUID: newDime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0, superLikesCount: 0)
                 let videoData = NSData(contentsOf: videoURL as URL)
                 
-                let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
+                let _ = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
                 let dataPath = NSTemporaryDirectory().appendingPathComponent("/\(newMedia.uid).mp4")
                 videoData?.write(toFile: dataPath, atomically: false)
                 
