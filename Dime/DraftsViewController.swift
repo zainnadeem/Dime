@@ -80,23 +80,37 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
 //            }
 //        }
         
-        store.currentUser?.drafts?[indexPath.row].
-        
-        store.currentUser?.drafts?[indexPath.row].downloadCoverImage(coverPhoto: (store.currentUser?.drafts?[indexPath.row].uid)!, completion: { (coverImage, error) in
+        store.currentUser?.drafts?[indexPath.row].downloadMediaImage(completion: { (coverImage, error) in
             
             guard let coverImage = coverImage else {
-                
+                print("There was an error unwrapping the coverImage in the DraftsVC")
                 return
             }
             
-            if let coverImage = coverImage {
-                print("Image on image on image")
-                cell.draftImageView.image = coverImage
-
+            if let error = error {
+                print("There was an error in the DraftsVC: \(error.localizedDescription)")
+                return
             }
             
+            cell.draftImageView.image = coverImage
             
         })
+        
+//        store.currentUser?.drafts?[indexPath.row].downloadCoverImage(coverPhoto: (store.currentUser?.drafts?[indexPath.row].uid)!, completion: { (coverImage, error) in
+//            
+//            guard let coverImage = coverImage else {
+//                print("There was an error unwrapping the coverImage in the DraftsVC")
+//                return
+//            }
+//            
+//            if let error = error {
+//                print("There was an error in the DraftsVC: \(error.localizedDescription)")
+//                return
+//            }
+//            
+//            cell.draftImageView.image = coverImage
+//
+//        })
         
         
         return cell

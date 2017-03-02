@@ -188,24 +188,11 @@ class Dime {
             ref.child("media/\(media.uid)").setValue(media.toDictionary())
             media.saveDraft(ref: ref, completion: { (error) in
                 if error != nil{
-                    print(error?.localizedDescription)
+                    print("\(error?.localizedDescription)")
                 }
             })
         }
-        
-        //save likes
-        for like in likes {
-            ref.child("likes/\(like.uid)").setValue(like.toDictionary())
-        }
-        
-        for superLike in superLikes {
-            ref.child("superLikes/\(superLike.uid)").setValue(superLike.toDictionary())
-        }
-        
-        //save comments
-        for comment in comments {
-            ref.child("comments/\(comment.uid)").setValue(comment.toDictionary())
-        }
+
     }
     
     func update(completion: @escaping (Error?) -> Void) {
