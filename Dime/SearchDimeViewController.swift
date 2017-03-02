@@ -184,8 +184,6 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         case .showMessages:
             print("showUsers")
         
-        default:
-            print("default")
         }
         
         return 0
