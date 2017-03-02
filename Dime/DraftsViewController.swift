@@ -70,15 +70,35 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "draftsCell") as! DraftsTableViewCell
         
-        if let media = store.currentUser?.drafts?[indexPath.row].media {
-            for image in media {
-                if let url = Data(base64Encoded: image.mediaURL) {
-                    let coverPhoto = UIImage(data: url)
-                    cell.draftImageView.image = coverPhoto
-                    
-                }
+//        if let media = store.currentUser?.drafts?[indexPath.row].media {
+//            for image in media {
+//                if let url = Data(base64Encoded: image.mediaURL) {
+//                    let coverPhoto = UIImage(data: url)
+//                    cell.draftImageView.image = coverPhoto
+//                    
+//                }
+//            }
+//        }
+        
+        store.currentUser?.drafts?[indexPath.row].
+        
+        store.currentUser?.drafts?[indexPath.row].downloadCoverImage(coverPhoto: (store.currentUser?.drafts?[indexPath.row].uid)!, completion: { (coverImage, error) in
+            
+            guard let coverImage = coverImage else {
+                
+                return
             }
-        }
+            
+            if let coverImage = coverImage {
+                print("Image on image on image")
+                cell.draftImageView.image = coverImage
+
+            }
+            
+            
+        })
+        
+        
         return cell
     }
     
@@ -88,9 +108,6 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        // let destination = MediaCollectionViewController()
-        
         tableView.deselectRow(at: indexPath, animated: false)
         
         let sb = UIStoryboard(name: "Main", bundle: nil)

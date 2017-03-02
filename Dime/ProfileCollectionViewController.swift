@@ -108,7 +108,6 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        circleProfileView.setImage(store.currentUser?.profileImage, for: .normal)
         fetchDimes()
     }
     
@@ -253,8 +252,13 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             let _ = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
              
                 if let snapshotImage = mediaObject as? UIImage {
-                    self.store.currentUser?.profileImage = snapshotImage
-                    profileUser.profileImage = snapshotImage
+                    
+                    self.store.currentUser?.save(completion: { (error) in
+                        self.store.currentUser?.profileImage = snapshotImage
+                    })
+                    
+//                    self.store.currentUser?.profileImage = snapshotImage
+//                    profileUser.profileImage = snapshotImage
                     self.circleProfileView.setImage(snapshotImage, for: .normal)
 //                    self.circleProfileView.reloadInputViews()
 //                    self.reloadInputViews()
