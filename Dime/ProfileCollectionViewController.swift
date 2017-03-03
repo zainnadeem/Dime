@@ -35,7 +35,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     var friendsCountIcon: UIButton = UIButton()
     var popularRankButton = UIButton()
     
-    var draftButton = UIButton()
+    var settingsButton = UIButton()
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage:nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
@@ -66,7 +66,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         fetchUser()
         fetchDimes()
         configureUserSpecificButtons()
-        configureDraftButton()
+        configureSettingsButton()
         
     }
     
@@ -236,37 +236,43 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     func changeProfilePic() {
         
-//        guard let profileUser = user else {
-//            print("There was an error unwrapping the User in changeProfilePic in ProfileCollectionVC")
-//            return
-//        }
+        guard let profileUser = user else {
+            print("There was an error unwrapping the User in changeProfilePic in ProfileCollectionVC")
+            return
+        }
         
        
         
         let editPictureAlert = UIAlertController(title: "Edit Profile Pic", message: nil, preferredStyle: .actionSheet)
         let editPictureAction = UIAlertAction(title: "Change Profile Picture", style: .default) { (edit) in
             
-            
-            
+        
             
             let _ = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
              
                 if let snapshotImage = mediaObject as? UIImage {
                     
+                    
+                    
                     self.store.currentUser?.save(completion: { (error) in
                         self.store.currentUser?.profileImage = snapshotImage
                     })
-                    
-//                    self.store.currentUser?.profileImage = snapshotImage
-//                    profileUser.profileImage = snapshotImage
+                 
                     self.circleProfileView.setImage(snapshotImage, for: .normal)
+                    self.store.currentUser?.profileImage = snapshotImage
+                    profileUser.profileImage = snapshotImage
+
+                }
+                
+                
+                    
+                
 //                    self.circleProfileView.reloadInputViews()
 //                    self.reloadInputViews()
-                }
+                
                 
                 print("Image successfully uploaded!")
 
-          
             })
             
         }
@@ -402,23 +408,23 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     
     
-    func configureDraftButton() {
+    func configureSettingsButton() {
 
-        self.view.addSubview(draftButton)
+        self.view.addSubview(settingsButton)
         
-        draftButton.translatesAutoresizingMaskIntoConstraints = false
-        draftButton.trailingAnchor.constraint(equalTo: banner.trailingAnchor).isActive = true
-        draftButton.centerYAnchor.constraint(equalTo: userNameButton.centerYAnchor).isActive = true
-        draftButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.04).isActive = true
-        draftButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.1).isActive = true
+        settingsButton.translatesAutoresizingMaskIntoConstraints = false
+        settingsButton.trailingAnchor.constraint(equalTo: banner.trailingAnchor).isActive = true
+        settingsButton.centerYAnchor.constraint(equalTo: userNameButton.centerYAnchor).isActive = true
+        settingsButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.04).isActive = true
+        settingsButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.1).isActive = true
         
-        draftButton.addTarget(self, action: #selector(draftButtonTapped), for: .touchUpInside)
+        settingsButton.addTarget(self, action: #selector(settingsButtonTapped), for: .touchUpInside)
         
-        draftButton.backgroundColor = .red
+        settingsButton.setImage(#imageLiteral(resourceName: "icon-settings"), for: .normal)
         
     }
     
-    func draftButtonTapped() {
+    func settingsButtonTapped() {
         let draftsStoryboard = UIStoryboard(name: "Drafts", bundle: nil)
         if let draftsVC = draftsStoryboard.instantiateInitialViewController() {
             present(draftsVC, animated: true, completion: nil)
