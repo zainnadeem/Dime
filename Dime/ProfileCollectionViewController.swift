@@ -182,53 +182,53 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     
     
-//    func startNewDimeCreation(){
-//        
-//        mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
-//            
-//            
-//            if let videoURL = mediaObject as? URL {
-//                
-//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//                let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
-//                let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
-//                self.store.currentDime = newDime
-//                
-//                let newMedia = Media(dimeUID: newDime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0, superLikesCount: 0)
-//                let videoData = NSData(contentsOf: videoURL as URL)
-//                
-//                let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
-//                let dataPath = NSTemporaryDirectory().appendingPathComponent("/\(newMedia.uid).mp4")
-//                videoData?.write(toFile: dataPath, atomically: false)
-//                
-//                newMedia.mediaURL = dataPath
-//                
-//                self.store.currentDime?.media.append(newMedia)
-//                self.store.currentUser?.updateMediaCount(.increment, amount: 1)
-// 
-//                self.present(controller, animated: true, completion: nil)
-//                
-//            } else if let snapshotImage = mediaObject as? UIImage {
-//                
-//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//                let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
-//                let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
-//                self.store.currentDime = newDime
-//                
-//                self.image = snapshotImage
-//                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image, likesCount: 0, superLikesCount: 0)
-//                self.store.currentDime?.media.append(newMedia)
-//                self.store.currentUser?.updateMediaCount(.increment, amount: 1)
-//                controller.finishedEditing = false
-//                
-//                self.present(controller, animated: true, completion: nil)
-//
-//                
-//            }
-//            
-//        })
-//        
-//    }
+    //    func startNewDimeCreation(){
+    //
+    //        mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
+    //
+    //
+    //            if let videoURL = mediaObject as? URL {
+    //
+    //                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    //                let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
+    //                let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
+    //                self.store.currentDime = newDime
+    //
+    //                let newMedia = Media(dimeUID: newDime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0, superLikesCount: 0)
+    //                let videoData = NSData(contentsOf: videoURL as URL)
+    //
+    //                let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
+    //                let dataPath = NSTemporaryDirectory().appendingPathComponent("/\(newMedia.uid).mp4")
+    //                videoData?.write(toFile: dataPath, atomically: false)
+    //
+    //                newMedia.mediaURL = dataPath
+    //
+    //                self.store.currentDime?.media.append(newMedia)
+    //                self.store.currentUser?.updateMediaCount(.increment, amount: 1)
+    //
+    //                self.present(controller, animated: true, completion: nil)
+    //
+    //            } else if let snapshotImage = mediaObject as? UIImage {
+    //
+    //                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    //                let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
+    //                let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
+    //                self.store.currentDime = newDime
+    //
+    //                self.image = snapshotImage
+    //                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image, likesCount: 0, superLikesCount: 0)
+    //                self.store.currentDime?.media.append(newMedia)
+    //                self.store.currentUser?.updateMediaCount(.increment, amount: 1)
+    //                controller.finishedEditing = false
+    //
+    //                self.present(controller, animated: true, completion: nil)
+    //
+    //
+    //            }
+    //
+    //        })
+    //
+    //    }
     
     
     
@@ -241,15 +241,15 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             return
         }
         
-       
+        
         
         let editPictureAlert = UIAlertController(title: "Edit Profile Pic", message: nil, preferredStyle: .actionSheet)
         let editPictureAction = UIAlertAction(title: "Change Profile Picture", style: .default) { (edit) in
             
-        
+            
             
             let _ = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
-             
+                
                 if let snapshotImage = mediaObject as? UIImage {
                     
                     
@@ -257,22 +257,22 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
                     self.store.currentUser?.save(completion: { (error) in
                         self.store.currentUser?.profileImage = snapshotImage
                     })
-                 
+                    
                     self.circleProfileView.setImage(snapshotImage, for: .normal)
                     self.store.currentUser?.profileImage = snapshotImage
                     profileUser.profileImage = snapshotImage
-
+                    
                 }
                 
                 
-                    
                 
-//                    self.circleProfileView.reloadInputViews()
-//                    self.reloadInputViews()
+                
+                //                    self.circleProfileView.reloadInputViews()
+                //                    self.reloadInputViews()
                 
                 
                 print("Image successfully uploaded!")
-
+                
             })
             
         }
@@ -409,7 +409,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     
     
     func configureSettingsButton() {
-
+        
         self.view.addSubview(settingsButton)
         
         settingsButton.translatesAutoresizingMaskIntoConstraints = false
@@ -425,10 +425,31 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     }
     
     func settingsButtonTapped() {
-        let draftsStoryboard = UIStoryboard(name: "Drafts", bundle: nil)
-        if let draftsVC = draftsStoryboard.instantiateInitialViewController() {
-            present(draftsVC, animated: true, completion: nil)
+        
+        let alertVC = UIAlertController(title: "Settings", message: nil, preferredStyle: .actionSheet)
+        let draftsAction = UIAlertAction(title: "Drafts", style: .default) { (drafts) in
+            let draftsStoryboard = UIStoryboard(name: "Drafts", bundle: nil)
+            if let draftsVC = draftsStoryboard.instantiateInitialViewController() {
+                self.present(draftsVC, animated: true, completion: nil)
+            }
         }
+        let profilePicAction = UIAlertAction(title: "Change Profile Pic", style: .default) { (changePic) in
+            
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (cancel) in
+            
+        }
+        
+        let logOutAction = UIAlertAction(title: "Log Out", style: .default) { (logOut) in
+            
+        }
+        
+        alertVC.addAction(draftsAction)
+        alertVC.addAction(profilePicAction)
+        alertVC.addAction(logOutAction)
+        alertVC.addAction(cancelAction)
+        
+        present(alertVC, animated: true, completion: nil)
     }
     
     func showAllFriends(){
