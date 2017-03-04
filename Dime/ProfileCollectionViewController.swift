@@ -248,27 +248,31 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             
             
             
-            let _ = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
-                
+            _ = MediaPickerHelper(viewController: self, completion: { [weak self] (mediaObject) in
+                guard let strongSelf = self else {
+                    return
+                }
                 if let snapshotImage = mediaObject as? UIImage {
                     
                     
                     
-                    self.store.currentUser?.save(completion: { (error) in
-                        self.store.currentUser?.profileImage = snapshotImage
+                    strongSelf.store.currentUser?.save(completion: { (error) in
+                        strongSelf.store.currentUser?.profileImage = snapshotImage
                     })
                     
-                    self.circleProfileView.setImage(snapshotImage, for: .normal)
-                    self.store.currentUser?.profileImage = snapshotImage
+                    strongSelf.circleProfileView.setImage(snapshotImage, for: .normal)
+                    strongSelf.store.currentUser?.profileImage = snapshotImage
                     profileUser.profileImage = snapshotImage
                     
+                } else {
+                    print("NOPE IMAGE DIDN'T UPLOAD")
                 }
                 
                 
                 
                 
-                //                    self.circleProfileView.reloadInputViews()
-                //                    self.reloadInputViews()
+                strongSelf.circleProfileView.reloadInputViews()
+                strongSelf.reloadInputViews()
                 
                 
                 print("Image successfully uploaded!")
@@ -442,10 +446,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             }
             strongSelf.changeProfilePic()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (cancel) in
-            
-        }
-        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (cancel) in }
         let logOutAction = UIAlertAction(title: "Log Out", style: .default) { [weak self] (logOut) in
             guard let strongSelf = self else {
                 return
@@ -456,46 +457,12 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             } catch {
                 print("There was an error logging out the user from the ProfileCollectionVC: \(error.localizedDescription)")
             }
-            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let loginVC = storyboard.instantiateViewController(withIdentifier: "initialLogin")
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             let transition = CATransition()
             transition.type = kCATransitionFade
             appDelegate.window!.setRootViewController(loginVC, transition: transition)
-            
-            
-            //            let alertVC = UIAlertController(title: "Are you sure you want to log out?", message: "", preferredStyle: .alert)
-            //            let logOut = UIAlertAction(title: "Log Out", style: .default, handler: {
-            //                action in
-            //
-            //                print("Logout tapped")
-            //
-            //                do {
-            //
-            //                    try FIRAuth.auth()?.signOut()
-            //                    self.store.currentUser?.unregisterToken()
-            //
-            //                }catch{
-            //                    print("error \(error)")
-            //                }
-            //
-            //
-            //                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            //
-            //                let loginVC = storyboard.instantiateViewController(withIdentifier: "initialLogin")
-            //
-            //                let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            //
-            //                let transition = CATransition()
-            //                transition.type = kCATransitionFade
-            //                appDelegate.window!.setRootViewController(loginVC, transition: transition)
-            //
-            //
-            //
-            //
-            //            })
-            
         }
         
         alertVC.addAction(draftsAction)
