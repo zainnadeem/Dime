@@ -427,20 +427,74 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     func settingsButtonTapped() {
         
         let alertVC = UIAlertController(title: "Settings", message: nil, preferredStyle: .actionSheet)
-        let draftsAction = UIAlertAction(title: "Drafts", style: .default) { (drafts) in
+        let draftsAction = UIAlertAction(title: "Drafts", style: .default) { [weak self] (drafts) in
+            guard let strongSelf = self else {
+                return
+            }
             let draftsStoryboard = UIStoryboard(name: "Drafts", bundle: nil)
             if let draftsVC = draftsStoryboard.instantiateInitialViewController() {
-                self.present(draftsVC, animated: true, completion: nil)
+                strongSelf.present(draftsVC, animated: true, completion: nil)
             }
         }
-        let profilePicAction = UIAlertAction(title: "Change Profile Pic", style: .default) { (changePic) in
-            
+        let profilePicAction = UIAlertAction(title: "Change Profile Pic", style: .default) { [weak self] (changePic) in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.changeProfilePic()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (cancel) in
             
         }
         
-        let logOutAction = UIAlertAction(title: "Log Out", style: .default) { (logOut) in
+        let logOutAction = UIAlertAction(title: "Log Out", style: .default) { [weak self] (logOut) in
+            guard let strongSelf = self else {
+                return
+            }
+            do {
+                try FIRAuth.auth()?.signOut()
+                strongSelf.store.currentUser?.unregisterToken()
+            } catch {
+                print("There was an error logging out the user from the ProfileCollectionVC: \(error.localizedDescription)")
+            }
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginVC = storyboard.instantiateViewController(withIdentifier: "initialLogin")
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let transition = CATransition()
+            transition.type = kCATransitionFade
+            appDelegate.window!.setRootViewController(loginVC, transition: transition)
+            
+            
+            //            let alertVC = UIAlertController(title: "Are you sure you want to log out?", message: "", preferredStyle: .alert)
+            //            let logOut = UIAlertAction(title: "Log Out", style: .default, handler: {
+            //                action in
+            //
+            //                print("Logout tapped")
+            //
+            //                do {
+            //
+            //                    try FIRAuth.auth()?.signOut()
+            //                    self.store.currentUser?.unregisterToken()
+            //
+            //                }catch{
+            //                    print("error \(error)")
+            //                }
+            //
+            //
+            //                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            //
+            //                let loginVC = storyboard.instantiateViewController(withIdentifier: "initialLogin")
+            //
+            //                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            //
+            //                let transition = CATransition()
+            //                transition.type = kCATransitionFade
+            //                appDelegate.window!.setRootViewController(loginVC, transition: transition)
+            //
+            //
+            //
+            //
+            //            })
             
         }
         
