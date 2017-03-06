@@ -421,9 +421,7 @@ extension MediaCollectionViewController : NavBarViewDelegate {
         
         let action = UIAlertAction(title: "okay", style: .default, handler: {
             action in
-            
-            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-            
+            self.dismiss(animated: true, completion: nil)
         })
         
         let draft = UIAlertAction(title: "save draft", style: .default) { (action) in
