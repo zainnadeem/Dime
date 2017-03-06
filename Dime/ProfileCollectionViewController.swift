@@ -180,7 +180,6 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     }
     
     func changeProfilePic() {
-        
         guard let profileUser = user else {
             print("There was an error unwrapping the User in changeProfilePic in ProfileCollectionVC")
             return
@@ -192,16 +191,14 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
                     return
                 }
                 if let snapshotImage = mediaObject as? UIImage {
-                    strongSelf.circleProfileView.setImage(snapshotImage, for: .normal)
                     strongSelf.store.currentUser?.profileImage = snapshotImage
                     profileUser.profileImage = snapshotImage
-                    strongSelf.store.currentUser?.save(completion: { (error) in
-                        strongSelf.store.currentUser?.profileImage = snapshotImage
+                    strongSelf.circleProfileView.setImage(profileUser.profileImage, for: .normal)
+                    print("Image successfully uploaded!")
+                    profileUser.save(completion: { (nil) in
+                            print("Profile pic saved to Firebase!")
                     })
-                } else {
-                    print("NOPE IMAGE DIDN'T UPLOAD")
                 }
-                print("Image successfully uploaded!")
             })
             
         }
