@@ -36,6 +36,7 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
     var popularRankButton = UIButton()
     
     var settingsButton = UIButton()
+    var mediaPickerHelper: MediaPickerHelper?
     
     lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage:nil, leftButtonImage: #imageLiteral(resourceName: "backArrow"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
@@ -178,105 +179,29 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.circleProfileView.clipsToBounds = true
     }
     
-    
-    
-    
-    
-    //    func startNewDimeCreation(){
-    //
-    //        mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { (mediaObject) in
-    //
-    //
-    //            if let videoURL = mediaObject as? URL {
-    //
-    //                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    //                let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
-    //                let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
-    //                self.store.currentDime = newDime
-    //
-    //                let newMedia = Media(dimeUID: newDime.uid, type: "video", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: createThumbnailForVideo(path: videoURL.path), likesCount: 0, superLikesCount: 0)
-    //                let videoData = NSData(contentsOf: videoURL as URL)
-    //
-    //                let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
-    //                let dataPath = NSTemporaryDirectory().appendingPathComponent("/\(newMedia.uid).mp4")
-    //                videoData?.write(toFile: dataPath, atomically: false)
-    //
-    //                newMedia.mediaURL = dataPath
-    //
-    //                self.store.currentDime?.media.append(newMedia)
-    //                self.store.currentUser?.updateMediaCount(.increment, amount: 1)
-    //
-    //                self.present(controller, animated: true, completion: nil)
-    //
-    //            } else if let snapshotImage = mediaObject as? UIImage {
-    //
-    //                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    //                let controller = storyboard.instantiateViewController(withIdentifier: "MediaCollectionViewController") as! MediaCollectionViewController
-    //                let newDime = Dime(caption: "", createdBy: self.store.currentUser!, media: [], totalDimeLikes: 0, averageLikesCount: 0, totalDimeSuperLikes: 0)
-    //                self.store.currentDime = newDime
-    //
-    //                self.image = snapshotImage
-    //                let newMedia = Media(dimeUID: newDime.uid, type: "photo", caption: "", createdBy: self.store.currentUser!, mediaURL: "", location: "", mediaImage: self.image, likesCount: 0, superLikesCount: 0)
-    //                self.store.currentDime?.media.append(newMedia)
-    //                self.store.currentUser?.updateMediaCount(.increment, amount: 1)
-    //                controller.finishedEditing = false
-    //
-    //                self.present(controller, animated: true, completion: nil)
-    //
-    //
-    //            }
-    //
-    //        })
-    //
-    //    }
-    
-    
-    
-    
-    
     func changeProfilePic() {
         
         guard let profileUser = user else {
             print("There was an error unwrapping the User in changeProfilePic in ProfileCollectionVC")
             return
         }
-        
-        
-        
         let editPictureAlert = UIAlertController(title: "Edit Profile Pic", message: nil, preferredStyle: .actionSheet)
         let editPictureAction = UIAlertAction(title: "Change Profile Picture", style: .default) { (edit) in
-            
-            
-            
-            _ = MediaPickerHelper(viewController: self, completion: { [weak self] (mediaObject) in
+            self.mediaPickerHelper = MediaPickerHelper(viewController: self, completion: { [weak self] (mediaObject) in
                 guard let strongSelf = self else {
                     return
                 }
                 if let snapshotImage = mediaObject as? UIImage {
-                    
-                    
-                    
-                    strongSelf.store.currentUser?.save(completion: { (error) in
-                        strongSelf.store.currentUser?.profileImage = snapshotImage
-                    })
-                    
                     strongSelf.circleProfileView.setImage(snapshotImage, for: .normal)
                     strongSelf.store.currentUser?.profileImage = snapshotImage
                     profileUser.profileImage = snapshotImage
-                    
+                    strongSelf.store.currentUser?.save(completion: { (error) in
+                        strongSelf.store.currentUser?.profileImage = snapshotImage
+                    })
                 } else {
                     print("NOPE IMAGE DIDN'T UPLOAD")
                 }
-                
-                
-                
-                
-                strongSelf.circleProfileView.reloadInputViews()
-                strongSelf.reloadInputViews()
-                
-                
                 print("Image successfully uploaded!")
-                
             })
             
         }
