@@ -191,9 +191,10 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
                     return
                 }
                 if let snapshotImage = mediaObject as? UIImage {
+                    strongSelf.cache?.setObject(snapshotImage.circle, forKey: "\(profileUser.uid)-profileImage")
                     strongSelf.store.currentUser?.profileImage = snapshotImage
                     profileUser.profileImage = snapshotImage
-                    strongSelf.circleProfileView.setImage(profileUser.profileImage, for: .normal)
+                    strongSelf.circleProfileView.setImage(profileUser.profileImage?.circle, for: .normal)
                     print("Image successfully uploaded!")
                     profileUser.save(completion: { (nil) in
                             print("Profile pic saved to Firebase!")
