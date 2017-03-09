@@ -18,6 +18,8 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     var passedDimes: [Dime] = [Dime]()
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
+    var topDimesButton = UIButton()
+    var addDimeButton = UIButton(type: .contactAdd)
     
    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
@@ -39,6 +41,7 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         self.view.addSubview(navBar)
         configureTitleLabel()
         configureTitleIcon()
+        configureTopDimesButton()
         fetchDimes()
         
     }
@@ -64,6 +67,7 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         viewControllerTitle.font = UIFont.dimeFont(15)
         viewControllerTitle.text = "        TOP DIMES"
         
+        
     }
     
     func configureTitleIcon() {
@@ -76,6 +80,34 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         self.viewControllerIcon.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
         self.viewControllerIcon.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.03).isActive = true
         self.viewControllerIcon.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.05).isActive = true
+    }
+    
+    func configureTopDimesButton() {
+        viewControllerTitle.addSubview(topDimesButton)
+        viewControllerTitle.addSubview(addDimeButton)
+        viewControllerTitle.bringSubview(toFront: topDimesButton)
+        
+        
+        addDimeButton.translatesAutoresizingMaskIntoConstraints = false
+        addDimeButton.centerYAnchor.constraint(equalTo: viewControllerTitle.centerYAnchor).isActive = true
+        addDimeButton.trailingAnchor.constraint(equalTo: viewControllerTitle.trailingAnchor).isActive = true
+     
+        topDimesButton.translatesAutoresizingMaskIntoConstraints = false
+        topDimesButton.centerYAnchor.constraint(equalTo: viewControllerTitle.centerYAnchor).isActive = true
+        topDimesButton.trailingAnchor.constraint(equalTo: addDimeButton.leadingAnchor).isActive = true
+        
+        topDimesButton.backgroundColor = .red
+        
+        topDimesButton.addTarget(self, action: #selector(topDimesButtonTapped), for: .touchUpInside)
+        
+        if let topDimesCount = store.currentUser?.topFriends.count {
+            topDimesButton.setTitle("\(topDimesCount)", for: .normal)
+        }
+        
+    }
+    
+    func topDimesButtonTapped() {
+        print("Top Dimes tapped!")
     }
     
     func reloadDataToFirstCell(){
