@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -29,15 +30,20 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="150"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YDL-e0-3gR" id="c33-NF-Ldg">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="149.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="149"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hA5-Lv-M39">
-                                                    <rect key="frame" x="67" y="10" width="240" height="128"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hA5-Lv-M39">
+                                                    <rect key="frame" x="67" y="8" width="240" height="133.5"/>
                                                     <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 </imageView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="hA5-Lv-M39" firstAttribute="top" secondItem="c33-NF-Ldg" secondAttribute="topMargin" id="LKi-HH-zS0"/>
+                                                <constraint firstItem="hA5-Lv-M39" firstAttribute="leading" secondItem="c33-NF-Ldg" secondAttribute="leadingMargin" constant="59" id="Wc3-bI-nkD"/>
+                                                <constraint firstItem="hA5-Lv-M39" firstAttribute="centerX" secondItem="c33-NF-Ldg" secondAttribute="centerX" id="pa7-fZ-aco"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="hA5-Lv-M39" secondAttribute="bottom" id="u7n-eF-V5C"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="draftImageView" destination="hA5-Lv-M39" id="KWd-EP-t7s"/>
@@ -81,7 +87,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="T6Q-ig-AxV" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="ucg-Dj-rad">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ucg-Dj-rad">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
