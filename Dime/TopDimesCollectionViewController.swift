@@ -83,10 +83,9 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     }
     
     func configureTopDimesButton() {
-        viewControllerTitle.addSubview(topDimesButton)
-        viewControllerTitle.addSubview(addDimeButton)
+        view.addSubview(topDimesButton)
+        view.addSubview(addDimeButton)
         viewControllerTitle.bringSubview(toFront: topDimesButton)
-        
         
         addDimeButton.translatesAutoresizingMaskIntoConstraints = false
         addDimeButton.centerYAnchor.constraint(equalTo: viewControllerTitle.centerYAnchor).isActive = true
@@ -99,7 +98,8 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         topDimesButton.backgroundColor = .red
         
         topDimesButton.addTarget(self, action: #selector(topDimesButtonTapped), for: .touchUpInside)
-        
+        addDimeButton.addTarget(self, action: #selector(topDimesButtonTapped), for: .touchUpInside)
+     
         if let topDimesCount = store.currentUser?.topFriends.count {
             topDimesButton.setTitle("\(topDimesCount)", for: .normal)
         }
