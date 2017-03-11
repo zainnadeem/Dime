@@ -90,6 +90,10 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             
             friendDiamond.isHidden = true
             friendDiamond.isEnabled = false
+            
+            settingsButton.isHidden = false
+            settingsButton.isEnabled = true
+            
             self.messagesButton.removeTarget(self, action: #selector(startChat), for: .touchUpInside)
             self.messagesButton.addTarget(self, action: #selector(showChats), for: .touchUpInside)
             
@@ -98,6 +102,9 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
             
             friendDiamond.isHidden = false
             friendDiamond.isEnabled = true
+            
+            settingsButton.isHidden = true
+            settingsButton.isEnabled = false
             
             navBar.rightButton.image = nil
             navBar.rightButton.isEnabled = false
