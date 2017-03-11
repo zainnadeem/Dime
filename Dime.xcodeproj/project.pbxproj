@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		17C0EA221BDC559CBCFF8F24 /* Pods_Dime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 423E19BC95A6B01B838A4DD9 /* Pods_Dime.framework */; };
 		6E3C845E1E748AE7008B8A12 /* TopDimes.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E3C845D1E748AE7008B8A12 /* TopDimes.storyboard */; };
+		6E3C84601E749067008B8A12 /* AddTopDimesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3C845F1E749067008B8A12 /* AddTopDimesViewController.swift */; };
+		6E3C84621E749107008B8A12 /* AddDimeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3C84611E749107008B8A12 /* AddDimeTableViewCell.swift */; };
 		6EC100521E5E23F200BD767E /* Drafts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6EC100511E5E23F200BD767E /* Drafts.storyboard */; };
 		6EC100541E5E248300BD767E /* DraftsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC100531E5E248300BD767E /* DraftsViewController.swift */; };
 		6EC100561E5E24CA00BD767E /* DraftsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC100551E5E24CA00BD767E /* DraftsTableViewCell.swift */; };
@@ -75,6 +77,8 @@
 		423E19BC95A6B01B838A4DD9 /* Pods_Dime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		67DA19E38EAB55B578D203F9 /* Pods-Dime.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dime.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Dime/Pods-Dime.debug.xcconfig"; sourceTree = "<group>"; };
 		6E3C845D1E748AE7008B8A12 /* TopDimes.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TopDimes.storyboard; sourceTree = "<group>"; };
+		6E3C845F1E749067008B8A12 /* AddTopDimesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTopDimesViewController.swift; sourceTree = "<group>"; };
+		6E3C84611E749107008B8A12 /* AddDimeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddDimeTableViewCell.swift; sourceTree = "<group>"; };
 		6EC100511E5E23F200BD767E /* Drafts.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Drafts.storyboard; sourceTree = "<group>"; };
 		6EC100531E5E248300BD767E /* DraftsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraftsViewController.swift; sourceTree = "<group>"; };
 		6EC100551E5E24CA00BD767E /* DraftsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraftsTableViewCell.swift; sourceTree = "<group>"; };
@@ -234,6 +238,7 @@
 		BF6FCDFE1DDE42D900AC5A71 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				6E3C84611E749107008B8A12 /* AddDimeTableViewCell.swift */,
 				BF787D031E32C6A200C31BDE /* SearchDimeTableViewCell.swift */,
 				BF35B8C61DFB3663006D87D1 /* CommentTableViewCell.swift */,
 				BFF5A5181E1C197F00F81B62 /* NotificationTableViewCell.swift */,
@@ -325,6 +330,7 @@
 				BF5A008D1DDA40E500F825DD /* HomeViewController.swift */,
 				BF2A9B4D1DEB74D0001A7704 /* TabBarViewController.swift */,
 				BF5564EF1DF7335F0086290D /* TopDimesCollectionViewController.swift */,
+				6E3C845F1E749067008B8A12 /* AddTopDimesViewController.swift */,
 				BF5564F31DF8A2100086290D /* FriendsCollectionViewController.swift */,
 				BF5564F11DF88D0C0086290D /* TrendingCollectionViewController.swift */,
 				BF5564F71DF8B1580086290D /* PopularFeedTableViewController.swift */,
@@ -477,6 +483,7 @@
 				6EC100561E5E24CA00BD767E /* DraftsTableViewCell.swift in Sources */,
 				BFF5A5171E1C186C00F81B62 /* NotificationsTableViewController.swift in Sources */,
 				BF5A00851DDA39CF00F825DD /* Media.swift in Sources */,
+				6E3C84621E749107008B8A12 /* AddDimeTableViewCell.swift in Sources */,
 				BF51A5031E26905E00C28523 /* ContactsPickerViewController.swift in Sources */,
 				BF86AC471E07954C00431E32 /* FIRVideo.swift in Sources */,
 				BF5A00891DDA3BA200F825DD /* MediaPickerHelper.swift in Sources */,
@@ -511,6 +518,7 @@
 				BF5564F61DF8AA0C0086290D /* PopularTableViewCell.swift in Sources */,
 				BF5A00821DDA39CF00F825DD /* FirebaseReference.swift in Sources */,
 				BF5564EE1DF72EC40086290D /* Constants.swift in Sources */,
+				6E3C84601E749067008B8A12 /* AddTopDimesViewController.swift in Sources */,
 				BF5A007C1DDA392100F825DD /* SignUpTableViewController.swift in Sources */,
 				BFAA92D11DEF38800063F660 /* EditingViewController.swift in Sources */,
 				BFC0512B1E30823500E4FD15 /* FriendRequestTableViewCell.swift in Sources */,

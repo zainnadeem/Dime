@@ -107,7 +107,9 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     }
     
     func topDimesButtonTapped() {
-        print("Top Dimes tapped!")
+        if let topDimesVC = UIStoryboard(name: "TopDimes", bundle: nil).instantiateInitialViewController() {
+            present(topDimesVC, animated: true, completion: nil)
+        }
     }
     
     func reloadDataToFirstCell(){
