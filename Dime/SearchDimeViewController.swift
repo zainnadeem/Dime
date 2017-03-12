@@ -133,7 +133,7 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
     func setViewConstraints(){
         self.view.addSubview(searchBar)
         self.view.addSubview(tableView)
-        
+
         tableView.translatesAutoresizingMaskIntoConstraints = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         
@@ -148,9 +148,13 @@ class SearchDimeViewController: UIViewController, UITableViewDataSource, UITable
         
         self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -49).isActive = true
         
+    
+        
         
     }
-    
+    func addFriendTapped() {
+        print("Add friend button tapped!")
+    }
     
     func addSearchProperties(){
         self.searchBar.showsSearchResultsButton = true
