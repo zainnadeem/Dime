@@ -1300,7 +1300,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AYq-j7-cFJ" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Popular" image="icon-popular-1" id="bIe-H9-8dj"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="EHQ-Hk-jrw">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="EHQ-Hk-jrw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

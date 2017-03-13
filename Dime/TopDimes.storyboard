@@ -44,7 +44,22 @@
                             <constraint firstAttribute="trailing" secondItem="hZ0-c1-6sq" secondAttribute="trailing" id="yIG-Ta-SUQ"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="3qz-s3-GpY"/>
+                    <navigationItem key="navigationItem" id="3qz-s3-GpY">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="fZp-2y-wRW">
+                            <connections>
+                                <action selector="doneButtonTapped:" destination="zpO-4W-Hog" id="5Bv-S4-1cn"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="tEC-Jy-Xhv">
+                            <connections>
+                                <action selector="addButtonTapped:" destination="zpO-4W-Hog" id="CN5-1k-kl6"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="addButton" destination="tEC-Jy-Xhv" id="wBc-5y-qs0"/>
+                        <outlet property="doneButton" destination="fZp-2y-wRW" id="Rhw-Um-IM4"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fY4-Y1-IPx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

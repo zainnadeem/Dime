@@ -29,7 +29,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="150"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YDL-e0-3gR" id="c33-NF-Ldg">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="149"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="150"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hA5-Lv-M39">
@@ -55,14 +55,14 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Drafts" id="Nym-nf-6ja">
-                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="a3m-kN-tDd">
-                            <connections>
-                                <action selector="editButtonTapped:" destination="CSR-yL-lpY" id="1sP-h1-Fha"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="0oP-Zp-E3W">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="0oP-Zp-E3W">
                             <connections>
                                 <action selector="doneButtonTapped:" destination="CSR-yL-lpY" id="Ioc-b5-7U3"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="a3m-kN-tDd">
+                            <connections>
+                                <action selector="editButtonTapped:" destination="CSR-yL-lpY" id="1sP-h1-Fha"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -81,7 +81,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="T6Q-ig-AxV" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="ucg-Dj-rad">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ucg-Dj-rad">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
