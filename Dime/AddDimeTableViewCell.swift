@@ -16,13 +16,5 @@ class AddDimeTableViewCell: UITableViewCell {
     @IBOutlet weak var starRatingLabel: UILabel!
     @IBOutlet weak var messageButton: UIButton!
     @IBOutlet weak var friendButton: UIButton!
-
-    func checkingLayout() {
-        profileImageView.backgroundColor = .red
-        usernameLabel.backgroundColor = .blue
-        topDimeButton.backgroundColor = .yellow
-        messageButton.backgroundColor = .green
-        friendButton.backgroundColor = .purple
-    }
     
 }

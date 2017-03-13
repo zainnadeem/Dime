@@ -52,8 +52,6 @@ extension AddTopDimeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! AddDimeTableViewCell
         
-//        cell.checkingLayout()
-        
         cell.profileImageView.image = store.currentUser?.topFriends[indexPath.row].profileImage
         cell.usernameLabel.text = store.currentUser?.topFriends[indexPath.row].username
     
