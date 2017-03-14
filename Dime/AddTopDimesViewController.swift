@@ -52,9 +52,14 @@ extension AddTopDimeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! AddDimeTableViewCell
         
-        cell.profileImageView.image = store.currentUser?.topFriends[indexPath.row].profileImage
-        cell.usernameLabel.text = store.currentUser?.topFriends[indexPath.row].username
-    
+        guard let topDime = store.currentUser?.topFriends[indexPath.row] else {
+            return cell
+        }
+        
+        cell.profileImageButton.setImage(topDime.profileImage?.circle, for: .normal)
+        cell.usernameLabel.text = topDime.username
+        cell.starRatingButton.titleLabel?.text = "\(topDime.popularRank)"
+        cell.updateUI()
         
         return cell
     }
