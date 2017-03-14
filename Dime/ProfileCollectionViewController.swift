@@ -148,8 +148,9 @@ class ProfileCollectionViewController: UIViewController, UICollectionViewDelegat
         self.circleProfileView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.13).isActive = true
         self.circleProfileView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.24).isActive = true
         
-        self.circleProfileView.addTarget(self, action: #selector(changeProfilePic), for: .touchUpInside)
-        
+        if user == store.currentUser {
+            self.circleProfileView.addTarget(self, action: #selector(changeProfilePic), for: .touchUpInside)
+        }
         
         guard let profileUser = self.user else { return }
         

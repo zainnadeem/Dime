@@ -92,7 +92,7 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             
-            cell.draftImageView.image = coverImage
+            cell.draftImageButton.setImage(coverImage, for: .normal)
             
         })
         

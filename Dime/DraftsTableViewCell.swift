@@ -10,5 +10,5 @@ import UIKit
 
 class DraftsTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var draftImageView: UIImageView!
+    @IBOutlet weak var draftImageButton: UIButton!
 }
