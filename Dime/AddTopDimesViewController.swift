@@ -31,9 +31,7 @@ class AddTopDimeViewController: UIViewController {
         topdimesTableView.dataSource = self
         
         navigationController?.navigationBar.backgroundColor = .sideMenuGrey()
-        
-        
-        
+
     }
     
     @IBAction func addButtonTapped(_ sender: Any) {
@@ -46,7 +44,6 @@ class AddTopDimeViewController: UIViewController {
     @IBAction func doneButtonTapped(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
-    
     
     @IBAction func profileImageTapped(_ sender: Any) {
         let destination = ProfileCollectionViewController()

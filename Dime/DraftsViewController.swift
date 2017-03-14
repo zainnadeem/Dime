@@ -69,19 +69,9 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
         store.currentDime = store.currentUser?.drafts?[indexPath.row]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "draftsCell") as! DraftsTableViewCell
-        
-//        if let media = store.currentUser?.drafts?[indexPath.row].media {
-//            for image in media {
-//                if let url = Data(base64Encoded: image.mediaURL) {
-//                    let coverPhoto = UIImage(data: url)
-//                    cell.draftImageView.image = coverPhoto
-//                    
-//                }
-//            }
-//        }
-        
+
         store.currentUser?.drafts?[indexPath.row].downloadMediaImage(completion: { (coverImage, error) in
-            
+        
             guard let coverImage = coverImage else {
                 print("There was an error unwrapping the coverImage in the DraftsVC")
                 return
@@ -91,28 +81,9 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
                 print("There was an error in the DraftsVC: \(error.localizedDescription)")
                 return
             }
-            
             cell.draftImageButton.setImage(coverImage, for: .normal)
-            
         })
-        
-//        store.currentUser?.drafts?[indexPath.row].downloadCoverImage(coverPhoto: (store.currentUser?.drafts?[indexPath.row].uid)!, completion: { (coverImage, error) in
-//            
-//            guard let coverImage = coverImage else {
-//                print("There was an error unwrapping the coverImage in the DraftsVC")
-//                return
-//            }
-//            
-//            if let error = error {
-//                print("There was an error in the DraftsVC: \(error.localizedDescription)")
-//                return
-//            }
-//            
-//            cell.draftImageView.image = coverImage
-//
-//        })
-        
-        
+
         return cell
     }
     
@@ -139,12 +110,7 @@ extension DraftsViewController: UITableViewDelegate, UITableViewDataSource {
             
             present(dest, animated: true, completion: nil)
         }
-        
-        
-        
-        
-        
-        
+  
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {

@@ -19,9 +19,6 @@ class AddDimeTableViewCell: UITableViewCell {
     
     func updateUI() {
         
-//        usernameLabel.textColor = .white
-//        messageButton.tintColor = .white
-
         usernameLabel.font = UIFont.dimeFontBold(30)
         starRatingButton.setImage(#imageLiteral(resourceName: "icon-popular"), for: .normal)
         topDimeButton.setImage(#imageLiteral(resourceName: "topDimesHomeUnfilled"), for: .normal)
