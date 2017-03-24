@@ -19,9 +19,9 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     var viewControllerTitle: UILabel = UILabel()
     var viewControllerIcon: UIButton = UIButton()
     var topDimesButton = UIButton()
-    var addDimeButton = UIButton(type: .contactAdd)
+    var addDimeButton = UIButton()
     
-   lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
+    lazy var navBar : NavBarView = NavBarView(withView: self.view, rightButtonImage: #imageLiteral(resourceName: "iconFeed"), leftButtonImage: #imageLiteral(resourceName: "searchIcon"), middleButtonImage: #imageLiteral(resourceName: "menuDime"))
     
     var dimeCollectionView : UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -43,15 +43,14 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         configureTitleIcon()
         configureTopDimesButton()
         fetchDimes()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         fetchDimes()
     }
-
+    
     func configureTitleLabel(){
-        self.view.addSubview(viewControllerTitle)
+        self.view.addSubview(self.viewControllerTitle)
         
         self.viewControllerTitle.translatesAutoresizingMaskIntoConstraints = false
         self.viewControllerTitle.topAnchor.constraint(equalTo: self.navBar.bottomAnchor).isActive = true
@@ -61,19 +60,16 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         self.viewControllerTitle.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.07).isActive = true
         self.viewControllerTitle.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         
-        viewControllerTitle.backgroundColor = UIColor.darkGray
-        viewControllerTitle.textAlignment = NSTextAlignment.left
-        viewControllerTitle.textColor = UIColor.white
-        viewControllerTitle.font = UIFont.dimeFont(15)
-        viewControllerTitle.text = "        TOP DIMES"
-        
-        
+        self.viewControllerTitle.backgroundColor = UIColor.darkGray
+        self.viewControllerTitle.textAlignment = NSTextAlignment.left
+        self.viewControllerTitle.textColor = UIColor.white
+        self.viewControllerTitle.font = UIFont.dimeFont(15)
+        self.viewControllerTitle.text = "        TOP DIMES"
     }
     
     func configureTitleIcon() {
         self.view.addSubview(viewControllerIcon)
-        viewControllerIcon.setImage(#imageLiteral(resourceName: "icon-diamond-black"), for: .normal)
-        
+        self.viewControllerIcon.setImage(#imageLiteral(resourceName: "icon-diamond-black"), for: .normal)
         
         self.viewControllerIcon.translatesAutoresizingMaskIntoConstraints = false
         self.viewControllerIcon.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 5).isActive = true
@@ -83,32 +79,36 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     }
     
     func configureTopDimesButton() {
-        view.addSubview(topDimesButton)
-        view.addSubview(addDimeButton)
-        viewControllerTitle.bringSubview(toFront: topDimesButton)
+        self.view.addSubview(self.topDimesButton)
+        self.view.addSubview(self.addDimeButton)
+        self.viewControllerTitle.bringSubview(toFront: self.topDimesButton)
         
-        addDimeButton.translatesAutoresizingMaskIntoConstraints = false
-        addDimeButton.centerYAnchor.constraint(equalTo: viewControllerTitle.centerYAnchor).isActive = true
-        addDimeButton.trailingAnchor.constraint(equalTo: viewControllerTitle.trailingAnchor).isActive = true
-     
-        topDimesButton.translatesAutoresizingMaskIntoConstraints = false
-        topDimesButton.centerYAnchor.constraint(equalTo: viewControllerTitle.centerYAnchor).isActive = true
-        topDimesButton.trailingAnchor.constraint(equalTo: addDimeButton.leadingAnchor).isActive = true
+        self.addDimeButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        self.addDimeButton.setImage(#imageLiteral(resourceName: "icon-add"), for: .normal)
         
-        topDimesButton.backgroundColor = .red
+        self.addDimeButton.translatesAutoresizingMaskIntoConstraints = false
+        self.addDimeButton.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
+        self.addDimeButton.trailingAnchor.constraint(equalTo: self.viewControllerTitle.trailingAnchor, constant: -8).isActive = true
+        self.addDimeButton.heightAnchor.constraint(equalToConstant: 24)
+        self.addDimeButton.widthAnchor.constraint(equalToConstant: 24)
         
-        topDimesButton.addTarget(self, action: #selector(topDimesButtonTapped), for: .touchUpInside)
-        addDimeButton.addTarget(self, action: #selector(topDimesButtonTapped), for: .touchUpInside)
-     
-        if let topDimesCount = store.currentUser?.topFriends.count {
-            topDimesButton.setTitle("\(topDimesCount)", for: .normal)
+        self.topDimesButton.translatesAutoresizingMaskIntoConstraints = false
+        self.topDimesButton.centerYAnchor.constraint(equalTo: self.viewControllerTitle.centerYAnchor).isActive = true
+        self.topDimesButton.trailingAnchor.constraint(equalTo: self.addDimeButton.leadingAnchor, constant: -8).isActive = true
+        
+        self.topDimesButton.backgroundColor = .clear
+        
+        self.topDimesButton.addTarget(self, action: #selector(topDimesButtonTapped), for: .touchUpInside)
+        self.addDimeButton.addTarget(self, action: #selector(topDimesButtonTapped), for: .touchUpInside)
+        
+        if let topDimesCount = self.store.currentUser?.topFriends.count {
+            self.topDimesButton.setTitle("\(topDimesCount)", for: .normal)
         }
-        
     }
     
     func topDimesButtonTapped() {
         if let topDimesVC = UIStoryboard(name: "TopDimes", bundle: nil).instantiateInitialViewController() {
-            present(topDimesVC, animated: true, completion: nil)
+            self.present(topDimesVC, animated: true, completion: nil)
         }
     }
     
@@ -123,7 +123,7 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         if let topFriends = store.currentUser?.topFriends{
             for friend in topFriends{
                 Dime.observeFriendsDimes(user: friend, { (dime) in
-
+                    
                     if !self.passedDimes.contains(dime) && Constants.isDimeWithinTwoDays(videoDate: dime.createdTime)  {
                         self.passedDimes.insert(dime, at: 0)
                         self.dimeCollectionView.reloadData()
@@ -134,34 +134,34 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
         }
         
     }
-
-
+    
+    
     // MARK: UICollectionViewDataSource
-
     
     
-     func numberOfSections(in collectionView: UICollectionView) -> Int {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
-     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
         return passedDimes.count
     }
-
-     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DimeCollectionViewCell
-       
+        
         cell.parentCollectionView = self
         cell.collectionView = dimeCollectionView
         cell.currentUser = store.currentUser
         cell.dime = passedDimes[indexPath.row]
-    
+        
         return cell
     }
-
+    
     func setUpCollectionView(){
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionViewScrollDirection.horizontal
@@ -187,16 +187,16 @@ class TopDimesCollectionViewController: UIViewController, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //show mediaCollection
         
-//        let destinationVC = ViewMediaCollectionViewController()
-//        destinationVC.passedDime = passedDimes[indexPath.row]
-//        self.navigationController?.pushViewController(destinationVC, animated: true)
+        //        let destinationVC = ViewMediaCollectionViewController()
+        //        destinationVC.passedDime = passedDimes[indexPath.row]
+        //        self.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
     
 }
 
 extension TopDimesCollectionViewController : NavBarViewDelegate {
-
+    
     
     func rightBarButtonTapped(_ sender: AnyObject) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -206,9 +206,9 @@ extension TopDimesCollectionViewController : NavBarViewDelegate {
     
     
     func leftBarButtonTapped(_ sender: AnyObject) {
-
+        
         let destinationVC = SearchDimeViewController()
-
+        
         
         if let user = store.currentUser{
             destinationVC.user = user
@@ -231,20 +231,20 @@ extension TopDimesCollectionViewController : DZNEmptyDataSetSource {
     
     func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
         
-            let image = #imageLiteral(resourceName: "topDimesHome")
-            
-            let size = image.size.applying(CGAffineTransform(scaleX: 0.2, y: 0.2))
-            let hasAlpha = true
-            let scale : CGFloat = 0.0
-            
-            UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
-            image.draw(in: CGRect(origin: CGPoint.zero, size: size))
-            
-            let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            
-            return scaledImage
-        }
+        let image = #imageLiteral(resourceName: "topDimesHome")
+        
+        let size = image.size.applying(CGAffineTransform(scaleX: 0.2, y: 0.2))
+        let hasAlpha = true
+        let scale : CGFloat = 0.0
+        
+        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
+        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return scaledImage
+    }
     
     
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
@@ -253,7 +253,7 @@ extension TopDimesCollectionViewController : DZNEmptyDataSetSource {
         let attributes = [NSFontAttributeName : UIFont.dimeFont(24.0),
                           NSForegroundColorAttributeName : UIColor.darkGray]
         
-
+        
         return NSAttributedString(string: text, attributes: attributes)
         
         
@@ -271,18 +271,18 @@ extension TopDimesCollectionViewController : DZNEmptyDataSetSource {
                           NSForegroundColorAttributeName : UIColor.lightGray,
                           NSParagraphStyleAttributeName : paragraph]
         
-            return NSAttributedString(string: text, attributes: attributes)
-
+        return NSAttributedString(string: text, attributes: attributes)
+        
     }
-
+    
     func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControlState) -> NSAttributedString! {
-    
-    let attributes = [NSFontAttributeName : UIFont.dimeFontBold(18.0),
-                      NSForegroundColorAttributeName : UIColor.black]
-    
-    return NSAttributedString(string: "Add a Top Dime today!👬", attributes: attributes)
+        
+        let attributes = [NSFontAttributeName : UIFont.dimeFontBold(18.0),
+                          NSForegroundColorAttributeName : UIColor.black]
+        
+        return NSAttributedString(string: "Add a Top Dime today!👬", attributes: attributes)
     }
-
+    
     func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
         return UIColor.white
     }
